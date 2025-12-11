@@ -1,0 +1,791 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+classdef ExactDiffEQ_Solver < matlab.apps.AppBase
+    % Properties corresponding to app components
+    properties (Access = public)
+        UIFigure                matlab.ui.Figure
+        TabGroup                matlab.ui.container.TabGroup
+        
+        % Input Panel
+        InputPanel              matlab.ui.container.Panel
+        MEditFieldLabel         matlab.ui.control.Label
+        MEditField              matlab.ui.control.EditField
+        NEditFieldLabel         matlab.ui.control.Label
+        NEditField              matlab.ui.control.EditField
+        x0EditFieldLabel        matlab.ui.control.Label
+        x0EditField             matlab.ui.control.NumericEditField
+        y0EditFieldLabel        matlab.ui.control.Label
+        y0EditField             matlab.ui.control.NumericEditField
+        ExampleDropDownLabel    matlab.ui.control.Label
+        ExampleDropDown         matlab.ui.control.DropDown
+        SolveButton             matlab.ui.control.Button
+        ClearButton             matlab.ui.control.Button
+        ExportButton            matlab.ui.control.Button
+        
+        % Solution Panel
+        SolutionPanel           matlab.ui.container.Panel
+        GeneralSolutionLabel    matlab.ui.control.Label
+        GeneralSolutionText     matlab.ui.control.TextArea
+        ParticularSolutionLabel matlab.ui.control.Label
+        ParticularSolutionText  matlab.ui.control.TextArea
+        ExactnessCheckText      matlab.ui.control.TextArea
+        
+        % Visualization Panel
+        VisualizationPanel      matlab.ui.container.Panel
+        ContourAxes             matlab.ui.control.UIAxes
+        SurfaceAxes             matlab.ui.control.UIAxes
+        VectorAxes              matlab.ui.control.UIAxes
+        
+        % Step-by-Step Panel
+        StepsPanel              matlab.ui.container.Panel
+        StepsTextArea           matlab.ui.control.TextArea
+        
+        % Results Panel
+        ResultsPanel            matlab.ui.container.Panel
+        ResultsTable            matlab.ui.control.Table
+        
+        % Menu
+        FileMenu                matlab.ui.container.Menu
+        SaveResultsMenu         matlab.ui.container.Menu
+        ExportPlotMenu          matlab.ui.container.Menu
+        HelpMenu                matlab.ui.container.Menu
+        AboutMenu               matlab.ui.container.Menu
+    end
+    
+    properties (Access = private)
+        % Internal properties
+        M_function function_handle
+        N_function function_handle
+        psi_symbolic sym
+        psi_function function_handle
+        solution_found logical = false
+        plot_range = [-3 3 -3 3]
+    end
+    
+    methods (Access = private)
+        
+        function checkExactness(app)
+            % Check if the equation is exact
+            syms x y;
+            
+            try
+                M_sym = str2sym(app.MEditField.Value);
+                N_sym = str2sym(app.NEditField.Value);
+                
+                dM_dy = diff(M_sym, y);
+                dN_dx = diff(N_sym, x);
+                
+                is_exact = isequal(simplify(dM_dy), simplify(dN_dx));
+                
+                if is_exact
+                    app.ExactnessCheckText.Value = sprintf(['✓ Equation is EXACT\n\n' ...
+                        '∂M/∂y = %s\n' ...
+                        '∂N/∂x = %s\n' ...
+                        '∂M/∂y = ∂N/∂x ✓'], ...
+                        char(dM_dy), char(dN_dx));
+                    app.ExactnessCheckText.FontColor = [0, 0.5, 0];
+                else
+                    app.ExactnessCheckText.Value = sprintf(['✗ Equation is NOT EXACT\n\n' ...
+                        '∂M/∂y = %s\n' ...
+                        '∂N/∂x = %s\n' ...
+                        'Difference: %s'], ...
+                        char(dM_dy), char(dN_dx), char(dM_dy - dN_dx));
+                    app.ExactnessCheckText.FontColor = [0.8, 0, 0];
+                end
+                
+            catch ME
+                app.ExactnessCheckText.Value = sprintf('Error: %s', ME.message);
+                app.ExactnessCheckText.FontColor = [0.8, 0, 0];
+            end
+        end
+        
+        function solveEquation(app)
+            % Solve the exact differential equation
+            syms x y g(y) C;
+            
+            try
+                M_sym = str2sym(app.MEditField.Value);
+                N_sym = str2sym(app.NEditField.Value);
+                
+                % Step 1: Integrate M w.r.t x
+                step1 = sprintf('1. Integrate M w.r.t x:\n   ψ₁ = ∫M dx = ∫(%s) dx', char(M_sym));
+                psi_x = int(M_sym, x) + g(y);
+                step1 = sprintf('%s\n   = %s + g(y)', step1, char(psi_x - g(y)));
+                
+                % Step 2: Differentiate w.r.t y
+                step2 = sprintf('\n\n2. Differentiate w.r.t y:\n   ∂ψ/∂y = ∂/∂y[%s]', char(psi_x - g(y)));
+                dpsi_dy = diff(psi_x, y);
+                step2 = sprintf('%s\n   = %s + g''(y)', step2, char(diff(psi_x - g(y), y)));
+                
+                % Step 3: Equate to N and solve for g'(y)
+                step3 = sprintf('\n\n3. Set ∂ψ/∂y = N and solve for g''(y):\n   %s + g''(y) = %s', ...
+                    char(diff(psi_x - g(y), y)), char(N_sym));
+                eqn = dpsi_dy == N_sym;
+                g_prime = solve(eqn, diff(g(y), y));
+                
+                if isempty(g_prime)
+                    % Try integrating N w.r.t y instead
+                    psi_y = int(N_sym, y) + g(x);
+                    dpsi_dx = diff(psi_y, x);
+                    eqn = dpsi_dx == M_sym;
+                    g_prime = solve(eqn, diff(g(x), x));
+                    step3 = sprintf('%s\n   Alternative method used', step3);
+                end
+                
+                step3 = sprintf('%s\n   g''(y) = %s', step3, char(g_prime));
+                
+                % Step 4: Integrate to find g(y)
+                step4 = sprintf('\n\n4. Integrate to find g(y):\n   g(y) = ∫(%s) dy', char(g_prime));
+                g_y = int(g_prime, y);
+                step4 = sprintf('%s\n   = %s', step4, char(g_y));
+                
+                % Step 5: Construct final solution
+                step5 = sprintf('\n\n5. Construct final solution:');
+                if contains(char(psi_x), 'g(y)')
+                    psi = simplify(psi_x - g(y) + g_y);
+                else
+                    psi = simplify(psi_y - g(x) + int(g_prime, x));
+                end
+                step5 = sprintf('%s\n   ψ(x,y) = %s = C', step5, char(psi));
+                
+                % Update step-by-step display
+                app.StepsTextArea.Value = sprintf('%s%s%s%s%s', ...
+                    step1, step2, step3, step4, step5);
+                
+                % Store symbolic solution
+                app.psi_symbolic = psi;
+                
+                % Create function handle
+                app.psi_function = matlabFunction(psi, 'Vars', [x, y]);
+                
+                % Update general solution
+                app.GeneralSolutionText.Value = sprintf('ψ(x,y) = %s = C', char(psi));
+                
+                % Update particular solution if IC provided
+                x0 = app.x0EditField.Value;
+                y0 = app.y0EditField.Value;
+                
+                if ~isnan(x0) && ~isnan(y0)
+                    C_val = subs(psi, [x, y], [x0, y0]);
+                    psi_particular = simplify(psi - C_val);
+                    app.ParticularSolutionText.Value = sprintf('ψ(x,y) = %s = 0', ...
+                        char(psi_particular));
+                else
+                    app.ParticularSolutionText.Value = 'Provide initial condition';
+                end
+                
+                app.solution_found = true;
+                
+                % Update visualizations
+                updateVisualizations(app);
+                
+                % Update results table
+                updateResultsTable(app);
+                
+            catch ME
+                uialert(app.UIFigure, sprintf('Error: %s', ME.message), 'Solution Error');
+            end
+        end
+        
+        function updateVisualizations(app)
+            % Update all plots
+            
+            if ~app.solution_found
+                return;
+            end
+            
+            % Create grid
+            x = linspace(app.plot_range(1), app.plot_range(2), 50);
+            y = linspace(app.plot_range(3), app.plot_range(4), 50);
+            [X, Y] = meshgrid(x, y);
+            
+            % Evaluate psi
+            Z = app.psi_function(X, Y);
+            
+            % 1. Contour Plot
+            cla(app.ContourAxes);
+            contour(app.ContourAxes, X, Y, Z, 20, 'LineWidth', 1.5);
+            hold(app.ContourAxes, 'on');
+            
+            % Mark initial condition
+            x0 = app.x0EditField.Value;
+            y0 = app.y0EditField.Value;
+            if ~isnan(x0) && ~isnan(y0)
+                plot(app.ContourAxes, x0, y0, 'ro', 'MarkerSize', 10, ...
+                    'MarkerFaceColor', 'r', 'DisplayName', 'Initial Condition');
+            end
+            
+            hold(app.ContourAxes, 'off');
+            xlabel(app.ContourAxes, 'x');
+            ylabel(app.ContourAxes, 'y');
+            title(app.ContourAxes, 'Solution Curves (Contour Plot)');
+            grid(app.ContourAxes, 'on');
+            colorbar(app.ContourAxes);
+            
+            % 2. Surface Plot
+            cla(app.SurfaceAxes);
+            surf(app.SurfaceAxes, X, Y, Z, 'EdgeAlpha', 0.3);
+            hold(app.SurfaceAxes, 'on');
+            
+            if ~isnan(x0) && ~isnan(y0)
+                z0 = app.psi_function(x0, y0);
+                plot3(app.SurfaceAxes, x0, y0, z0, 'ro', 'MarkerSize', 10, ...
+                    'MarkerFaceColor', 'r');
+            end
+            
+            contour3(app.SurfaceAxes, X, Y, Z, 20, 'k-', 'LineWidth', 0.5);
+            hold(app.SurfaceAxes, 'off');
+            
+            xlabel(app.SurfaceAxes, 'x');
+            ylabel(app.SurfaceAxes, 'y');
+            zlabel(app.SurfaceAxes, 'ψ(x,y)');
+            title(app.SurfaceAxes, 'Solution Surface');
+            grid(app.SurfaceAxes, 'on');
+            colormap(app.SurfaceAxes, 'jet');
+            
+            % 3. Vector Field Plot
+            cla(app.VectorAxes);
+            
+            % Compute M and N
+            syms x_sym y_sym;
+            M_sym = str2sym(app.MEditField.Value);
+            N_sym = str2sym(app.NEditField.Value);
+            
+            M_func = matlabFunction(M_sym, 'Vars', [x_sym, y_sym]);
+            N_func = matlabFunction(N_sym, 'Vars', [x_sym, y_sym]);
+            
+            % Create vector field
+            [Xv, Yv] = meshgrid(linspace(app.plot_range(1), app.plot_range(2), 15), ...
+                               linspace(app.plot_range(3), app.plot_range(4), 15));
+            
+            U = zeros(size(Xv));
+            V = zeros(size(Yv));
+            
+            for i = 1:numel(Xv)
+                U(i) = M_func(Xv(i), Yv(i));
+                V(i) = N_func(Xv(i), Yv(i));
+            end
+            
+            % Normalize for better visualization
+            norm_factor = sqrt(U.^2 + V.^2);
+            U_norm = U ./ (norm_factor + eps);
+            V_norm = V ./ (norm_factor + eps);
+            
+            quiver(app.VectorAxes, Xv, Yv, U_norm, V_norm, 0.5, 'b');
+            xlabel(app.VectorAxes, 'x');
+            ylabel(app.VectorAxes, 'y');
+            title(app.VectorAxes, 'Vector Field (M, N)');
+            grid(app.VectorAxes, 'on');
+            axis(app.VectorAxes, 'equal');
+        end
+        
+        function updateResultsTable(app)
+            % Update results table with computed values
+            
+            if ~app.solution_found
+                return;
+            end
+            
+            syms x y;
+            
+            % Compute various quantities
+            M_sym = str2sym(app.MEditField.Value);
+            N_sym = str2sym(app.NEditField.Value);
+            psi_sym = app.psi_symbolic;
+            
+            dM_dy = diff(M_sym, y);
+            dN_dx = diff(N_sym, x);
+            dpsi_dx = diff(psi_sym, x);
+            dpsi_dy = diff(psi_sym, y);
+            
+            % Create table data
+            data = {
+                'M(x,y)', char(M_sym);
+                'N(x,y)', char(N_sym);
+                '∂M/∂y', char(dM_dy);
+                '∂N/∂x', char(dN_dx);
+                'Exact?', char(simplify(dM_dy - dN_dx) == 0);
+                'ψ(x,y)', char(psi_sym);
+                '∂ψ/∂x', char(dpsi_dx);
+                '∂ψ/∂y', char(dpsi_dy);
+                'Verification M', char(simplify(dpsi_dx - M_sym) == 0);
+                'Verification N', char(simplify(dpsi_dy - N_sym) == 0)
+            };
+            
+            app.ResultsTable.Data = data;
+        end
+        
+        function loadExample(app, example_idx)
+            % Load example differential equation
+            
+            switch example_idx
+                case 1
+                    % Example 1: Basic exact equation
+                    app.MEditField.Value = '2*x*y';
+                    app.NEditField.Value = 'x^2 + cos(y)';
+                    app.x0EditField.Value = 0;
+                    app.y0EditField.Value = 1;
+                    
+                case 2
+                    % Example 2: With trigonometric functions
+                    app.MEditField.Value = 'y*cos(x) + 2*x*exp(y)';
+                    app.NEditField.Value = 'sin(x) + x^2*exp(y) - 1';
+                    app.x0EditField.Value = 0;
+                    app.y0EditField.Value = 0;
+                    
+                case 3
+                    % Example 3: Polynomial equation
+                    app.MEditField.Value = '3*x^2 + 2*x*y';
+                    app.NEditField.Value = 'x^2 + 3*y^2';
+                    app.x0EditField.Value = 1;
+                    app.y0EditField.Value = 0;
+                    
+                case 4
+                    % Example 4: Non-exact equation
+                    app.MEditField.Value = 'x^2 + y';
+                    app.NEditField.Value = 'x - y^2';
+                    app.x0EditField.Value = 0;
+                    app.y0EditField.Value = 0;
+                    
+                case 5
+                    % Example 5: Advanced example
+                    app.MEditField.Value = '(1 + ln(x*y))';
+                    app.NEditField.Value = '1 + ln(x*y)';
+                    app.x0EditField.Value = 1;
+                    app.y0EditField.Value = 1;
+            end
+            
+            % Automatically check exactness and solve
+            checkExactness(app);
+            solveEquation(app);
+        end
+    end
+    
+    % Callback methods
+    methods (Access = private)
+        
+        % Button pushed function: SolveButton
+        function SolveButtonPushed(app, event)
+            checkExactness(app);
+            solveEquation(app);
+        end
+        
+        % Button pushed function: ClearButton
+        function ClearButtonPushed(app, event)
+            % Clear all fields
+            app.MEditField.Value = '';
+            app.NEditField.Value = '';
+            app.x0EditField.Value = NaN;
+            app.y0EditField.Value = NaN;
+            app.GeneralSolutionText.Value = '';
+            app.ParticularSolutionText.Value = '';
+            app.ExactnessCheckText.Value = '';
+            app.StepsTextArea.Value = '';
+            app.ResultsTable.Data = {};
+            
+            % Clear plots
+            cla(app.ContourAxes);
+            cla(app.SurfaceAxes);
+            cla(app.VectorAxes);
+            
+            app.solution_found = false;
+        end
+        
+        % Menu selected function: ExampleDropDown
+        function ExampleDropDownValueChanged(app, event)
+            value = app.ExampleDropDown.Value;
+            
+            switch value
+                case 'Example 1'
+                    loadExample(app, 1);
+                case 'Example 2'
+                    loadExample(app, 2);
+                case 'Example 3'
+                    loadExample(app, 3);
+                case 'Example 4'
+                    loadExample(app, 4);
+                case 'Example 5'
+                    loadExample(app, 5);
+            end
+        end
+        
+        % Button pushed function: ExportButton
+        function ExportButtonPushed(app, event)
+            % Export results to various formats
+            
+            if ~app.solution_found
+                uialert(app.UIFigure, 'No solution to export', 'Export Error');
+                return;
+            end
+            
+            % Create export options dialog
+            [file, path] = uiputfile({...
+                '*.pdf', 'PDF Document (*.pdf)'; ...
+                '*.png', 'PNG Image (*.png)'; ...
+                '*.fig', 'MATLAB Figure (*.fig)'; ...
+                '*.mat', 'MATLAB Data (*.mat)'; ...
+                '*.txt', 'Text File (*.txt)'}, ...
+                'Export Results');
+            
+            if isequal(file, 0)
+                return; % User cancelled
+            end
+            
+            [~, ~, ext] = fileparts(file);
+            
+            try
+                switch lower(ext)
+                    case '.pdf'
+                        exportToPDF(app, fullfile(path, file));
+                    case '.png'
+                        exportToPNG(app, fullfile(path, file));
+                    case '.fig'
+                        exportToFIG(app, fullfile(path, file));
+                    case '.mat'
+                        exportToMAT(app, fullfile(path, file));
+                    case '.txt'
+                        exportToTXT(app, fullfile(path, file));
+                end
+                
+                msgbox(sprintf('Successfully exported to:\n%s', fullfile(path, file)), ...
+                    'Export Complete', 'help');
+                
+            catch ME
+                uialert(app.UIFigure, sprintf('Export failed: %s', ME.message), ...
+                    'Export Error');
+            end
+        end
+        
+        function exportToPDF(app, filename)
+            % Export to PDF
+            fig = figure('Visible', 'off');
+            
+            % Create report layout
+            subplot(3,2,1);
+            copyobj(app.ContourAxes.Children, gca);
+            title('Solution Contours');
+            
+            subplot(3,2,2);
+            copyobj(app.SurfaceAxes.Children, gca);
+            title('Solution Surface');
+            
+            subplot(3,2,3);
+            text(0.1, 0.9, sprintf('Equation: (%s)dx + (%s)dy = 0', ...
+                app.MEditField.Value, app.NEditField.Value), ...
+                'FontSize', 10);
+            text(0.1, 0.7, sprintf('General Solution: %s', ...
+                app.GeneralSolutionText.Value), 'FontSize', 10);
+            text(0.1, 0.5, sprintf('Particular Solution: %s', ...
+                app.ParticularSolutionText.Value), 'FontSize', 10);
+            axis off;
+            
+            subplot(3,2,4);
+            copyobj(app.VectorAxes.Children, gca);
+            title('Vector Field');
+            
+            subplot(3,2,[5,6]);
+            steps_text = app.StepsTextArea.Value;
+            text(0.1, 0.9, 'Step-by-Step Solution:', 'FontSize', 11, 'FontWeight', 'bold');
+            text(0.1, 0.8, steps_text, 'FontSize', 8, 'VerticalAlignment', 'top');
+            axis off;
+            
+            print(fig, filename, '-dpdf');
+            close(fig);
+        end
+        
+        function exportToPNG(app, filename)
+            % Export summary image
+            fig = figure('Visible', 'off', 'Position', [100, 100, 800, 600]);
+            
+            subplot(2,2,1);
+            copyobj(app.ContourAxes.Children, gca);
+            title('Solution');
+            axis equal;
+            
+            subplot(2,2,2);
+            text(0.1, 0.9, sprintf('M = %s', app.MEditField.Value), 'FontSize', 10);
+            text(0.1, 0.8, sprintf('N = %s', app.NEditField.Value), 'FontSize', 10);
+            text(0.1, 0.7, app.GeneralSolutionText.Value, 'FontSize', 10);
+            text(0.1, 0.6, app.ParticularSolutionText.Value, 'FontSize', 10);
+            axis off;
+            
+            subplot(2,2,3);
+            copyobj(app.SurfaceAxes.Children, gca);
+            title('Surface');
+            view(45, 30);
+            
+            subplot(2,2,4);
+            copyobj(app.VectorAxes.Children, gca);
+            title('Vector Field');
+            axis equal;
+            
+            saveas(fig, filename);
+            close(fig);
+        end
+        
+        function exportToTXT(app, filename)
+            % Export solution details to text file
+            fid = fopen(filename, 'w');
+            
+            fprintf(fid, 'Exact Differential Equation Solver Report\n');
+            fprintf(fid, '==========================================\n\n');
+            
+            fprintf(fid, 'Input Equation:\n');
+            fprintf(fid, 'M(x,y) = %s\n', app.MEditField.Value);
+            fprintf(fid, 'N(x,y) = %s\n\n', app.NEditField.Value);
+            
+            fprintf(fid, 'Initial Condition:\n');
+            fprintf(fid, 'x₀ = %g, y₀ = %g\n\n', ...
+                app.x0EditField.Value, app.y0EditField.Value);
+            
+            fprintf(fid, 'Solution:\n');
+            fprintf(fid, '%s\n', app.GeneralSolutionText.Value);
+            fprintf(fid, '%s\n\n', app.ParticularSolutionText.Value);
+            
+            fprintf(fid, 'Exactness Check:\n%s\n\n', app.ExactnessCheckText.Value);
+            
+            fprintf(fid, 'Step-by-Step Solution:\n');
+            fprintf(fid, '%s\n', app.StepsTextArea.Value);
+            
+            fclose(fid);
+        end
+        
+        % Menu selected function: AboutMenu
+        function AboutMenuSelected(app, event)
+            % Show about dialog
+            about_text = sprintf(['ExactDiffEQ Solver v1.0\n\n' ...
+                'Developed for MATLAB App Development Project\n' ...
+                'Topic: Exact Differential Equations\n\n' ...
+                'Features:\n' ...
+                '• Solve exact differential equations\n' ...
+                '• Step-by-step solution display\n' ...
+                '• Multiple visualization options\n' ...
+                '• Export functionality\n\n' ...
+                'Created using MATLAB App Designer']);
+            
+            uialert(app.UIFigure, about_text, 'About', 'Icon', 'info');
+        end
+    end
+    
+    % App initialization and construction
+    methods (Access = private)
+        
+        % Create UIFigure and components
+        function createComponents(app)
+            
+            % Create UIFigure
+            app.UIFigure = uifigure('Visible', 'off');
+            app.UIFigure.Position = [100 100 1400 800];
+            app.UIFigure.Name = 'ExactDiffEQ Solver';
+            app.UIFigure.Color = [0.96 0.96 0.96];
+            
+            % Create TabGroup
+            app.TabGroup = uitabgroup(app.UIFigure);
+            app.TabGroup.Position = [20 20 1360 760];
+            
+            % Create Main Tab
+            mainTab = uitab(app.TabGroup);
+            mainTab.Title = 'Solver';
+            
+            % Create Input Panel
+            app.InputPanel = uipanel(mainTab);
+            app.InputPanel.Title = 'Input Equation';
+            app.InputPanel.Position = [20 600 400 130];
+            app.InputPanel.FontWeight = 'bold';
+            
+            % M(x,y) input
+            app.MEditFieldLabel = uilabel(app.InputPanel);
+            app.MEditFieldLabel.HorizontalAlignment = 'right';
+            app.MEditFieldLabel.Position = [20 75 50 22];
+            app.MEditFieldLabel.Text = 'M(x,y) =';
+            
+            app.MEditField = uieditfield(app.InputPanel, 'text');
+            app.MEditField.Position = [85 75 300 22];
+            app.MEditField.Value = '2*x*y';
+            
+            % N(x,y) input
+            app.NEditFieldLabel = uilabel(app.InputPanel);
+            app.NEditFieldLabel.HorizontalAlignment = 'right';
+            app.NEditFieldLabel.Position = [20 45 50 22];
+            app.NEditFieldLabel.Text = 'N(x,y) =';
+            
+            app.NEditField = uieditfield(app.InputPanel, 'text');
+            app.NEditField.Position = [85 45 300 22];
+            app.NEditField.Value = 'x^2 + cos(y)';
+            
+            % Initial conditions
+            app.x0EditFieldLabel = uilabel(app.InputPanel);
+            app.x0EditFieldLabel.HorizontalAlignment = 'right';
+            app.x0EditFieldLabel.Position = [20 15 30 22];
+            app.x0EditFieldLabel.Text = 'x₀ =';
+            
+            app.x0EditField = uieditfield(app.InputPanel, 'numeric');
+            app.x0EditField.Position = [55 15 60 22];
+            app.x0EditField.Value = 0;
+            
+            app.y0EditFieldLabel = uilabel(app.InputPanel);
+            app.y0EditFieldLabel.HorizontalAlignment = 'right';
+            app.y0EditFieldLabel.Position = [125 15 30 22];
+            app.y0EditFieldLabel.Text = 'y₀ =';
+            
+            app.y0EditField = uieditfield(app.InputPanel, 'numeric');
+            app.y0EditField.Position = [160 15 60 22];
+            app.y0EditField.Value = 1;
+            
+            % Example dropdown
+            app.ExampleDropDownLabel = uilabel(app.InputPanel);
+            app.ExampleDropDownLabel.HorizontalAlignment = 'right';
+            app.ExampleDropDownLabel.Position = [230 15 60 22];
+            app.ExampleDropDownLabel.Text = 'Examples:';
+            
+            app.ExampleDropDown = uidropdown(app.InputPanel);
+            app.ExampleDropDown.Position = [295 15 90 22];
+            app.ExampleDropDown.Items = {'Select...', 'Example 1', 'Example 2', ...
+                'Example 3', 'Example 4', 'Example 5'};
+            app.ExampleDropDown.Value = 'Select...';
+            
+            % Buttons
+            app.SolveButton = uibutton(mainTab, 'push');
+            app.SolveButton.Position = [440 650 100 30];
+            app.SolveButton.Text = 'Solve';
+            app.SolveButton.BackgroundColor = [0.2 0.6 0.2];
+            app.SolveButton.FontColor = [1 1 1];
+            app.SolveButton.FontWeight = 'bold';
+            
+            app.ClearButton = uibutton(mainTab, 'push');
+            app.ClearButton.Position = [550 650 100 30];
+            app.ClearButton.Text = 'Clear';
+            app.ClearButton.BackgroundColor = [0.8 0.2 0.2];
+            app.ClearButton.FontColor = [1 1 1];
+            app.ClearButton.FontWeight = 'bold';
+            
+            app.ExportButton = uibutton(mainTab, 'push');
+            app.ExportButton.Position = [660 650 100 30];
+            app.ExportButton.Text = 'Export';
+            app.ExportButton.BackgroundColor = [0.2 0.2 0.8];
+            app.ExportButton.FontColor = [1 1 1];
+            app.ExportButton.FontWeight = 'bold';
+            
+            % Create Solution Panel
+            app.SolutionPanel = uipanel(mainTab);
+            app.SolutionPanel.Title = 'Solution';
+            app.SolutionPanel.Position = [440 450 400 180];
+            app.SolutionPanel.FontWeight = 'bold';
+            
+            app.GeneralSolutionLabel = uilabel(app.SolutionPanel);
+            app.GeneralSolutionLabel.Position = [10 130 100 22];
+            app.GeneralSolutionLabel.Text = 'General Solution:';
+            
+            app.GeneralSolutionText = uitextarea(app.SolutionPanel);
+            app.GeneralSolutionText.Position = [10 90 380 40];
+            app.GeneralSolutionText.Editable = 'off';
+            app.GeneralSolutionText.BackgroundColor = [0.98 0.98 0.9];
+            
+            app.ParticularSolutionLabel = uilabel(app.SolutionPanel);
+            app.ParticularSolutionLabel.Position = [10 50 120 22];
+            app.ParticularSolutionLabel.Text = 'Particular Solution:';
+            
+            app.ParticularSolutionText = uitextarea(app.SolutionPanel);
+            app.ParticularSolutionText.Position = [10 10 380 40];
+            app.ParticularSolutionText.Editable = 'off';
+            app.ParticularSolutionText.BackgroundColor = [0.98 0.98 0.9];
+            
+            % Create Exactness Check Panel
+            exactnessPanel = uipanel(mainTab);
+            exactnessPanel.Title = 'Exactness Check';
+            exactnessPanel.Position = [440 300 400 140];
+            exactnessPanel.FontWeight = 'bold';
+            
+            app.ExactnessCheckText = uitextarea(exactnessPanel);
+            app.ExactnessCheckText.Position = [10 10 380 120];
+            app.ExactnessCheckText.Editable = 'off';
+            app.ExactnessCheckText.BackgroundColor = [0.95 0.95 1];
+            
+            % Create Visualization Panel
+            app.VisualizationPanel = uipanel(mainTab);
+            app.VisualizationPanel.Title = 'Visualizations';
+            app.VisualizationPanel.Position = [20 20 400 560];
+            app.VisualizationPanel.FontWeight = 'bold';
+            
+            % Create axes for plots
+            app.ContourAxes = uiaxes(app.VisualizationPanel);
+            app.ContourAxes.Position = [10 320 380 220];
+            title(app.ContourAxes, 'Solution Curves');
+            
+            app.SurfaceAxes = uiaxes(app.VisualizationPanel);
+            app.SurfaceAxes.Position = [10 60 380 220];
+            title(app.SurfaceAxes, 'Solution Surface');
+            
+            app.VectorAxes = uiaxes(app.VisualizationPanel);
+            app.VectorAxes.Position = [10 320 380 220];
+            title(app.VectorAxes, 'Vector Field');
+            
+            % Initially hide vector axes
+            app.VectorAxes.Visible = 'off';
+            
+            % Create Steps Panel
+            app.StepsPanel = uipanel(mainTab);
+            app.StepsPanel.Title = 'Step-by-Step Solution';
+            app.StepsPanel.Position = [860 20 520 760];
+            app.StepsPanel.FontWeight = 'bold';
+            
+            app.StepsTextArea = uitextarea(app.StepsPanel);
+            app.StepsTextArea.Position = [10 10 500 740];
+            app.StepsTextArea.Editable = 'off';
+            app.StepsTextArea.BackgroundColor = [1 1 1];
+            app.StepsTextArea.FontName = 'Monospaced';
+            
+            % Create Results Tab
+            resultsTab = uitab(app.TabGroup);
+            resultsTab.Title = 'Results';
+            
+            app.ResultsPanel = uipanel(resultsTab);
+            app.ResultsPanel.Title = 'Computed Results';
+            app.ResultsPanel.Position = [20 20 1320 720];
+            app.ResultsPanel.FontWeight = 'bold';
+            
+            % Create results table
+            app.ResultsTable = uitable(app.ResultsPanel);
+            app.ResultsTable.Position = [20 20 1280 680];
+            app.ResultsTable.ColumnName = {'Quantity', 'Value'};
+            app.ResultsTable.ColumnWidth = {150, 600};
+            app.ResultsTable.RowName = {};
+            
+            % Create Visualization Tab
+            visTab = uitab(app.TabGroup);
+            visTab.Title = 'Visualization';
+            
