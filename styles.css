@@ -1,0 +1,641 @@
+/* =============================================
+   GLOBAL STYLES AND RESET
+============================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --primary-color: #3498db;
+    --primary-dark: #2980b9;
+    --secondary-color: #2c3e50;
+    --secondary-light: #34495e;
+    --accent-color: #e74c3c;
+    --success-color: #2ecc71;
+    --warning-color: #f39c12;
+    --light-bg: #f8f9fa;
+    --dark-bg: #1a2530;
+    --text-light: #ffffff;
+    --text-dark: #333333;
+    --text-gray: #7f8c8d;
+    --border-color: #e9ecef;
+    --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow-medium: 0 6px 20px rgba(0, 0, 0, 0.1);
+    --shadow-heavy: 0 10px 30px rgba(0, 0, 0, 0.15);
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+}
+
+body {
+    background-color: var(--light-bg);
+    color: var(--text-dark);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* =============================================
+   TYPOGRAPHY
+============================================= */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--secondary-color);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+h2 { font-size: 2rem; margin-bottom: 0.875rem; }
+h3 { font-size: 1.75rem; margin-bottom: 0.75rem; }
+h4 { font-size: 1.5rem; margin-bottom: 0.625rem; }
+h5 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+h6 { font-size: 1rem; margin-bottom: 0.375rem; }
+
+p {
+    margin-bottom: 1rem;
+    color: var(--text-gray);
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--primary-dark);
+}
+
+/* =============================================
+   HEADER STYLES
+============================================= */
+header {
+    background: linear-gradient(135deg, var(--secondary-color), var(--dark-bg));
+    color: var(--text-light);
+    padding: 15px 0;
+    box-shadow: var(--shadow-medium);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.pcce-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-right: 25px;
+    border-right: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.pcce-logo-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: var(--border-radius);
+    background-color: var(--text-light);
+    padding: 5px;
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
+}
+
+.pcce-logo-img:hover {
+    transform: rotate(5deg) scale(1.05);
+}
+
+.pcce-logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.pcce-logo-text .main {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-light);
+    line-height: 1.2;
+}
+
+.pcce-logo-text .sub {
+    font-size: 12px;
+    color: #ecf0f1;
+    opacity: 0.9;
+    margin-top: 2px;
+}
+
+.virtual-labs-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.virtual-labs-logo i {
+    font-size: 32px;
+    color: var(--primary-color);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.virtual-labs-logo h1 {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.virtual-labs-logo span {
+    color: var(--primary-color);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: var(--transition);
+}
+
+.user-info:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.user-info i {
+    font-size: 20px;
+    color: var(--primary-color);
+}
+
+.user-info span {
+    font-weight: 500;
+}
+
+/* =============================================
+   MAIN CONTENT LAYOUT
+============================================= */
+.main-content {
+    display: flex;
+    margin-top: 30px;
+    gap: 30px;
+    flex: 1;
+    margin-bottom: 40px;
+}
+
+/* =============================================
+   SIDEBAR NAVIGATION
+============================================= */
+.sidebar {
+    flex: 0 0 280px;
+    background-color: var(--text-light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    padding: 20px 0;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+
+.sidebar-header {
+    padding: 0 20px 15px;
+    color: var(--secondary-color);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+}
+
+.nav-menu {
+    list-style: none;
+    margin-bottom: 25px;
+}
+
+.nav-item {
+    padding: 12px 25px;
+    border-left: 4px solid transparent;
+    transition: var(--transition);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 5px;
+}
+
+.nav-item:hover {
+    background-color: var(--light-bg);
+    border-left-color: var(--primary-color);
+    padding-left: 30px;
+}
+
+.nav-item.active {
+    background-color: #f0f7ff;
+    border-left-color: var(--primary-color);
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.nav-item i {
+    width: 20px;
+    text-align: center;
+    font-size: 18px;
+}
+
+/* Progress Tracker */
+.progress-tracker {
+    padding: 0 20px;
+    margin-top: 20px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 20px;
+}
+
+.progress-tracker h4 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    color: var(--secondary-color);
+}
+
+.progress-bar {
+    height: 10px;
+    background-color: var(--border-color);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+    border-radius: 5px;
+    transition: width 0.5s ease;
+}
+
+/* =============================================
+   MAIN CONTENT AREA
+============================================= */
+.content {
+    flex: 1;
+    background-color: var(--text-light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    padding: 30px;
+    min-height: 600px;
+}
+
+.content-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.breadcrumb-item {
+    color: var(--text-gray);
+}
+
+.breadcrumb-item.active {
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+.breadcrumb-separator {
+    color: var(--text-gray);
+}
+
+.content-header h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.content-header p {
+    font-size: 18px;
+    color: var(--text-gray);
+}
+
+/* =============================================
+   DYNAMIC CONTENT CONTAINER
+============================================= */
+.dynamic-content {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   CONTENT NAVIGATION BUTTONS
+============================================= */
+.content-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.nav-btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: var(--transition);
+}
+
+.prev-btn {
+    background-color: var(--light-bg);
+    color: var(--secondary-color);
+}
+
+.prev-btn:hover {
+    background-color: var(--border-color);
+    transform: translateX(-5px);
+}
+
+.next-btn {
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+    color: var(--text-light);
+}
+
+.next-btn:hover {
+    background: linear-gradient(45deg, var(--primary-dark), var(--secondary-color));
+    transform: translateX(5px);
+}
+
+/* =============================================
+   SECTION SPECIFIC STYLES (Loaded via CSS in sections)
+============================================= */
+
+/* =============================================
+   FOOTER STYLES
+============================================= */
+footer {
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+    padding: 40px 0 20px;
+    margin-top: auto;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.footer-info {
+    text-align: center;
+}
+
+.footer-info h4 {
+    color: var(--text-light);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.footer-info p {
+    color: #ecf0f1;
+    margin-bottom: 5px;
+}
+
+.footer-copyright {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-copyright p {
+    color: #bdc3c7;
+    margin-bottom: 5px;
+}
+
+.footer-sub {
+    font-size: 14px;
+}
+
+/* =============================================
+   RESPONSIVE DESIGN
+============================================= */
+@media (max-width: 992px) {
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        position: static;
+    }
+    
+    .content-header h1 {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .logo-section {
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+    }
+    
+    .pcce-logo-container {
+        border-right: none;
+        padding-right: 0;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        padding-bottom: 20px;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .virtual-labs-logo {
+        justify-content: center;
+    }
+    
+    .content {
+        padding: 20px;
+    }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.5rem; }
+    h4 { font-size: 1.25rem; }
+}
+
+@media (max-width: 576px) {
+    .pcce-logo-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .pcce-logo-img {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .nav-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .content-navigation {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .prev-btn, .next-btn {
+        justify-content: center;
+    }
+}
+/* Math Equation Styles */
+.math-equation {
+    font-family: 'Cambria Math', 'Times New Roman', serif;
+    font-size: 18px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    margin: 10px 0;
+    border-left: 4px solid var(--primary-color);
+    overflow-x: auto;
+}
+
+.math-equation.large {
+    font-size: 22px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    border: 2px solid var(--border-color);
+}
+
+.math-symbol {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.derivative {
+    color: #e74c3c;
+}
+
+.integral {
+    color: #2ecc71;
+}
+
+/* Solution Steps Animation */
+@keyframes stepAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.step-card {
+    animation: stepAppear 0.5s ease forwards;
+}
+
+.step-card:nth-child(1) { animation-delay: 0.1s; }
+.step-card:nth-child(2) { animation-delay: 0.2s; }
+.step-card:nth-child(3) { animation-delay: 0.3s; }
+.step-card:nth-child(4) { animation-delay: 0.4s; }
+.step-card:nth-child(5) { animation-delay: 0.5s; }
+.step-card:nth-child(6) { animation-delay: 0.6s; }
+.step-card:nth-child(7) { animation-delay: 0.7s; }
+.step-card:nth-child(8) { animation-delay: 0.8s; }
+
+/* Loading Animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.fa-spin {
+    animation: spin 2s linear infinite;
+}
+
+/* Tooltip for Math Help */
+.math-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.math-tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: var(--secondary-color);
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 14px;
+}
+
+.math-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
