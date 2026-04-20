@@ -6,75 +6,46 @@
     <title>Virtual Labs - Exact Differential Equations</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css">
 </head>
 <body>
-    <!-- Header -->
+    <!-- Header - Full Width -->
     <header>
-        <div class="container header-container">
+        <div class="header-brand">
             <div class="logo-section">
                 <div class="pcce-logo-container">
-                    <img src="images/pcce.png" alt="PCOE Logo" class="pcce-logo-img" id="pcceLogo">
+                    <img src="images/pcce.png" alt="PCOE Logo" class="pcce-logo-img">
                     <div class="pcce-logo-text">
-                        <div class="main">APPLIED SCIENCES & HUMANITIES</div>
+                        <div class="main">APPLIED SCIENCES &amp; HUMANITIES</div>
                         <div class="sub">Pimpri Chinchwad College of Engineering</div>
                     </div>
                 </div>
-                
+                <div class="brand-divider"></div>
                 <div class="virtual-labs-logo">
                     <i class="fas fa-flask"></i>
                     <h1>Virtual <span>Labs</span></h1>
                 </div>
             </div>
-            
             <div class="user-info">
                 <i class="fas fa-user-circle"></i>
                 <span>Welcome, Student</span>
             </div>
         </div>
+        <!-- Full-width Nav Bar -->
+        <nav class="main-nav">
+            <ul class="nav-tabs">
+                <li class="nav-tab active" data-section="aim"><i class="fas fa-bullseye"></i><span>Aim</span></li>
+                <li class="nav-tab" data-section="theory"><i class="fas fa-book"></i><span>Theory</span></li>
+                <li class="nav-tab" data-section="pretest"><i class="fas fa-question-circle"></i><span>Pretest</span></li>
+                <li class="nav-tab" data-section="simulation"><i class="fas fa-desktop"></i><span>Simulation</span></li>
+                <li class="nav-tab" data-section="posttest"><i class="fas fa-clipboard-check"></i><span>Posttest</span></li>
+                <li class="nav-tab" data-section="references"><i class="fas fa-book-open"></i><span>References</span></li>
+                <li class="nav-tab" data-section="contributors"><i class="fas fa-users"></i><span>Contributors</span></li>
+                <li class="nav-tab" data-section="feedback"><i class="fas fa-comment-alt"></i><span>Feedback</span></li>
+            </ul>
+        </nav>
     </header>
 
-    <div class="container main-content">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <h3><i class="fas fa-bars"></i> Navigation</h3>
-            <ul class="nav-menu">
-                <li class="nav-item active" data-section="aim">
-                    <i class="fas fa-bullseye"></i>
-                    <span>Aim</span>
-                </li>
-                <li class="nav-item" data-section="theory">
-                    <i class="fas fa-book"></i>
-                    <span>Theory</span>
-                </li>
-                <li class="nav-item" data-section="pretest">
-                    <i class="fas fa-question-circle"></i>
-                    <span>Pretest</span>
-                </li>
-                <li class="nav-item" data-section="simulation">
-                    <i class="fas fa-desktop"></i>
-                    <span>Simulation</span>
-                </li>
-                <li class="nav-item" data-section="posttest">
-                    <i class="fas fa-clipboard-check"></i>
-                    <span>Posttest</span>
-                </li>
-                <li class="nav-item" data-section="references">
-                    <i class="fas fa-book-open"></i>
-                    <span>References</span>
-                </li>
-                <li class="nav-item" data-section="contributors">
-                    <i class="fas fa-users"></i>
-                    <span>Contributors</span>
-                </li>
-                <li class="nav-item" data-section="feedback">
-                    <i class="fas fa-comment-alt"></i>
-                    <span>Feedback</span>
-                </li>
-            </ul>
-        </aside>
-
-        <!-- Content Area -->
+    <div class="page-wrapper">
         <main class="content">
             <div class="content-header">
                 <div class="breadcrumb">
@@ -84,9 +55,9 @@
                 <p>Virtual Lab for Engineering Mathematics</p>
             </div>
 
-            <!-- Dynamic Content Sections -->
             <div id="content-sections">
-                <!-- Aim Section -->
+
+                <!-- AIM -->
                 <section id="aim-section" class="content-section active">
                     <div class="section-content">
                         <h3><i class="fas fa-bullseye"></i> Aim of the Experiment</h3>
@@ -117,414 +88,342 @@
                                 </ul>
                             </div>
                         </div>
-                        
                         <div class="example-box">
                             <h4><i class="fas fa-lightbulb"></i> Sample Exact Differential Equation</h4>
                             <p class="equation">(2xy + y²)dx + (x² + 2xy)dy = 0</p>
-                            <p>This is an exact differential equation where:</p>
                             <p>M(x,y) = 2xy + y², N(x,y) = x² + 2xy</p>
                             <p>∂M/∂y = 2x + 2y = ∂N/∂x ✓</p>
                         </div>
                     </div>
                 </section>
 
-                <!-- Theory Section -->
+                <!-- THEORY -->
                 <section id="theory-section" class="content-section">
                     <div class="section-content">
                         <h3><i class="fas fa-book"></i> Theoretical Background</h3>
-                        
                         <div class="theory-card">
                             <h4><i class="fas fa-dna"></i> Definition</h4>
                             <p>A differential equation of the form M(x,y)dx + N(x,y)dy = 0 is called <strong>exact</strong> if there exists a function ψ(x,y) such that:</p>
                             <p class="equation">dψ = M(x,y)dx + N(x,y)dy</p>
-                            <p>This implies that:</p>
-                            <p class="equation">∂ψ/∂x = M(x,y) and ∂ψ/∂y = N(x,y)</p>
+                            <p>This implies: <span class="equation" style="display:inline;padding:4px 10px;font-size:15px;">∂ψ/∂x = M(x,y) and ∂ψ/∂y = N(x,y)</span></p>
                         </div>
-
                         <div class="theory-card">
                             <h4><i class="fas fa-check-circle"></i> Condition for Exactness</h4>
                             <p>The necessary and sufficient condition for exactness is:</p>
                             <p class="equation">∂M/∂y = ∂N/∂x</p>
-                            <p>Where M and N have continuous partial derivatives in the region of interest.</p>
                         </div>
-
                         <div class="theory-card">
                             <h4><i class="fas fa-cogs"></i> Solution Procedure</h4>
                             <div class="steps">
-                                <div class="step">
-                                    <span class="step-number">1</span>
-                                    <p>Verify exactness: Check if ∂M/∂y = ∂N/∂x</p>
-                                </div>
-                                <div class="step">
-                                    <span class="step-number">2</span>
-                                    <p>Integrate M w.r.t x: ψ = ∫M dx + g(y)</p>
-                                </div>
-                                <div class="step">
-                                    <span class="step-number">3</span>
-                                    <p>Differentiate w.r.t y: ∂ψ/∂y = ∂/∂y(∫M dx) + g'(y)</p>
-                                </div>
-                                <div class="step">
-                                    <span class="step-number">4</span>
-                                    <p>Compare with N: ∂ψ/∂y should equal N</p>
-                                </div>
-                                <div class="step">
-                                    <span class="step-number">5</span>
-                                    <p>Find g(y): Solve for g'(y) and integrate</p>
-                                </div>
-                                <div class="step">
-                                    <span class="step-number">6</span>
-                                    <p>Write solution: ψ(x,y) = C</p>
-                                </div>
+                                <div class="step"><span class="step-number">1</span><p>Verify exactness: Check if ∂M/∂y = ∂N/∂x</p></div>
+                                <div class="step"><span class="step-number">2</span><p>Integrate M w.r.t x: ψ = ∫M dx + g(y)</p></div>
+                                <div class="step"><span class="step-number">3</span><p>Differentiate ψ w.r.t y and compare with N</p></div>
+                                <div class="step"><span class="step-number">4</span><p>Find g'(y) and integrate to get g(y)</p></div>
+                                <div class="step"><span class="step-number">5</span><p>Write general solution: ψ(x,y) = C</p></div>
                             </div>
                         </div>
-
                         <div class="theory-card">
                             <h4><i class="fas fa-exclamation-triangle"></i> Integrating Factors</h4>
-                            <p>If ∂M/∂y ≠ ∂N/∂x, the equation is not exact. However, sometimes we can find an <strong>integrating factor μ(x,y)</strong> such that:</p>
-                            <p class="equation">μM dx + μN dy = 0 becomes exact</p>
-                            <p>Common integrating factors:</p>
-                            <ul>
-                                <li>If (∂M/∂y - ∂N/∂x)/N is function of x only: μ = e^∫f(x)dx</li>
-                                <li>If (∂N/∂x - ∂M/∂y)/M is function of y only: μ = e^∫g(y)dy</li>
+                            <p>If ∂M/∂y ≠ ∂N/∂x, the equation is not exact. An <strong>integrating factor μ</strong> can sometimes make it exact:</p>
+                            <ul style="margin:10px 0 0 20px;color:#555;line-height:1.8;">
+                                <li>If (∂M/∂y − ∂N/∂x)/N = f(x) only → μ = e^(∫f(x)dx)</li>
+                                <li>If (∂N/∂x − ∂M/∂y)/M = g(y) only → μ = e^(∫g(y)dy)</li>
                             </ul>
                         </div>
                     </div>
                 </section>
 
-                <!-- Pretest Section -->
+                <!-- PRETEST -->
                 <section id="pretest-section" class="content-section">
                     <div class="section-content">
                         <h3><i class="fas fa-question-circle"></i> Pretest - Prerequisite Knowledge</h3>
-                        <p class="section-description">Test your fundamental knowledge before learning exact differential equations.</p>
-                        
+                        <p class="section-description">Test your fundamental knowledge before the simulation.</p>
                         <div class="quiz-container" id="pretest-quiz">
                             <div class="quiz-header">
                                 <div class="quiz-info">
-                                    <span><i class="fas fa-clock"></i> Time: Unlimited</span>
-                                    <span><i class="fas fa-question"></i> Questions: 10</span>
+                                    <span><i class="fas fa-clock"></i> Unlimited</span>
+                                    <span><i class="fas fa-question"></i> 10 Questions</span>
                                     <span><i class="fas fa-star"></i> Score: <span id="pretest-score">0</span>/10</span>
                                 </div>
-                                <button class="btn btn-primary" id="start-pretest">
-                                    <i class="fas fa-play"></i> Start Test
-                                </button>
+                                <button class="btn btn-primary" id="start-pretest"><i class="fas fa-play"></i> Start Test</button>
                             </div>
-
-                            <div class="questions-container">
-                                <!-- Questions will be loaded by JavaScript -->
-                            </div>
-
+                            <div class="questions-container"></div>
                             <div class="quiz-controls">
-                                <button class="btn btn-secondary" id="prev-question">
-                                    <i class="fas fa-arrow-left"></i> Previous
-                                </button>
-                                <button class="btn btn-primary" id="next-question">
-                                    Next <i class="fas fa-arrow-right"></i>
-                                </button>
-                                <button class="btn btn-success" id="submit-pretest">
-                                    <i class="fas fa-paper-plane"></i> Submit Test
-                                </button>
+                                <button class="btn btn-secondary" id="prev-question"><i class="fas fa-arrow-left"></i> Previous</button>
+                                <button class="btn btn-primary" id="next-question">Next <i class="fas fa-arrow-right"></i></button>
+                                <button class="btn btn-success" id="submit-pretest"><i class="fas fa-paper-plane"></i> Submit</button>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Simulation Section -->
+                <!-- SIMULATION -->
                 <section id="simulation-section" class="content-section">
                     <div class="section-content">
                         <h3><i class="fas fa-desktop"></i> Interactive Simulation</h3>
-                        <p class="section-description">Enter any exact differential equation and get step-by-step solution.</p>
-                        
-                        <div class="simulation-container">
-                            <div class="input-section">
-    <h4><i class="fas fa-edit"></i> Step 1 — Enter M(x,y) and N(x,y)</h4>
-    <div class="equation-input">
-        <div class="input-group">
-            <label>M(x,y):</label>
-            <input type="text" id="M-input" placeholder="e.g., 2*x*y + y^2" value="2*x*y + y^2">
-        </div>
-        <div class="input-group">
-            <label>N(x,y):</label>
-            <input type="text" id="N-input" placeholder="e.g., x^2 + 2*x*y" value="x^2 + 2*x*y">
-        </div>
- 
-        <div class="equation-preview">
-            <h5>Equation preview:</h5>
-            <div id="equation-display">(2xy + y²)dx + (x² + 2xy)dy = 0</div>
-        </div>
- 
-        <!-- NEW: Student enters their own partial derivatives -->
-        <h4 style="margin-top:20px"><i class="fas fa-pencil-alt"></i> Step 2 — Compute and enter partial derivatives</h4>
-        <p style="font-size:14px;color:#666;margin-bottom:10px">
-            Compute these by hand, then enter them below. The solver will verify your work.
-        </p>
-        <div class="input-group">
-            <label>∂M/∂y =</label>
-            <input type="text" id="dMdy-input" placeholder="e.g., 2*x + 2*y">
-        </div>
-        <div class="input-group">
-            <label>∂N/∂x =</label>
-            <input type="text" id="dNdx-input" placeholder="e.g., 2*x + 2*y">
-        </div>
- 
-        <div style="display:flex;gap:10px;margin-top:10px">
-            <button class="btn btn-primary" id="solve-equation">
-                <i class="fas fa-calculator"></i> Verify &amp; Solve Step-by-Step
-            </button>
-            <button class="btn btn-secondary" id="clear-input">
-                <i class="fas fa-redo"></i> Clear
-            </button>
-        </div>
-    </div>
-</div>
-                            <div class="solution-section">
-                                <h4><i class="fas fa-list-ol"></i> Step-by-Step Solution</h4>
-                                <div class="steps-container" id="solution-steps">
-                                    <!-- Solution steps will appear here -->
-                                    <div class="placeholder-text">
-                                        <i class="fas fa-arrow-up"></i>
-                                        <p>Enter an equation above and click "Solve Step-by-Step" to see the solution</p>
+                        <p class="section-description">Solve exact differential equations step-by-step with guided input and real-time verification.</p>
+
+                        <div class="sim-layout">
+
+                            <!-- LEFT PANEL -->
+                            <div class="sim-left">
+
+                                <!-- Step 1 -->
+                                <div class="sim-card" id="panel-step1">
+                                    <div class="sim-card-header">
+                                        <span class="sim-step-badge">1</span>
+                                        <h4>Enter the Differential Equation</h4>
+                                    </div>
+                                    <p class="sim-hint">From <strong>M(x,y)dx + N(x,y)dy = 0</strong>, enter M and N:</p>
+                                    <div class="eq-input-row">
+                                        <label>M(x,y) =</label>
+                                        <input type="text" id="M-input" placeholder="e.g. 2*x*y + y^2">
+                                        <span class="var-label">dx</span>
+                                    </div>
+                                    <div class="eq-input-row">
+                                        <label>N(x,y) =</label>
+                                        <input type="text" id="N-input" placeholder="e.g. x^2 + 2*x*y">
+                                        <span class="var-label">dy</span>
+                                    </div>
+                                    <div class="eq-preview-box" id="eq-preview">
+                                        <span id="eq-display">— Enter M and N above —</span>
+                                    </div>
+                                    <div class="sim-btn-row">
+                                        <button class="btn btn-primary" id="btn-proceed-deriv">
+                                            <i class="fas fa-arrow-right"></i> Enter Derivatives
+                                        </button>
+                                        <button class="btn btn-secondary" id="btn-reset">
+                                            <i class="fas fa-redo"></i> Reset
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2 (hidden initially) -->
+                                <div class="sim-card hidden" id="panel-step2">
+                                    <div class="sim-card-header">
+                                        <span class="sim-step-badge">2</span>
+                                        <h4>Enter Partial Derivatives</h4>
+                                    </div>
+                                    <p class="sim-hint">Compute these by hand and enter below to verify:</p>
+
+                                    <div class="deriv-check-group">
+                                        <label>∂M/∂y =</label>
+                                        <div class="deriv-input-row">
+                                            <input type="text" id="dMdy-input" placeholder="Differentiate M with respect to y">
+                                            <button class="btn-verify" id="btn-check-dMdy"><i class="fas fa-check-circle"></i> Verify</button>
+                                        </div>
+                                        <div class="verify-feedback" id="res-dMdy"></div>
+                                    </div>
+
+                                    <div class="deriv-check-group">
+                                        <label>∂N/∂x =</label>
+                                        <div class="deriv-input-row">
+                                            <input type="text" id="dNdx-input" placeholder="Differentiate N with respect to x">
+                                            <button class="btn-verify" id="btn-check-dNdx"><i class="fas fa-check-circle"></i> Verify</button>
+                                        </div>
+                                        <div class="verify-feedback" id="res-dNdx"></div>
+                                    </div>
+
+                                    <button class="btn btn-primary" id="btn-check-exactness" style="margin-top:15px;width:100%;">
+                                        <i class="fas fa-balance-scale"></i> Check Exactness Condition
+                                    </button>
+                                </div>
+
+                                <!-- Sample Equations -->
+                                <div class="sim-card">
+                                    <div class="sim-card-header">
+                                        <span class="sim-step-badge" style="background:#f39c12;">★</span>
+                                        <h4>Sample Equations</h4>
+                                    </div>
+                                    <div class="sample-list">
+                                        <button class="sample-btn" data-m="2*x*y + y^2" data-n="x^2 + 2*x*y" data-dmdy="2*x + 2*y" data-dndx="2*x + 2*y">
+                                            (2xy + y²)dx + (x² + 2xy)dy = 0
+                                        </button>
+                                        <button class="sample-btn" data-m="y^2*cos(x) + y" data-n="2*y*sin(x) + x" data-dmdy="2*y*cos(x) + 1" data-dndx="2*y*cos(x) + 1">
+                                            (y²cosx + y)dx + (2ysinx + x)dy = 0
+                                        </button>
+                                        <button class="sample-btn" data-m="3*x^2*y" data-n="x^3 + cos(y)" data-dmdy="3*x^2" data-dndx="3*x^2">
+                                            3x²y dx + (x³ + cosy)dy = 0
+                                        </button>
+                                        <button class="sample-btn" data-m="y" data-n="x" data-dmdy="1" data-dndx="1">
+                                            y dx + x dy = 0
+                                        </button>
+                                        <button class="sample-btn non-exact-sample" data-m="x^2 + y^2" data-n="x*y" data-dmdy="2*y" data-dndx="y">
+                                            ⚠ (x²+y²)dx + xy dy = 0 [Non-Exact]
+                                        </button>
+                                    </div>
+                                    <div class="input-tips">
+                                        <strong><i class="fas fa-info-circle"></i> Input format:</strong>
+                                        Use <code>*</code> for multiply, <code>^</code> for power, <code>sin(x)</code>, <code>cos(y)</code>, <code>exp(x)</code>
+                                    </div>
+                                </div>
+
+                            </div><!-- end sim-left -->
+
+                            <!-- RIGHT PANEL: Solution -->
+                            <div class="sim-right">
+                                <div class="sim-card solution-display-card">
+                                    <div class="sim-card-header">
+                                        <span class="sim-step-badge" style="background:#27ae60;">✓</span>
+                                        <h4>Step-by-Step Solution</h4>
+                                    </div>
+                                    <div id="solution-steps">
+                                        <div class="placeholder-msg">
+                                            <i class="fas fa-calculator"></i>
+                                            <p>Enter M(x,y) and N(x,y) on the left, then follow the guided steps.</p>
+                                            <p class="hint-small">The solution will appear here as you progress.</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="examples-section">
-                                <h4><i class="fas fa-lightbulb"></i> Example Equations</h4>
-                                <div class="example-buttons">
-                                    <button class="example-btn" data-m="2*x*y + y^2" data-n="x^2 + 2*x*y">
-                                        (2xy + y²)dx + (x² + 2xy)dy = 0
-                                    </button>
-                                    <button class="example-btn" data-m="y^2*cos(x) + y" data-n="2*y*sin(x) + x">
-                                        (y²cosx + y)dx + (2ysinx + x)dy = 0
-                                    </button>
-                                    <button class="example-btn" data-m="e^y" data-n="x*e^y + 2*y">
-                                        e^y dx + (xe^y + 2y)dy = 0
-                                    </button>
-                                    <button class="example-btn" data-m="3*x^2*y" data-n="x^3 + cos(y)">
-                                        3x²y dx + (x³ + cosy)dy = 0
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        </div><!-- end sim-layout -->
                     </div>
                 </section>
 
-                <!-- Posttest Section -->
+                <!-- POSTTEST -->
                 <section id="posttest-section" class="content-section">
                     <div class="section-content">
-                        <h3><i class="fas fa-clipboard-check"></i> Posttest - Exact Differential Equations</h3>
-                        <p class="section-description">Test your understanding of exact differential equations after completing the simulation.</p>
-                        
+                        <h3><i class="fas fa-clipboard-check"></i> Posttest</h3>
+                        <p class="section-description">Test your understanding after completing the simulation.</p>
                         <div class="quiz-container" id="posttest-quiz">
                             <div class="quiz-header">
                                 <div class="quiz-info">
-                                    <span><i class="fas fa-clock"></i> Time: Unlimited</span>
-                                    <span><i class="fas fa-question"></i> Questions: 10</span>
+                                    <span><i class="fas fa-clock"></i> Unlimited</span>
+                                    <span><i class="fas fa-question"></i> 10 Questions</span>
                                     <span><i class="fas fa-star"></i> Score: <span id="posttest-score">0</span>/10</span>
                                 </div>
-                                <button class="btn btn-primary" id="start-posttest">
-                                    <i class="fas fa-play"></i> Start Test
-                                </button>
+                                <button class="btn btn-primary" id="start-posttest"><i class="fas fa-play"></i> Start Test</button>
                             </div>
-
-                            <div class="questions-container">
-                                <!-- Questions will be loaded by JavaScript -->
-                            </div>
-
+                            <div class="questions-container"></div>
                             <div class="quiz-controls">
-                                <button class="btn btn-secondary" id="prev-postquestion">
-                                    <i class="fas fa-arrow-left"></i> Previous
-                                </button>
-                                <button class="btn btn-primary" id="next-postquestion">
-                                    Next <i class="fas fa-arrow-right"></i>
-                                </button>
-                                <button class="btn btn-success" id="submit-posttest">
-                                    <i class="fas fa-paper-plane"></i> Submit Test
-                                </button>
+                                <button class="btn btn-secondary" id="prev-postquestion"><i class="fas fa-arrow-left"></i> Previous</button>
+                                <button class="btn btn-primary" id="next-postquestion">Next <i class="fas fa-arrow-right"></i></button>
+                                <button class="btn btn-success" id="submit-posttest"><i class="fas fa-paper-plane"></i> Submit</button>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- References Section -->
+                <!-- REFERENCES -->
                 <section id="references-section" class="content-section">
                     <div class="section-content">
-                        <h3><i class="fas fa-book-open"></i> References & Further Reading</h3>
-                        
+                        <h3><i class="fas fa-book-open"></i> References &amp; Further Reading</h3>
                         <div class="references-container">
                             <div class="reference-card">
                                 <h4><i class="fas fa-book"></i> Textbooks</h4>
                                 <ul>
-                                    <li>Advanced Engineering Mathematics by Erwin Kreyszig</li>
-                                    <li>Differential Equations by George F. Simmons</li>
-                                    <li>Engineering Mathematics by B.S. Grewal</li>
-                                    <li>A Textbook of Differential Equations by Raisinghania</li>
+                                    <li>Advanced Engineering Mathematics – Erwin Kreyszig</li>
+                                    <li>Differential Equations – George F. Simmons</li>
+                                    <li>Engineering Mathematics – B.S. Grewal</li>
+                                    <li>A Textbook of Differential Equations – Raisinghania</li>
                                 </ul>
                             </div>
-
                             <div class="reference-card">
                                 <h4><i class="fas fa-globe"></i> Online Resources</h4>
                                 <ul>
-                                    <li>MIT OpenCourseWare - Differential Equations</li>
-                                    <li>Khan Academy - Differential Equations</li>
-                                    <li>Wolfram MathWorld - Exact Differential Equations</li>
+                                    <li>MIT OpenCourseWare – Differential Equations</li>
+                                    <li>Khan Academy – Differential Equations</li>
+                                    <li>Wolfram MathWorld – Exact DEs</li>
                                     <li>Paul's Online Math Notes</li>
                                 </ul>
                             </div>
-
                             <div class="reference-card">
                                 <h4><i class="fas fa-video"></i> Video Lectures</h4>
                                 <ul>
-                                    <li>NPTEL Course on Differential Equations</li>
-                                    <li>3Blue1Brown - Differential Equations</li>
-                                    <li>Professor Leonard - Differential Equations Playlist</li>
+                                    <li>NPTEL – Differential Equations Course</li>
+                                    <li>3Blue1Brown – Differential Equations</li>
+                                    <li>Professor Leonard – DE Playlist</li>
                                 </ul>
                             </div>
-
                             <div class="reference-card">
                                 <h4><i class="fas fa-tools"></i> Software Tools</h4>
                                 <ul>
-                                    <li>Wolfram Alpha - Equation Solver</li>
-                                    <li>MATLAB - Symbolic Math Toolbox</li>
-                                    <li>Python - SymPy Library</li>
-                                    <li>Desmos - Graphing Calculator</li>
+                                    <li>Wolfram Alpha</li>
+                                    <li>MATLAB – Symbolic Math Toolbox</li>
+                                    <li>Python – SymPy Library</li>
+                                    <li>Desmos – Graphing Calculator</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Contributors Section -->
+                <!-- CONTRIBUTORS -->
                 <section id="contributors-section" class="content-section">
                     <div class="section-content">
                         <h3><i class="fas fa-users"></i> Project Contributors</h3>
-                        
                         <div class="contributors-container">
                             <div class="contributor-card guide">
-                                <div class="contributor-image">
-                                    <img src="images/prof_kute.jpg" alt="Prof. Dinesh Kute">
-                                </div>
+                                <div class="contributor-image"><img src="images/prof_kute.jpg" alt="Prof. Dinesh Kute"></div>
                                 <div class="contributor-info">
                                     <h4>PROF. DINESH KUTE</h4>
                                     <p class="role">Project Guide</p>
-                                    <p class="department">Department of Applied Sciences & Humanities</p>
-                                    <p class="qualification">PROF. AT AS&H DEPARTMENT, PCCOE,PUNE</p>
+                                    <p class="department">Department of Applied Sciences &amp; Humanities</p>
+                                    <p class="qualification">PROF. AT AS&amp;H DEPARTMENT, PCCOE, PUNE</p>
                                 </div>
                             </div>
-
                             <h4 class="team-heading">Project Team Members</h4>
                             <div class="team-members">
                                 <div class="member-card">
-                                    <div class="member-image">
-                                        <img src="images/student1.jpg" alt="Piyush Patil">
-                                    </div>
-                                    <div class="member-info">
-                                        <h5>Piyush Patil</h5>
-                                        <p class="prn">PRN: 125B1F132</p>
-                                        <p class="year">FIRST YEAR INFORMATION TECHNOLOGY</p>
-                                    </div>
+                                    <div class="member-image"><img src="images/student1.jpg" alt="Piyush Patil"></div>
+                                    <div class="member-info"><h5>Piyush Patil</h5><p class="prn">PRN: 125B1F132</p><p class="year">FIRST YEAR INFORMATION TECHNOLOGY</p></div>
                                 </div>
-
                                 <div class="member-card">
-                                    <div class="member-image">
-                                        <img src="images/student3.jpg" alt="Pratham Gupta">
-                                    </div>
-                                    <div class="member-info">
-                                        <h5>Pratham Gupta</h5>
-                                        <p class="prn">PRN: 125B1F125</p>
-                                        <p class="year">FIRST YEAR INFORMATION TECHNOLOGY</p>
-                                    </div>
+                                    <div class="member-image"><img src="images/student2.jpg" alt="Pratham Gupta"></div>
+                                    <div class="member-info"><h5>Pratham Gupta</h5><p class="prn">PRN: 125B1F125</p><p class="year">FIRST YEAR INFORMATION TECHNOLOGY</p></div>
                                 </div>
-
                                 <div class="member-card">
-                                    <div class="member-image">
-                                        <img src="images/student2.jpg" alt="Pawan Koshti">
-                                    </div>
-                                    <div class="member-info">
-                                        <h5>Pawan Koshti</h5>
-                                        <p class="prn">PRN: 125B1F079</p>
-                                        <p class="year">FIRST YEAR INFORMATION TECHNOLOGY</p>
-                                    </div>
+                                    <div class="member-image"><img src="images/student3.jpg" alt="Pawan Koshti"></div>
+                                    <div class="member-info"><h5>Pawan Koshti</h5><p class="prn">PRN: 125B1F079</p><p class="year">FIRST YEAR INFORMATION TECHNOLOGY</p></div>
                                 </div>
-
                                 <div class="member-card">
-                                    <div class="member-image">
-                                        <img src="images/student4.jpg" alt="Hariom Ugale">
-                                    </div>
-                                    <div class="member-info">
-                                        <h5>Hariom Ugale</h5>
-                                        <p class="prn">PRN: 125B1F083</p>
-                                        <p class="year">FIRST YEAR INFORMATION TECHNOLOGY</p>
-                                    </div>
+                                    <div class="member-image"><img src="images/student4.jpg" alt="Hariom Ugale"></div>
+                                    <div class="member-info"><h5>Hariom Ugale</h5><p class="prn">PRN: 125B1F083</p><p class="year">FIRST YEAR INFORMATION TECHNOLOGY</p></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Feedback Section -->
+                <!-- FEEDBACK -->
                 <section id="feedback-section" class="content-section">
                     <div class="section-content">
                         <h3><i class="fas fa-comment-alt"></i> Feedback</h3>
                         <p class="section-description">Your feedback helps us improve the virtual lab experience.</p>
-                        
                         <div class="feedback-container">
                             <div class="feedback-info">
-                                <div class="feedback-icon">
-                                    <i class="fas fa-comments"></i>
-                                </div>
+                                <div class="feedback-icon"><i class="fas fa-comments"></i></div>
                                 <div class="feedback-text">
                                     <h4>Share Your Experience</h4>
-                                    <p>Please take a moment to provide your valuable feedback about this virtual lab on Exact Differential Equations.</p>
-                                    <p>Your input will help us enhance the learning experience for future students.</p>
+                                    <p>Please provide your valuable feedback about this virtual lab.</p>
                                 </div>
                             </div>
-
                             <div class="google-form-container">
                                 <h4><i class="fab fa-google"></i> Google Feedback Form</h4>
-                                <div class="form-link">
-                                    <p>Click the button below to open the feedback form:</p>
-                                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfcf1kM6Dn7BZnAssGyCtM3youCcyainoWBsPpq04EC4LlKrw/viewform?usp=header" 
-                                       target="_blank" class="btn btn-primary feedback-btn">
-                                        <i class="fas fa-external-link-alt"></i> Open Feedback Form
-                                    </a>
-                                </div>
-                                
-                                <div class="form-preview">
-                                    <h5>Form Preview:</h5>
-                                    <div class="preview-box">
-                                        <p><strong>Form Title:</strong> Virtual Lab Feedback - Exact Differential Equations</p>
-                                        <p><strong>Instructions:</strong> Please rate your experience and provide suggestions</p>
-                                        <p><strong>Sections:</strong> Rating, Comments, Suggestions for Improvement</p>
-                                    </div>
-                                </div>
+                                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfcf1kM6Dn7BZnAssGyCtM3youCcyainoWBsPpq04EC4LlKrw/viewform?usp=header" target="_blank" class="btn btn-primary feedback-btn">
+                                    <i class="fas fa-external-link-alt"></i> Open Feedback Form
+                                </a>
                             </div>
-
                             <div class="alternative-feedback">
                                 <h4><i class="fas fa-envelope"></i> Alternative Contact</h4>
-                                <p>If you encounter any issues with the form, you can email your feedback to:</p>
-                                <p class="email-contact">virtual.labs@pccoepune.org</p>
+                                <p>Email: <span class="email-contact">virtual.labs@pccoepune.org</span></p>
                             </div>
                         </div>
                     </div>
                 </section>
+
             </div>
         </main>
     </div>
 
-    <!-- Footer -->
-    <footer class="container">
-        <p>Virtual Labs &copy; 2025 | Applied Sciences & Humanities Department | 
+    <footer>
+        <p>Virtual Labs &copy; 2025 | Applied Sciences &amp; Humanities Department |
            <span class="footer-logo">Pimpri Chinchwad College of Engineering</span>
         </p>
         <p class="footer-note">This virtual lab is developed for educational purposes</p>
     </footer>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/contrib/auto-render.min.js"></script>
-<!-- nerdamer: symbolic math (differentiation + integration) -->
-<script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/nerdamer.core.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/Calculus.js"></script>
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
