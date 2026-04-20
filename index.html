@@ -236,29 +236,46 @@
                         
                         <div class="simulation-container">
                             <div class="input-section">
-                                <h4><i class="fas fa-edit"></i> Enter Your Equation</h4>
-                                <div class="equation-input">
-                                    <div class="input-group">
-                                        <label>M(x,y):</label>
-                                        <input type="text" id="M-input" placeholder="e.g., 2xy + y^2" value="2*x*y + y^2">
-                                    </div>
-                                    <div class="input-group">
-                                        <label>N(x,y):</label>
-                                        <input type="text" id="N-input" placeholder="e.g., x^2 + 2xy" value="x^2 + 2*x*y">
-                                    </div>
-                                    <div class="equation-preview">
-                                        <h5>Equation:</h5>
-                                        <div id="equation-display">(2xy + y²)dx + (x² + 2xy)dy = 0</div>
-                                    </div>
-                                    <button class="btn btn-primary" id="solve-equation">
-                                        <i class="fas fa-calculator"></i> Solve Step-by-Step
-                                    </button>
-                                    <button class="btn btn-secondary" id="clear-input">
-                                        <i class="fas fa-redo"></i> Clear
-                                    </button>
-                                </div>
-                            </div>
-
+    <h4><i class="fas fa-edit"></i> Step 1 — Enter M(x,y) and N(x,y)</h4>
+    <div class="equation-input">
+        <div class="input-group">
+            <label>M(x,y):</label>
+            <input type="text" id="M-input" placeholder="e.g., 2*x*y + y^2" value="2*x*y + y^2">
+        </div>
+        <div class="input-group">
+            <label>N(x,y):</label>
+            <input type="text" id="N-input" placeholder="e.g., x^2 + 2*x*y" value="x^2 + 2*x*y">
+        </div>
+ 
+        <div class="equation-preview">
+            <h5>Equation preview:</h5>
+            <div id="equation-display">(2xy + y²)dx + (x² + 2xy)dy = 0</div>
+        </div>
+ 
+        <!-- NEW: Student enters their own partial derivatives -->
+        <h4 style="margin-top:20px"><i class="fas fa-pencil-alt"></i> Step 2 — Compute and enter partial derivatives</h4>
+        <p style="font-size:14px;color:#666;margin-bottom:10px">
+            Compute these by hand, then enter them below. The solver will verify your work.
+        </p>
+        <div class="input-group">
+            <label>∂M/∂y =</label>
+            <input type="text" id="dMdy-input" placeholder="e.g., 2*x + 2*y">
+        </div>
+        <div class="input-group">
+            <label>∂N/∂x =</label>
+            <input type="text" id="dNdx-input" placeholder="e.g., 2*x + 2*y">
+        </div>
+ 
+        <div style="display:flex;gap:10px;margin-top:10px">
+            <button class="btn btn-primary" id="solve-equation">
+                <i class="fas fa-calculator"></i> Verify &amp; Solve Step-by-Step
+            </button>
+            <button class="btn btn-secondary" id="clear-input">
+                <i class="fas fa-redo"></i> Clear
+            </button>
+        </div>
+    </div>
+</div>
                             <div class="solution-section">
                                 <h4><i class="fas fa-list-ol"></i> Step-by-Step Solution</h4>
                                 <div class="steps-container" id="solution-steps">
@@ -409,7 +426,7 @@
 
                                 <div class="member-card">
                                     <div class="member-image">
-                                        <img src="images/student2.jpg" alt="Pratham Gupta">
+                                        <img src="images/student3.jpg" alt="Pratham Gupta">
                                     </div>
                                     <div class="member-info">
                                         <h5>Pratham Gupta</h5>
@@ -420,7 +437,7 @@
 
                                 <div class="member-card">
                                     <div class="member-image">
-                                        <img src="images/student3.jpg" alt="Pawan Koshti">
+                                        <img src="images/student2.jpg" alt="Pawan Koshti">
                                     </div>
                                     <div class="member-info">
                                         <h5>Pawan Koshti</h5>
@@ -504,7 +521,10 @@
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/contrib/auto-render.min.js"></script>
-    <script src="script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/contrib/auto-render.min.js"></script>
+<!-- nerdamer: symbolic math (differentiation + integration) -->
+<script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/nerdamer.core.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/Calculus.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

@@ -1,1154 +1,553 @@
-// Wait for DOM to load
-document.addEventListener('DOMContentLoaded', function() {
-    // Navigation functionality
-    const navItems = document.querySelectorAll('.nav-item');
-    const contentSections = document.querySelectorAll('.content-section');
-    const currentSectionSpan = document.getElementById('current-section');
-    const breadcrumbSection = document.querySelector('.breadcrumb span');
+document.addEventListener('DOMContentLoaded', function () {
 
-    // Initialize active section
-    let activeSection = 'aim';
+  // ─── Navigation ────────────────────────────────────────────────────────────
+  const navItems = document.querySelectorAll('.nav-item');
+  const contentSections = document.querySelectorAll('.content-section');
+  const currentSectionSpan = document.getElementById('current-section');
 
-    // Navigation click handler
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const sectionId = item.getAttribute('data-section');
-            
-            // Update navigation
-            navItems.forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-            
-            // Update content sections
-            contentSections.forEach(section => {
-                section.classList.remove('active');
-                if (section.id === `${sectionId}-section`) {
-                    section.classList.add('active');
-                    activeSection = sectionId;
-                    
-                    // Update breadcrumb
-                    const sectionName = sectionId.charAt(0).toUpperCase() + sectionId.slice(1);
-                    currentSectionSpan.textContent = sectionName;
-                    breadcrumbSection.textContent = sectionName;
-                    
-                    // Load section-specific content
-                    loadSectionContent(sectionId);
-                }
-            });
-        });
-    });
+  let activeSection = 'aim';
+  let simulationInitialized = false;  // FIX: prevent duplicate listener registration
 
-    // Section content loader
-    function loadSectionContent(sectionId) {
-        switch(sectionId) {
-            case 'pretest':
-                loadPretestQuestions();
-                break;
-            case 'posttest':
-                loadPosttestQuestions();
-                break;
-            case 'simulation':
-                initSimulation();
-                break;
+  navItems.forEach(item => {
+    // FIX: add keyboard accessibility
+    item.setAttribute('role', 'button');
+    item.setAttribute('tabindex', '0');
+
+    const activate = () => {
+      const sectionId = item.getAttribute('data-section');
+
+      navItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+
+      contentSections.forEach(section => {
+        section.classList.remove('active');
+        if (section.id === `${sectionId}-section`) {
+          section.classList.add('active');
+          activeSection = sectionId;
+          // FIX: single span update (breadcrumbSection was redundant)
+          currentSectionSpan.textContent =
+            sectionId.charAt(0).toUpperCase() + sectionId.slice(1);
+          loadSectionContent(sectionId);
         }
+      });
+    };
+
+    item.addEventListener('click', activate);
+    item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
+  });
+
+  function loadSectionContent(sectionId) {
+    if (sectionId === 'pretest')    initQuiz(PRETEST_CONFIG);
+    if (sectionId === 'posttest')   initQuiz(POSTTEST_CONFIG);
+    if (sectionId === 'simulation' && !simulationInitialized) {
+      simulationInitialized = true;  // FIX: only init once
+      initSimulation();
     }
+  }
 
-    // Pretest Questions
-    const pretestQuestions = [
-        {
-            question: "What is the derivative of sin(x)?",
-            options: ["cos(x)", "-cos(x)", "sin(x)", "-sin(x)"],
-            correct: 0
-        },
-        {
-            question: "What is ∫x dx?",
-            options: ["x²/2", "x²", "2x", "1"],
-            correct: 0
-        },
-        {
-            question: "What is ∂/∂x (xy)?",
-            options: ["y", "x", "xy", "0"],
-            correct: 0
-        },
-        {
-            question: "What is the order of the differential equation: d²y/dx² + 3dy/dx + 2y = 0?",
-            options: ["0", "1", "2", "3"],
-            correct: 2
-        },
-        {
-            question: "Which of these is a first order differential equation?",
-            options: ["y'' + y = 0", "dy/dx = x", "d³y/dx³ = y", "y' + y'' = x"],
-            correct: 1
-        },
-        {
-            question: "What is the general solution of dy/dx = 2x?",
-            options: ["y = x²", "y = x² + C", "y = 2x + C", "y = x"],
-            correct: 1
-        },
-        {
-            question: "What is ∂/∂y (x²y)?",
-            options: ["x²", "2xy", "xy", "y"],
-            correct: 0
-        },
-        {
-            question: "What is ∫e^x dx?",
-            options: ["e^x", "e^x + C", "ln(x)", "1/e^x"],
-            correct: 1
-        },
-        {
-            question: "Which of these is a separable differential equation?",
-            options: ["dy/dx = xy", "dy/dx + y = x", "y'' + y' = 0", "dy/dx = sin(x+y)"],
-            correct: 0
-        },
-        {
-            question: "What is the degree of (dy/dx)² + x = 0?",
-            options: ["1", "2", "0", "Undefined"],
-            correct: 1
-        }
-    ];
+  // ─── Quiz data ──────────────────────────────────────────────────────────────
+  const pretestQuestions = [
+    { question: "What is the derivative of sin(x)?",                                              options: ["cos(x)", "-cos(x)", "sin(x)", "-sin(x)"],   correct: 0 },
+    { question: "What is ∫x dx?",                                                                 options: ["x²/2", "x²", "2x", "1"],                    correct: 0 },
+    { question: "What is ∂/∂x (xy)?",                                                            options: ["y", "x", "xy", "0"],                        correct: 0 },
+    { question: "What is the order of d²y/dx² + 3dy/dx + 2y = 0?",                              options: ["0", "1", "2", "3"],                          correct: 2 },
+    { question: "Which is a first order differential equation?",                                  options: ["y'' + y = 0", "dy/dx = x", "d³y/dx³ = y", "y' + y'' = x"], correct: 1 },
+    { question: "What is the general solution of dy/dx = 2x?",                                   options: ["y = x²", "y = x² + C", "y = 2x + C", "y = x"], correct: 1 },
+    { question: "What is ∂/∂y (x²y)?",                                                           options: ["x²", "2xy", "xy", "y"],                      correct: 0 },
+    { question: "What is ∫eˣ dx?",                                                               options: ["eˣ", "eˣ + C", "ln(x)", "1/eˣ"],             correct: 1 },
+    { question: "Which is a separable differential equation?",                                    options: ["dy/dx = xy", "dy/dx + y = x", "y'' + y' = 0", "dy/dx = sin(x+y)"], correct: 0 },
+    { question: "What is the degree of (dy/dx)² + x = 0?",                                      options: ["1", "2", "0", "Undefined"],                   correct: 1 },
+  ];
 
-    // Posttest Questions
-    const posttestQuestions = [
-        {
-            question: "Which of these is an exact differential equation?",
-            options: [
-                "(2x + y)dx + (x + 2y)dy = 0",
-                "(y²)dx + (2xy)dy = 0",
-                "(sin y)dx + (x cos y)dy = 0",
-                "All of the above"
-            ],
-            correct: 3
-        },
-        {
-            question: "For exactness of M dx + N dy = 0, what condition must be satisfied?",
-            options: [
-                "∂M/∂x = ∂N/∂y",
-                "∂M/∂y = ∂N/∂x",
-                "M = N",
-                "∂²M/∂x∂y = ∂²N/∂y∂x"
-            ],
-            correct: 1
-        },
-        {
-            question: "The equation (2xy + y²)dx + (x² + 2xy)dy = 0 is:",
-            options: [
-                "Exact",
-                "Not exact",
-                "Homogeneous",
-                "Linear"
-            ],
-            correct: 0
-        },
-        {
-            question: "The solution of the exact equation (y dx + x dy) = 0 is:",
-            options: [
-                "xy = C",
-                "x + y = C",
-                "x/y = C",
-                "x² + y² = C"
-            ],
-            correct: 0
-        },
-        {
-            question: "If M = e^y and N = xe^y + 2y, then ∂M/∂y equals:",
-            options: [
-                "e^y",
-                "xe^y",
-                "xe^y + 2",
-                "e^y + 2"
-            ],
-            correct: 0
-        },
-        {
-            question: "An integrating factor for (y² - 2xy)dx + (3xy - 6x²)dy = 0 is:",
-            options: [
-                "1/x",
-                "1/y",
-                "x",
-                "y"
-            ],
-            correct: 0
-        },
-        {
-            question: "The solution of (cos y dx - x sin y dy) = 0 is:",
-            options: [
-                "x cos y = C",
-                "x sin y = C",
-                "x + cos y = C",
-                "x - sin y = C"
-            ],
-            correct: 0
-        },
-        {
-            question: "Which method is used to solve exact differential equations?",
-            options: [
-                "Separation of variables",
-                "Integrating factor",
-                "Direct integration",
-                "Partial integration"
-            ],
-            correct: 3
-        },
-        {
-            question: "If ∂M/∂y ≠ ∂N/∂x, the equation is:",
-            options: [
-                "Always solvable",
-                "Not exact",
-                "Exact with integrating factor",
-                "Both B and C"
-            ],
-            correct: 3
-        },
-        {
-            question: "The general solution of an exact differential equation is of the form:",
-            options: [
-                "y = f(x) + C",
-                "F(x,y) = C",
-                "y' = f(x)",
-                "M = N"
-            ],
-            correct: 1
-        }
-    ];
+  const posttestQuestions = [
+    { question: "Which is an exact differential equation?",                                       options: ["(2x + y)dx + (x + 2y)dy = 0", "(y²)dx + (2xy)dy = 0", "(sin y)dx + (x cos y)dy = 0", "All of the above"], correct: 3 },
+    { question: "For exactness of M dx + N dy = 0, which condition must hold?",                  options: ["∂M/∂x = ∂N/∂y", "∂M/∂y = ∂N/∂x", "M = N", "∂²M/∂x∂y = ∂²N/∂y∂x"], correct: 1 },
+    { question: "The equation (2xy + y²)dx + (x² + 2xy)dy = 0 is:",                             options: ["Exact", "Not exact", "Homogeneous", "Linear"], correct: 0 },
+    { question: "The solution of (y dx + x dy) = 0 is:",                                         options: ["xy = C", "x + y = C", "x/y = C", "x² + y² = C"], correct: 0 },
+    { question: "If M = eʸ and N = xeʸ + 2y, then ∂M/∂y equals:",                              options: ["eʸ", "xeʸ", "xeʸ + 2", "eʸ + 2"],            correct: 0 },
+    { question: "An integrating factor for (y² - 2xy)dx + (3xy - 6x²)dy = 0 is:",              options: ["1/x", "1/y", "x", "y"],                       correct: 0 },
+    { question: "The solution of (cos y dx − x sin y dy) = 0 is:",                               options: ["x cos y = C", "x sin y = C", "x + cos y = C", "x − sin y = C"], correct: 0 },
+    { question: "Which method is used to solve exact differential equations?",                    options: ["Separation of variables", "Integrating factor", "Direct integration", "Partial integration"], correct: 3 },
+    { question: "If ∂M/∂y ≠ ∂N/∂x, the equation is:",                                          options: ["Always solvable", "Not exact", "Exact with integrating factor", "Both B and C"], correct: 3 },
+    { question: "The general solution of an exact differential equation has the form:",           options: ["y = f(x) + C", "F(x,y) = C", "y' = f(x)", "M = N"], correct: 1 },
+  ];
 
-    // Pretest functionality
-    let currentPretestQuestion = 0;
-    let pretestAnswers = new Array(pretestQuestions.length).fill(-1);
-    let pretestScore = 0;
+  // ─── Quiz factory (DRY — replaces two identical copy-pasted blocks) ─────────
+  const PRETEST_CONFIG  = { questions: pretestQuestions,  quizId: 'pretest-quiz',  startBtn: 'start-pretest',  prevBtn: 'prev-question',     nextBtn: 'next-question',     submitBtn: 'submit-pretest',  scoreId: 'pretest-score'  };
+  const POSTTEST_CONFIG = { questions: posttestQuestions, quizId: 'posttest-quiz', startBtn: 'start-posttest', prevBtn: 'prev-postquestion', nextBtn: 'next-postquestion', submitBtn: 'submit-posttest', scoreId: 'posttest-score' };
 
-    function loadPretestQuestions() {
-        const questionsContainer = document.querySelector('#pretest-quiz .questions-container');
-        questionsContainer.innerHTML = '';
-        
-        const question = pretestQuestions[currentPretestQuestion];
-        
-        const questionDiv = document.createElement('div');
-        questionDiv.className = 'question-item';
-        questionDiv.innerHTML = `
-            <div class="question-number">Question ${currentPretestQuestion + 1} of ${pretestQuestions.length}</div>
-            <div class="question-text">${question.question}</div>
-            <div class="options">
-                ${question.options.map((option, index) => `
-                    <div class="option ${pretestAnswers[currentPretestQuestion] === index ? 'selected' : ''}" 
-                         data-index="${index}">
-                        ${String.fromCharCode(65 + index)}) ${option}
-                    </div>
-                `).join('')}
-            </div>
-        `;
-        
-        questionsContainer.appendChild(questionDiv);
-        
-        // Add event listeners to options
-        document.querySelectorAll('.option').forEach(option => {
-            option.addEventListener('click', function() {
-                const selectedIndex = parseInt(this.getAttribute('data-index'));
-                pretestAnswers[currentPretestQuestion] = selectedIndex;
-                
-                // Update UI
-                document.querySelectorAll('.option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                this.classList.add('selected');
-            });
-        });
-        
-        // Update navigation buttons
-        document.getElementById('prev-question').disabled = currentPretestQuestion === 0;
-        document.getElementById('next-question').disabled = currentPretestQuestion === pretestQuestions.length - 1;
-    }
+  const quizState = {};
 
-    // Pretest navigation
-    document.getElementById('start-pretest')?.addEventListener('click', function() {
-        currentPretestQuestion = 0;
-        pretestAnswers.fill(-1);
-        pretestScore = 0;
-        loadPretestQuestions();
-        this.disabled = true;
-    });
+  function initQuiz(cfg) {
+    if (quizState[cfg.quizId]) return;  // already bound
 
-    document.getElementById('prev-question')?.addEventListener('click', function() {
-        if (currentPretestQuestion > 0) {
-            currentPretestQuestion--;
-            loadPretestQuestions();
-        }
-    });
+    const state = { current: 0, answers: new Array(cfg.questions.length).fill(-1) };
+    quizState[cfg.quizId] = state;
 
-    document.getElementById('next-question')?.addEventListener('click', function() {
-        if (currentPretestQuestion < pretestQuestions.length - 1) {
-            currentPretestQuestion++;
-            loadPretestQuestions();
-        }
-    });
+    const qs = document.getElementById(cfg.quizId);
+    const container = qs.querySelector('.questions-container');
 
-    document.getElementById('submit-pretest')?.addEventListener('click', function() {
-        // Calculate score
-        pretestScore = 0;
-        pretestQuestions.forEach((question, index) => {
-            if (pretestAnswers[index] === question.correct) {
-                pretestScore++;
-            }
-        });
-        
-        // Update score display
-        document.getElementById('pretest-score').textContent = pretestScore;
-        
-        // Show results
-        alert(`Pretest Completed!\nYour Score: ${pretestScore}/${pretestQuestions.length}\n${pretestScore >= 7 ? 'Great! You are ready to proceed.' : 'Review the basics before proceeding.'}`);
-        
-        // Re-enable start button
-        document.getElementById('start-pretest').disabled = false;
-    });
+    function render() {
+      const q = cfg.questions[state.current];
+      container.innerHTML = `
+        <div class="question-item">
+          <div class="question-number">Question ${state.current + 1} of ${cfg.questions.length}</div>
+          <div class="question-text">${q.question}</div>
+          <div class="options" role="radiogroup">
+            ${q.options.map((opt, i) => `
+              <div class="option ${state.answers[state.current] === i ? 'selected' : ''}"
+                   role="radio" aria-checked="${state.answers[state.current] === i}"
+                   tabindex="0" data-index="${i}">
+                ${String.fromCharCode(65 + i)}) ${opt}
+              </div>`).join('')}
+          </div>
+        </div>`;
 
-    // Posttest functionality (similar to pretest)
-    let currentPosttestQuestion = 0;
-    let posttestAnswers = new Array(posttestQuestions.length).fill(-1);
-    let posttestScore = 0;
-
-    function loadPosttestQuestions() {
-        const questionsContainer = document.querySelector('#posttest-quiz .questions-container');
-        questionsContainer.innerHTML = '';
-        
-        const question = posttestQuestions[currentPosttestQuestion];
-        
-        const questionDiv = document.createElement('div');
-        questionDiv.className = 'question-item';
-        questionDiv.innerHTML = `
-            <div class="question-number">Question ${currentPosttestQuestion + 1} of ${posttestQuestions.length}</div>
-            <div class="question-text">${question.question}</div>
-            <div class="options">
-                ${question.options.map((option, index) => `
-                    <div class="option ${posttestAnswers[currentPosttestQuestion] === index ? 'selected' : ''}" 
-                         data-index="${index}">
-                        ${String.fromCharCode(65 + index)}) ${option}
-                    </div>
-                `).join('')}
-            </div>
-        `;
-        
-        questionsContainer.appendChild(questionDiv);
-        
-        // Add event listeners to options
-        document.querySelectorAll('.option').forEach(option => {
-            option.addEventListener('click', function() {
-                const selectedIndex = parseInt(this.getAttribute('data-index'));
-                posttestAnswers[currentPosttestQuestion] = selectedIndex;
-                
-                // Update UI
-                document.querySelectorAll('.option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                this.classList.add('selected');
-            });
-        });
-        
-        // Update navigation buttons
-        document.getElementById('prev-postquestion').disabled = currentPosttestQuestion === 0;
-        document.getElementById('next-postquestion').disabled = currentPosttestQuestion === posttestQuestions.length - 1;
-    }
-
-    // Posttest navigation
-    document.getElementById('start-posttest')?.addEventListener('click', function() {
-        currentPosttestQuestion = 0;
-        posttestAnswers.fill(-1);
-        posttestScore = 0;
-        loadPosttestQuestions();
-        this.disabled = true;
-    });
-
-    document.getElementById('prev-postquestion')?.addEventListener('click', function() {
-        if (currentPosttestQuestion > 0) {
-            currentPosttestQuestion--;
-            loadPosttestQuestions();
-        }
-    });
-
-    document.getElementById('next-postquestion')?.addEventListener('click', function() {
-        if (currentPosttestQuestion < posttestQuestions.length - 1) {
-            currentPosttestQuestion++;
-            loadPosttestQuestions();
-        }
-    });
-
-    document.getElementById('submit-posttest')?.addEventListener('click', function() {
-        // Calculate score
-        posttestScore = 0;
-        posttestQuestions.forEach((question, index) => {
-            if (posttestAnswers[index] === question.correct) {
-                posttestScore++;
-            }
-        });
-        
-        // Update score display
-        document.getElementById('posttest-score').textContent = posttestScore;
-        
-        // Show results
-        alert(`Posttest Completed!\nYour Score: ${posttestScore}/${posttestQuestions.length}\n${posttestScore >= 7 ? 'Excellent! You have mastered the topic.' : 'You may want to review the material again.'}`);
-        
-        // Re-enable start button
-        document.getElementById('start-posttest').disabled = false;
-    });
-
-    // EXACT DIFFERENTIAL EQUATION SOLVER
-    class ExactDESolver {
-        constructor() {
-            this.steps = [];
-            this.isExact = false;
-            this.solution = null;
-        }
-
-        // Parse mathematical expression
-        parseExpression(expr) {
-            // Remove spaces and convert to lowercase
-            expr = expr.replace(/\s+/g, '').toLowerCase();
-            
-            // Replace common function notations
-            expr = expr.replace(/sin\(/g, 'Math.sin(')
-                      .replace(/cos\(/g, 'Math.cos(')
-                      .replace(/tan\(/g, 'Math.tan(')
-                      .replace(/exp\(/g, 'Math.exp(')
-                      .replace(/ln\(/g, 'Math.log(')
-                      .replace(/log\(/g, 'Math.log10(')
-                      .replace(/e\^/g, 'Math.exp(')
-                      .replace(/\^/g, '**')
-                      .replace(/(\d)([a-z])/g, '$1*$2')
-                      .replace(/([a-z])(\d)/g, '$1*$2')
-                      .replace(/([a-z])([a-z])/g, '$1*$2');
-            
-            return expr;
-        }
-
-        // Extract terms from expression
-        extractTerms(expr) {
-            const terms = [];
-            let currentTerm = '';
-            let bracketCount = 0;
-            
-            for (let i = 0; i < expr.length; i++) {
-                const char = expr[i];
-                
-                if (char === '(') bracketCount++;
-                if (char === ')') bracketCount--;
-                
-                if ((char === '+' || char === '-') && bracketCount === 0 && i > 0) {
-                    if (currentTerm) {
-                        terms.push(currentTerm);
-                        currentTerm = char;
-                    }
-                } else {
-                    currentTerm += char;
-                }
-            }
-            
-            if (currentTerm) terms.push(currentTerm);
-            return terms.map(term => term.trim()).filter(term => term);
-        }
-
-        // Compute partial derivative numerically
-        partialDerivative(funcStr, wrt, point, h = 0.00001) {
-            const { x, y } = point;
-            let f1, f2;
-            
-            try {
-                if (wrt === 'y') {
-                    f1 = this.evaluateAtPoint(funcStr, x, y + h);
-                    f2 = this.evaluateAtPoint(funcStr, x, y);
-                } else {
-                    f1 = this.evaluateAtPoint(funcStr, x + h, y);
-                    f2 = this.evaluateAtPoint(funcStr, x, y);
-                }
-                
-                return (f1 - f2) / h;
-            } catch (e) {
-                return null;
-            }
-        }
-
-        // Evaluate expression at point
-        evaluateAtPoint(expr, x, y) {
-            try {
-                const safeExpr = expr.replace(/x/g, x).replace(/y/g, y);
-                // Evaluate the expression
-                const func = new Function('Math', `return ${safeExpr}`);
-                return func(Math);
-            } catch (e) {
-                console.error('Evaluation error:', e);
-                return null;
-            }
-        }
-
-        // Integrate with respect to x
-        integrateWithRespectToX(M_expr) {
-            const terms = this.extractTerms(M_expr);
-            let result = '';
-            
-            for (const term of terms) {
-                const integratedTerm = this.integrateTerm(term, 'x');
-                result += (result && integratedTerm.startsWith('-') ? '' : '+') + integratedTerm;
-            }
-            
-            return result.replace(/^\+/, '') + ' + g(y)';
-        }
-
-        // Integrate a single term
-        integrateTerm(term, variable) {
-            term = term.trim();
-            
-            // Handle negative signs
-            let sign = term.startsWith('-') ? '-' : '';
-            if (sign) term = term.substring(1);
-            
-            // Check for functions
-            if (term.includes('sin(') || term.includes('cos(') || term.includes('tan(')) {
-                return this.integrateTrigTerm(sign + term, variable);
-            } else if (term.includes('exp(')) {
-                return this.integrateExpTerm(sign + term, variable);
-            } else {
-                return this.integratePolyTerm(sign + term, variable);
-            }
-        }
-
-        // Integrate polynomial term
-        integratePolyTerm(term, variable) {
-            // Handle coefficient
-            let coefficient = 1;
-            let varPart = term;
-            
-            // Extract coefficient if present
-            const match = term.match(/^([-+]?\d*\.?\d*)/);
-            if (match && match[1] && match[1] !== '' && match[1] !== '+' && match[1] !== '-') {
-                coefficient = parseFloat(match[1]);
-                varPart = term.substring(match[1].length);
-            } else if (term.startsWith('-')) {
-                coefficient = -1;
-                varPart = term.substring(1);
-            } else if (term.startsWith('+')) {
-                coefficient = 1;
-                varPart = term.substring(1);
-            }
-            
-            // Check if term contains the variable
-            if (!varPart.includes(variable)) {
-                // Constant with respect to variable
-                return `${coefficient}${variable}${varPart}`;
-            }
-            
-            // Handle power
-            if (varPart.includes('**')) {
-                const parts = varPart.split('**');
-                const base = parts[0];
-                const power = parseFloat(parts[1]);
-                
-                if (base === variable) {
-                    const newPower = power + 1;
-                    const newCoeff = coefficient / newPower;
-                    return `${newCoeff}${variable}**${newPower}`;
-                }
-            } else if (varPart === variable) {
-                // Simple variable
-                return `${coefficient/2}${variable}**2`;
-            }
-            
-            // If we can't integrate symbolically, return as is
-            return `${coefficient}∫(${varPart}) d${variable}`;
-        }
-
-        // Integrate trigonometric term
-        integrateTrigTerm(term, variable) {
-            // Extract the argument inside trig function
-            const match = term.match(/(sin|cos|tan)\(([^)]+)\)/);
-            if (match) {
-                const func = match[1];
-                const arg = match[2];
-                
-                // Check if argument is linear in variable
-                if (arg.includes('*' + variable) || arg === variable) {
-                    const coeffMatch = arg.match(new RegExp(`([-+]?\\d*\\.?\\d*)\\*?${variable}`));
-                    let a = 1;
-                    if (coeffMatch && coeffMatch[1]) {
-                        a = parseFloat(coeffMatch[1]) || 1;
-                    }
-                    
-                    switch(func) {
-                        case 'sin':
-                            return `-${1/a}cos(${arg})`;
-                        case 'cos':
-                            return `${1/a}sin(${arg})`;
-                        case 'tan':
-                            return `${1/a}ln|sec(${arg})|`;
-                    }
-                }
-            }
-            
-            return `∫(${term}) d${variable}`;
-        }
-
-        // Integrate exponential term
-        integrateExpTerm(term, variable) {
-            const match = term.match(/exp\(([^)]+)\)/);
-            if (match) {
-                const arg = match[1];
-                
-                if (arg.includes('*' + variable) || arg === variable) {
-                    const coeffMatch = arg.match(new RegExp(`([-+]?\\d*\\.?\\d*)\\*?${variable}`));
-                    let a = 1;
-                    if (coeffMatch && coeffMatch[1]) {
-                        a = parseFloat(coeffMatch[1]) || 1;
-                    }
-                    return `${1/a}exp(${arg})`;
-                }
-            }
-            
-            return `∫(${term}) d${variable}`;
-        }
-
-        // Differentiate with respect to y
-        differentiateWithRespectToY(expr) {
-            const terms = this.extractTerms(expr.replace(' + g(y)', ''));
-            let result = '';
-            
-            for (const term of terms) {
-                const diffTerm = this.differentiateTerm(term, 'y');
-                if (diffTerm && diffTerm !== '0') {
-                    result += (result && !diffTerm.startsWith('-') ? '+' : '') + diffTerm;
-                }
-            }
-            
-            return result.replace(/^\+/, '') + " + g'(y)";
-        }
-
-        // Differentiate a single term
-        differentiateTerm(term, variable) {
-            term = term.trim();
-            
-            // Handle negative signs
-            let sign = term.startsWith('-') ? '-' : '';
-            if (sign) term = term.substring(1);
-            
-            // Check if term contains g(y)
-            if (term.includes('g(y)')) {
-                return term.includes("'") ? "g'(y)" : "g(y)";
-            }
-            
-            // Check if term contains the variable
-            if (!term.includes(variable)) {
-                return '0'; // Derivative of constant with respect to y is 0
-            }
-            
-            // Simple cases
-            if (term === variable) {
-                return sign + '1';
-            }
-            
-            if (term.includes('*' + variable)) {
-                const coeff = parseFloat(term.split('*')[0]) || 1;
-                return sign + coeff;
-            }
-            
-            if (term.includes(variable + '**')) {
-                const parts = term.split('**');
-                const base = parts[0];
-                const power = parseFloat(parts[1]);
-                
-                if (base === variable) {
-                    const coeff = parseFloat(term.split('*')[0]) || 1;
-                    return sign + (coeff * power) + variable + '**' + (power - 1);
-                }
-            }
-            
-            // For other cases, return symbolic derivative
-            return sign + "∂(" + term + ")/∂" + variable;
-        }
-
-        // Solve exact differential equation
-        solve(M_expr, N_expr) {
-            this.steps = [];
-            this.isExact = false;
-            this.solution = null;
-            
-            // Clean expressions
-            M_expr = this.parseExpression(M_expr);
-            N_expr = this.parseExpression(N_expr);
-            
-            // Step 1: Display the given equation
-            this.steps.push({
-                header: "Step 1: Given Equation",
-                content: "The differential equation is:",
-                equation: `(${M_expr}) dx + (${N_expr}) dy = 0`
-            });
-            
-            // Step 2: Identify M and N
-            this.steps.push({
-                header: "Step 2: Identify M(x,y) and N(x,y)",
-                content: "We have:",
-                equations: [
-                    `M(x,y) = ${M_expr}`,
-                    `N(x,y) = ${N_expr}`
-                ]
-            });
-            
-            // Step 3: Check exactness
-            this.steps.push({
-                header: "Step 3: Check for Exactness",
-                content: "For exactness, we need ∂M/∂y = ∂N/∂x",
-                equation: `Condition: ∂M/∂y = ∂N/∂x`
-            });
-            
-            // Compute partial derivatives at sample points
-            const points = [{x: 1, y: 1}, {x: 2, y: 1}, {x: 1, y: 2}];
-            let allEqual = true;
-            let dM_dy_vals = [];
-            let dN_dx_vals = [];
-            
-            for (const point of points) {
-                const dM_dy = this.partialDerivative(M_expr, 'y', point);
-                const dN_dx = this.partialDerivative(N_expr, 'x', point);
-                
-                dM_dy_vals.push(dM_dy);
-                dN_dx_vals.push(dN_dx);
-                
-                if (Math.abs(dM_dy - dN_dx) > 0.001) {
-                    allEqual = false;
-                }
-            }
-            
-            // Take average values
-            const avg_dM_dy = dM_dy_vals.reduce((a, b) => a + b, 0) / dM_dy_vals.length;
-            const avg_dN_dx = dN_dx_vals.reduce((a, b) => a + b, 0) / dN_dx_vals.length;
-            
-            this.isExact = Math.abs(avg_dM_dy - avg_dN_dx) < 0.01;
-            
-            this.steps.push({
-                header: "Step 4: Compute Partial Derivatives",
-                content: "Computing at sample points:",
-                equations: [
-                    `∂M/∂y ≈ ${avg_dM_dy.toFixed(4)}`,
-                    `∂N/∂x ≈ ${avg_dN_dx.toFixed(4)}`
-                ]
-            });
-            
-            if (this.isExact) {
-                this.steps.push({
-                    header: "Step 5: Exactness Condition",
-                    content: "Since ∂M/∂y ≈ ∂N/∂x, the equation is exact.",
-                    equation: `∂M/∂y (${avg_dM_dy.toFixed(4)}) ≈ ∂N/∂x (${avg_dN_dx.toFixed(4)}) ✓`
-                });
-                
-                // Step 6: Integrate M with respect to x
-                const int_M_dx = this.integrateWithRespectToX(M_expr);
-                this.steps.push({
-                    header: "Step 6: Integrate M with respect to x",
-                    content: "Find ψ(x,y) by integrating M with respect to x:",
-                    equation: `ψ(x,y) = ∫M dx = ∫(${M_expr}) dx = ${int_M_dx}`
-                });
-                
-                // Step 7: Differentiate ψ with respect to y
-                const dψ_dy = this.differentiateWithRespectToY(int_M_dx);
-                this.steps.push({
-                    header: "Step 7: Differentiate ψ with respect to y",
-                    content: "Differentiate ψ with respect to y:",
-                    equation: `∂ψ/∂y = ∂/∂y [${int_M_dx}] = ${dψ_dy}`
-                });
-                
-                // Step 8: Compare with N to find g'(y)
-                this.steps.push({
-                    header: "Step 8: Compare with N(x,y)",
-                    content: "We know ∂ψ/∂y should equal N(x,y):",
-                    equation: `${dψ_dy} = ${N_expr}`
-                });
-                
-                // Step 9: Solve for g'(y)
-                // For exact equations, the terms from differentiation should match N
-                // The remaining terms give g'(y)
-                this.steps.push({
-                    header: "Step 9: Find g'(y)",
-                    content: "From comparison, we get:",
-                    equation: `g'(y) = ${N_expr} - [terms from ∂ψ/∂y excluding g'(y)]`
-                });
-                
-                // Step 10: Integrate to find g(y)
-                this.steps.push({
-                    header: "Step 10: Integrate g'(y)",
-                    content: "Integrate g'(y) with respect to y:",
-                    equation: `g(y) = ∫ g'(y) dy`
-                });
-                
-                // Step 11: Write final solution
-                // For exact equations: ψ(x,y) = C
-                const solution = this.constructSolution(int_M_dx);
-                this.solution = solution;
-                this.steps.push({
-                    header: "Step 11: General Solution",
-                    content: "The general solution is ψ(x,y) = constant:",
-                    equation: solution,
-                    final: true
-                });
-                
-            } else {
-                this.steps.push({
-                    header: "Step 5: Exactness Condition",
-                    content: "Since ∂M/∂y ≠ ∂N/∂x, the equation is not exact.",
-                    equation: `∂M/∂y (${avg_dM_dy.toFixed(4)}) ≠ ∂N/∂x (${avg_dN_dx.toFixed(4)})`
-                });
-                
-                // Check for integrating factors
-                const diff = avg_dM_dy - avg_dN_dx;
-                this.steps.push({
-                    header: "Step 6: Check for Integrating Factor",
-                    content: "We can try to find an integrating factor μ(x,y):",
-                    list: [
-                        "1. Check if (∂M/∂y - ∂N/∂x)/N is function of x only → μ(x) = exp(∫f(x)dx)",
-                        "2. Check if (∂N/∂x - ∂M/∂y)/M is function of y only → μ(y) = exp(∫g(y)dy)",
-                        "3. Try common integrating factors: 1/x, 1/y, 1/(x²+y²), etc."
-                    ]
-                });
-                
-                // Suggest possible integrating factors
-                const suggestions = this.suggestIntegratingFactor(M_expr, N_expr, diff);
-                if (suggestions.length > 0) {
-                    this.steps.push({
-                        header: "Step 7: Suggested Integrating Factors",
-                        content: "Possible integrating factors to try:",
-                        list: suggestions
-                    });
-                }
-            }
-            
-            return {
-                steps: this.steps,
-                isExact: this.isExact,
-                solution: this.solution
-            };
-        }
-        
-        // Construct solution
-        constructSolution(int_M_dx) {
-            // Remove g(y) and combine terms
-            let solution = int_M_dx.replace(' + g(y)', '');
-            
-            // For exact equations, the solution is typically of form F(x,y) = C
-            // We'll try to simplify the expression
-            solution = solution.replace(/\+\s*\-/g, '-')
-                              .replace(/\-\s*\-/g, '+')
-                              .replace(/\s+/g, ' ');
-            
-            return `${solution} = C`;
-        }
-        
-        // Suggest integrating factors
-        suggestIntegratingFactor(M_expr, N_expr, diff) {
-            const suggestions = [];
-            
-            // Check if M and N are homogeneous
-            if (M_expr.includes('x') && M_expr.includes('y') && 
-                N_expr.includes('x') && N_expr.includes('y')) {
-                suggestions.push("Try μ = 1/(xM + yN) if homogeneous");
-            }
-            
-            // Check if terms suggest specific patterns
-            if (M_expr.includes('y') && N_expr.includes('x')) {
-                suggestions.push("Try μ = 1/(xy)");
-            }
-            
-            if ((M_expr.includes('x**2') || M_expr.includes('y**2')) &&
-                (N_expr.includes('x**2') || N_expr.includes('y**2'))) {
-                suggestions.push("Try μ = 1/(x² + y²)");
-            }
-            
-            // Common patterns
-            if (Math.abs(diff) > 0.1) {
-                suggestions.push(`Try μ = exp(${diff.toFixed(2)}x) or μ = exp(${(-diff).toFixed(2)}y)`);
-            }
-            
-            return suggestions;
-        }
-    }
-
-    // Simulation functionality
-    function initSimulation() {
-        const MInput = document.getElementById('M-input');
-        const NInput = document.getElementById('N-input');
-        const equationDisplay = document.getElementById('equation-display');
-        const solveButton = document.getElementById('solve-equation');
-        const clearButton = document.getElementById('clear-input');
-        const exampleButtons = document.querySelectorAll('.example-btn');
-        const solutionSteps = document.getElementById('solution-steps');
-
-        // Update equation display
-        function updateEquationDisplay() {
-            const M = MInput.value || 'M(x,y)';
-            const N = NInput.value || 'N(x,y)';
-            equationDisplay.innerHTML = `(${M})dx + (${N})dy = 0`;
-            
-            // Try to render with KaTeX if available
-            try {
-                if (typeof katex !== 'undefined') {
-                    katex.render(`(${M})\\,dx + (${N})\\,dy = 0`, equationDisplay, {
-                        throwOnError: false,
-                        displayMode: false
-                    });
-                }
-            } catch (e) {
-                // If KaTeX fails, keep the plain text
-            }
-        }
-
-        // Display solution steps
-        function displaySolutionSteps(steps, isExact, solution) {
-            solutionSteps.innerHTML = '';
-            
-            steps.forEach((step, index) => {
-                const stepDiv = document.createElement('div');
-                stepDiv.className = `solution-step ${step.final ? 'final-step' : ''}`;
-                
-                let contentHTML = `
-                    <div class="step-header">
-                        <span class="step-number">${index + 1}</span>
-                        ${step.header}
-                    </div>
-                    <div class="step-content">
-                        <p>${step.content}</p>
-                `;
-                
-                if (step.equation) {
-                    contentHTML += `<div class="step-equation">${step.equation}</div>`;
-                }
-                
-                if (step.equations) {
-                    step.equations.forEach(eq => {
-                        contentHTML += `<div class="step-equation">${eq}</div>`;
-                    });
-                }
-                
-                if (step.list) {
-                    contentHTML += '<ul class="step-list">';
-                    step.list.forEach(item => {
-                        contentHTML += `<li>${item}</li>`;
-                    });
-                    contentHTML += '</ul>';
-                }
-                
-                contentHTML += '</div>';
-                stepDiv.innerHTML = contentHTML;
-                solutionSteps.appendChild(stepDiv);
-                
-                // Try to render equations with KaTeX
-                setTimeout(() => {
-                    stepDiv.querySelectorAll('.step-equation').forEach(eqElement => {
-                        const eqText = eqElement.textContent;
-                        try {
-                            if (typeof katex !== 'undefined' && eqText) {
-                                katex.render(eqText, eqElement, {
-                                    throwOnError: false,
-                                    displayMode: false
-                                });
-                            }
-                        } catch (e) {
-                            // Keep plain text if KaTeX fails
-                        }
-                    });
-                }, 100);
-            });
-            
-            // Add solution summary
-            if (solution) {
-                const solutionDiv = document.createElement('div');
-                solutionDiv.className = 'solution-summary final-step';
-                solutionDiv.innerHTML = `
-                    <div class="step-header">
-                        <i class="fas fa-check-circle"></i>
-                        Solution Summary
-                    </div>
-                    <div class="step-content">
-                        <p>The exact differential equation has been solved successfully.</p>
-                        <div class="final-solution">${solution}</div>
-                    </div>
-                `;
-                solutionSteps.appendChild(solutionDiv);
-                
-                // Try to render final solution with KaTeX
-                setTimeout(() => {
-                    const finalEq = solutionDiv.querySelector('.final-solution');
-                    if (finalEq && typeof katex !== 'undefined') {
-                        try {
-                            katex.render(finalEq.textContent, finalEq, {
-                                throwOnError: false,
-                                displayMode: false
-                            });
-                        } catch (e) {
-                            // Keep plain text
-                        }
-                    }
-                }, 100);
-            }
-            
-            // Scroll to top of solution
-            solutionSteps.scrollTop = 0;
-        }
-
-        // Solve button click handler
-        solveButton.addEventListener('click', function() {
-            const M = MInput.value.trim();
-            const N = NInput.value.trim();
-            
-            if (!M || !N) {
-                alert('Please enter both M(x,y) and N(x,y) functions.');
-                return;
-            }
-            
-            // Show loading
-            solutionSteps.innerHTML = `
-                <div class="placeholder-text">
-                    <i class="fas fa-cog fa-spin"></i>
-                    <p>Solving equation step by step...</p>
-                </div>
-            `;
-            
-            // Solve using the solver
-            setTimeout(() => {
-                try {
-                    const solver = new ExactDESolver();
-                    const result = solver.solve(M, N);
-                    
-                    if (result.steps.length > 0) {
-                        displaySolutionSteps(result.steps, result.isExact, result.solution);
-                    } else {
-                        solutionSteps.innerHTML = `
-                            <div class="placeholder-text">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <p>Could not solve the equation. Please check your input.</p>
-                            </div>
-                        `;
-                    }
-                } catch (error) {
-                    console.error('Solving error:', error);
-                    solutionSteps.innerHTML = `
-                        <div class="placeholder-text">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <p>Error solving equation: ${error.message}</p>
-                            <p>Please check your input format and try again.</p>
-                        </div>
-                    `;
-                }
-            }, 500);
-        });
-
-        // Clear button
-        clearButton.addEventListener('click', function() {
-            MInput.value = '';
-            NInput.value = '';
-            updateEquationDisplay();
-            solutionSteps.innerHTML = `
-                <div class="placeholder-text">
-                    <i class="fas fa-arrow-up"></i>
-                    <p>Enter an exact differential equation above and click "Solve Step-by-Step"</p>
-                    <p class="hint">Format: M(x,y) dx + N(x,y) dy = 0</p>
-                </div>
-            `;
-        });
-
-        // Example buttons
-        exampleButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const M = this.getAttribute('data-m');
-                const N = this.getAttribute('data-n');
-                
-                MInput.value = M;
-                NInput.value = N;
-                updateEquationDisplay();
-                
-                // Auto-solve after a brief delay
-                setTimeout(() => {
-                    solveButton.click();
-                }, 300);
-            });
-        });
-
-        // Add sample equations dropdown
-        const sampleEquations = [
-            {
-                name: "Basic Example",
-                M: "2*x*y + y^2",
-                N: "x^2 + 2*x*y",
-                desc: "(2xy + y²)dx + (x² + 2xy)dy = 0"
-            },
-            {
-                name: "Trigonometric Example",
-                M: "y^2*cos(x) + y",
-                N: "2*y*sin(x) + x",
-                desc: "(y²cosx + y)dx + (2ysinx + x)dy = 0"
-            },
-            {
-                name: "Exponential Example",
-                M: "exp(y)",
-                N: "x*exp(y) + 2*y",
-                desc: "e^y dx + (xe^y + 2y)dy = 0"
-            },
-            {
-                name: "Polynomial Example",
-                M: "3*x^2*y",
-                N: "x^3 + cos(y)",
-                desc: "3x²y dx + (x³ + cosy)dy = 0"
-            },
-            {
-                name: "Linear Example",
-                M: "y",
-                N: "x",
-                desc: "y dx + x dy = 0"
-            },
-            {
-                name: "Homogeneous Example",
-                M: "x^2 + y^2",
-                N: "2*x*y",
-                desc: "(x² + y²)dx + 2xy dy = 0"
-            }
-        ];
-
-        // Add input format tips
-        const formatTips = document.createElement('div');
-        formatTips.className = 'format-tips';
-        formatTips.innerHTML = `
-            <h5><i class="fas fa-info-circle"></i> Input Format Tips:</h5>
-            <ul>
-                <li>Use * for multiplication: 2*x*y</li>
-                <li>Use ^ for exponentiation: x^2, y^3</li>
-                <li>Use sin(x), cos(x), exp(x) for functions</li>
-                <li>Examples: 3*x^2*y, sin(x+y), exp(2*x)</li>
-                <li>The solver will show all steps for exact equations</li>
-                <li>For non-exact equations, it will suggest integrating factors</li>
-            </ul>
-        `;
-        
-        // Find input section and append tips
-        const inputSection = document.querySelector('.input-section');
-        if (inputSection) {
-            inputSection.appendChild(formatTips);
-        }
-
-        // Initialize
-        updateEquationDisplay();
-        
-        // Update display on input
-        MInput.addEventListener('input', updateEquationDisplay);
-        NInput.addEventListener('input', updateEquationDisplay);
-        
-        // Add Enter key support
-        MInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') solveButton.click();
-        });
-        
-        NInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') solveButton.click();
-        });
-    }
-
-    // Initialize the first section
-    loadSectionContent(activeSection);
-
-    // Handle image errors
-    document.querySelectorAll('img').forEach(img => {
-        img.onerror = function() {
-            this.src = 'https://via.placeholder.com/150/2c3e50/ffffff?text=Image';
-            this.onerror = null;
+      // FIX: scope querySelectorAll to THIS quiz container
+      container.querySelectorAll('.option').forEach(opt => {
+        const select = () => {
+          const idx = parseInt(opt.getAttribute('data-index'));
+          state.answers[state.current] = idx;
+          container.querySelectorAll('.option').forEach(o => {
+            o.classList.remove('selected');
+            o.setAttribute('aria-checked', 'false');
+          });
+          opt.classList.add('selected');
+          opt.setAttribute('aria-checked', 'true');
         };
+        opt.addEventListener('click', select);
+        opt.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); } });
+      });
+
+      document.getElementById(cfg.prevBtn).disabled = state.current === 0;
+      document.getElementById(cfg.nextBtn).disabled = state.current === cfg.questions.length - 1;
+    }
+
+    document.getElementById(cfg.startBtn)?.addEventListener('click', function () {
+      state.current = 0;
+      state.answers.fill(-1);
+      render();
+      this.disabled = true;
     });
+
+    document.getElementById(cfg.prevBtn)?.addEventListener('click', () => { if (state.current > 0) { state.current--; render(); } });
+    document.getElementById(cfg.nextBtn)?.addEventListener('click', () => { if (state.current < cfg.questions.length - 1) { state.current++; render(); } });
+
+    document.getElementById(cfg.submitBtn)?.addEventListener('click', function () {
+      let score = 0;
+      cfg.questions.forEach((q, i) => { if (state.answers[i] === q.correct) score++; });
+      document.getElementById(cfg.scoreId).textContent = score;
+
+      // FIX: replace alert() with inline result banner
+      const existing = qs.querySelector('.quiz-result');
+      if (existing) existing.remove();
+
+      const passed = score >= 7;
+      const banner = document.createElement('div');
+      banner.className = 'quiz-result';
+      banner.style.cssText = `margin-top:20px;padding:20px;border-radius:8px;text-align:center;
+        background:${passed ? '#d4edda' : '#fff3cd'};
+        border:1px solid ${passed ? '#c3e6cb' : '#ffeeba'};
+        color:${passed ? '#155724' : '#856404'}`;
+      banner.innerHTML = `
+        <div style="font-size:24px;font-weight:600;margin-bottom:8px">${score} / ${cfg.questions.length}</div>
+        <div style="margin-bottom:12px">${passed
+          ? (cfg.quizId === 'pretest-quiz' ? 'Great! You are ready to proceed.' : 'Excellent! You have mastered the topic.')
+          : (cfg.quizId === 'pretest-quiz' ? 'Review the basics before proceeding.' : 'You may want to review the material again.')
+        }</div>
+        <div style="background:#fff;border-radius:4px;height:10px;overflow:hidden">
+          <div style="width:${(score/cfg.questions.length)*100}%;height:100%;background:${passed ? '#28a745' : '#ffc107'};transition:width .5s"></div>
+        </div>`;
+      qs.appendChild(banner);
+
+      document.getElementById(cfg.startBtn).disabled = false;
+    });
+  }
+
+  // ─── Exact DE Solver ────────────────────────────────────────────────────────
+  class ExactDESolver {
+
+    preprocess(expr) {
+      return expr.trim()
+        .replace(/\s+/g, '')
+        .replace(/\*\*/g, '^')   // JS ** → nerdamer ^
+        .replace(/Math\.sin/g, 'sin').replace(/Math\.cos/g, 'cos')
+        .replace(/Math\.tan/g, 'tan').replace(/Math\.exp/g, 'exp')
+        .replace(/Math\.log\b/g, 'log');
+    }
+
+    // Safely evaluate expression numerically at (x, y)
+    evalAt(expr, xVal, yVal) {
+      try {
+        return parseFloat(nerdamer(expr, { x: String(xVal), y: String(yVal) }).evaluate().toString());
+      } catch (_) {
+        return NaN;
+      }
+    }
+
+    // Compare two expressions numerically at several diverse points
+    numericallyEqual(exprA, exprB) {
+      const pts = [{ x: 1, y: 1 }, { x: 2, y: 3 }, { x: -1, y: 2 }, { x: 0.5, y: 1.5 }, { x: 3, y: -1 }];
+      let matches = 0;
+      for (const p of pts) {
+        const a = this.evalAt(exprA, p.x, p.y);
+        const b = this.evalAt(exprB, p.x, p.y);
+        if (isNaN(a) || isNaN(b)) continue;
+        if (Math.abs(a - b) <= 0.005 * (Math.abs(a) + Math.abs(b) + 1)) matches++;
+      }
+      return matches >= 4;  // require 4 of 5 points to agree
+    }
+
+    isFreeFromX(expr) {
+      const y = 1;
+      const v = [this.evalAt(expr, 0, y), this.evalAt(expr, 1, y), this.evalAt(expr, 5, y), this.evalAt(expr, -2, y)];
+      const valid = v.filter(n => !isNaN(n));
+      if (valid.length < 2) return true;
+      return Math.max(...valid) - Math.min(...valid) < 0.005;
+    }
+
+    addStep(steps, header, body, equations, type) {
+      steps.push({ header, body, equations: Array.isArray(equations) ? equations : (equations ? [equations] : []), type: type || 'normal' });
+    }
+
+    solve(M_raw, N_raw, dMdy_raw, dNdx_raw) {
+      const steps = [];
+
+      const M = this.preprocess(M_raw);
+      const N = this.preprocess(N_raw);
+      const dMdy_user = this.preprocess(dMdy_raw);
+      const dNdx_user = this.preprocess(dNdx_raw);
+
+      // ── Step 1: Show the equation
+      this.addStep(steps, 'Step 1: Given equation',
+        'The differential equation M(x,y) dx + N(x,y) dy = 0 is:',
+        [`( ${M} ) dx  +  ( ${N} ) dy  =  0`]);
+
+      // ── Step 2: Identify M and N
+      this.addStep(steps, 'Step 2: Identify M and N',
+        'We identify the component functions:',
+        [`M(x,y) = ${M}`, `N(x,y) = ${N}`]);
+
+      // ── Step 3: Compute symbolic partial derivatives
+      let dMdy_sym, dNdx_sym;
+      try {
+        dMdy_sym = nerdamer(`diff(${M}, y)`).toString();
+        dNdx_sym = nerdamer(`diff(${N}, x)`).toString();
+      } catch (e) {
+        this.addStep(steps, 'Error', `Could not compute symbolic derivatives: ${e.message}. Check your input.`, [], 'error');
+        return { steps, isExact: false, solution: null };
+      }
+
+      // ── Step 3a: Verify user's ∂M/∂y
+      const dMdy_ok = this.numericallyEqual(dMdy_user, dMdy_sym);
+      this.addStep(steps,
+        'Step 3: Verify ∂M/∂y',
+        `You entered: ∂M/∂y = ${dMdy_user}`,
+        [
+          `Computed:  ∂M/∂y = ${dMdy_sym}`,
+          dMdy_ok ? '✓ Your value is correct.' : `✗ Incorrect. The correct value is ${dMdy_sym} — this will be used for the solution.`,
+        ],
+        dMdy_ok ? 'correct' : 'incorrect');
+
+      // ── Step 3b: Verify user's ∂N/∂x
+      const dNdx_ok = this.numericallyEqual(dNdx_user, dNdx_sym);
+      this.addStep(steps,
+        'Step 4: Verify ∂N/∂x',
+        `You entered: ∂N/∂x = ${dNdx_user}`,
+        [
+          `Computed:  ∂N/∂x = ${dNdx_sym}`,
+          dNdx_ok ? '✓ Your value is correct.' : `✗ Incorrect. The correct value is ${dNdx_sym} — this will be used for the solution.`,
+        ],
+        dNdx_ok ? 'correct' : 'incorrect');
+
+      // ── Step 4: Exactness check
+      const isExact = this.numericallyEqual(dMdy_sym, dNdx_sym);
+
+      if (!isExact) {
+        this.addStep(steps,
+          'Step 5: Exactness check — Not exact',
+          `Since ∂M/∂y = ${dMdy_sym}  ≠  ∂N/∂x = ${dNdx_sym}, the equation is NOT exact.`,
+          [], 'incorrect');
+
+        // Suggest integrating factors
+        this.addIntegratingFactorSteps(steps, M, N, dMdy_sym, dNdx_sym);
+        return { steps, isExact: false, solution: null };
+      }
+
+      this.addStep(steps,
+        'Step 5: Exactness check — Exact ✓',
+        `Since ∂M/∂y = ${dMdy_sym}  =  ∂N/∂x = ${dNdx_sym}, the equation IS EXACT.`,
+        [], 'correct');
+
+      // ── Step 5: Integrate M w.r.t x
+      let psi;
+      try {
+        psi = nerdamer(`integrate(${M}, x)`).toString();
+      } catch (e) {
+        this.addStep(steps, 'Error', `Could not integrate M: ${e.message}`, [], 'error');
+        return { steps, isExact: true, solution: null };
+      }
+
+      this.addStep(steps,
+        'Step 6: Integrate M with respect to x',
+        'Find ψ(x,y) = ∫M dx + g(y) where g(y) is an unknown function of y only:',
+        [`ψ(x,y) = ∫( ${M} ) dx + g(y) = ${psi} + g(y)`]);
+
+      // ── Step 6: ∂ψ/∂y and derive g′(y)
+      let dPsi_dy, g_prime;
+      try {
+        dPsi_dy = nerdamer(`diff(${psi}, y)`).toString();
+        g_prime = nerdamer.simplify(nerdamer(`${N} - (${dPsi_dy})`).toString()).toString();
+      } catch (e) {
+        this.addStep(steps, 'Error', `Could not compute g′(y): ${e.message}`, [], 'error');
+        return { steps, isExact: true, solution: null };
+      }
+
+      this.addStep(steps,
+        'Step 7: Differentiate ψ w.r.t y and find g′(y)',
+        'Set ∂ψ/∂y = N to find g′(y):',
+        [
+          `∂ψ/∂y = ∂/∂y[ ${psi} ] + g′(y)  =  ${dPsi_dy} + g′(y)`,
+          `Setting equal to N:  ${dPsi_dy} + g′(y)  =  ${N}`,
+          `Therefore g′(y) = ${N} − ( ${dPsi_dy} )  =  ${g_prime}`,
+        ]);
+
+      // Check g′(y) is truly free from x
+      if (!this.isFreeFromX(g_prime)) {
+        this.addStep(steps,
+          'Warning',
+          `g′(y) = ${g_prime} appears to still contain x. The equation may not actually be exact, or symbolic simplification failed. Check your input.`,
+          [], 'incorrect');
+      }
+
+      // ── Step 7: Integrate g′(y)
+      let g_y;
+      try {
+        g_y = (g_prime === '0' || g_prime === '') ? '0' : nerdamer(`integrate(${g_prime}, y)`).toString();
+      } catch (e) {
+        g_y = `∫( ${g_prime} ) dy`;
+      }
+
+      this.addStep(steps,
+        'Step 8: Find g(y)',
+        'Integrate g′(y) with respect to y:',
+        [`g(y) = ∫( ${g_prime} ) dy  =  ${g_y}`]);
+
+      // ── Step 8: Write final solution
+      let solution;
+      try {
+        solution = (g_y === '0')
+          ? `${psi} = C`
+          : nerdamer(`${psi} + ${g_y}`).toString() + ' = C';
+      } catch (_) {
+        solution = `${psi} + ${g_y} = C`;
+      }
+
+      this.addStep(steps,
+        'Step 9: General Solution',
+        'The general solution ψ(x,y) = C is:',
+        [solution], 'final');
+
+      return { steps, isExact: true, solution };
+    }
+
+    addIntegratingFactorSteps(steps, M, N, dMdy, dNdx) {
+      const suggestions = [];
+
+      // Check if (∂M/∂y − ∂N/∂x) / N is a function of x only
+      try {
+        const fExpr = nerdamer.simplify(nerdamer(`(${dMdy} - (${dNdx})) / (${N})`).toString()).toString();
+        if (this.isFreeFromY(fExpr)) {
+          suggestions.push(`(∂M/∂y − ∂N/∂x) / N = ${fExpr}  (function of x only)`);
+          suggestions.push(`→  Integrating factor: μ(x) = exp( ∫ ${fExpr} dx )`);
+        }
+      } catch (_) {}
+
+      // Check if (∂N/∂x − ∂M/∂y) / M is a function of y only
+      try {
+        const gExpr = nerdamer.simplify(nerdamer(`(${dNdx} - (${dMdy})) / (${M})`).toString()).toString();
+        if (this.isFreeFromX(gExpr)) {
+          suggestions.push(`(∂N/∂x − ∂M/∂y) / M = ${gExpr}  (function of y only)`);
+          suggestions.push(`→  Integrating factor: μ(y) = exp( ∫ ${gExpr} dy )`);
+        }
+      } catch (_) {}
+
+      if (suggestions.length === 0) {
+        suggestions.push('No standard integrating factor found automatically.');
+        suggestions.push('Try manually: μ = 1/x, μ = 1/y, μ = 1/(xy), μ = 1/(x²+y²), or μ = xᵃyᵇ.');
+      }
+
+      this.addStep(steps, 'Step 6: Integrating factor suggestions',
+        'To make the equation exact, try the following integrating factors:',
+        suggestions);
+    }
+
+    isFreeFromY(expr) {
+      const x = 1;
+      const v = [this.evalAt(expr, x, 0.5), this.evalAt(expr, x, 1), this.evalAt(expr, x, 5)];
+      const valid = v.filter(n => !isNaN(n));
+      if (valid.length < 2) return true;
+      return Math.max(...valid) - Math.min(...valid) < 0.005;
+    }
+  }
+
+  // ─── Simulation UI ──────────────────────────────────────────────────────────
+  function initSimulation() {
+    const MInput        = document.getElementById('M-input');
+    const NInput        = document.getElementById('N-input');
+    const dMdyInput     = document.getElementById('dMdy-input');    // NEW
+    const dNdxInput     = document.getElementById('dNdx-input');    // NEW
+    const equationDisplay = document.getElementById('equation-display');
+    const solveButton   = document.getElementById('solve-equation');
+    const clearButton   = document.getElementById('clear-input');
+    const exampleBtns   = document.querySelectorAll('.example-btn');
+    const stepsContainer = document.getElementById('solution-steps');
+
+    function updateEquationDisplay() {
+      const M = MInput.value || 'M(x,y)';
+      const N = NInput.value || 'N(x,y)';
+      equationDisplay.textContent = `( ${M} ) dx + ( ${N} ) dy = 0`;
+    }
+
+    function displaySteps(steps, solution) {
+      stepsContainer.innerHTML = '';
+
+      steps.forEach(step => {
+        const div = document.createElement('div');
+        const typeClass = step.type === 'final' ? 'final-step'
+                        : step.type === 'correct' ? 'correct-step'
+                        : step.type === 'incorrect' ? 'incorrect-step'
+                        : step.type === 'error' ? 'error-step'
+                        : '';
+        div.className = `solution-step ${typeClass}`;
+
+        const eqsHTML = step.equations.map(eq =>
+          `<div class="step-equation">${eq}</div>`).join('');
+
+        div.innerHTML = `
+          <div class="step-header">${step.header}</div>
+          <div class="step-content">
+            <p>${step.body}</p>
+            ${eqsHTML}
+          </div>`;
+        stepsContainer.appendChild(div);
+      });
+
+      if (solution) {
+        const summary = document.createElement('div');
+        summary.className = 'solution-step final-step solution-summary';
+        summary.innerHTML = `
+          <div class="step-header">General Solution</div>
+          <div class="step-content">
+            <div class="final-solution">${solution}</div>
+          </div>`;
+        stepsContainer.appendChild(summary);
+      }
+
+      stepsContainer.scrollTop = 0;
+
+      // Render with KaTeX auto-render if available (use requestAnimationFrame, not setTimeout)
+      requestAnimationFrame(() => {
+        if (typeof renderMathInElement !== 'undefined') {
+          renderMathInElement(stepsContainer, { throwOnError: false, delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }] });
+        }
+      });
+    }
+
+    function showPlaceholder(msg, icon) {
+      stepsContainer.innerHTML = `
+        <div class="placeholder-text">
+          <i class="fas ${icon || 'fa-arrow-up'}"></i>
+          <p>${msg}</p>
+        </div>`;
+    }
+
+    solveButton.addEventListener('click', () => {
+      const M = MInput.value.trim();
+      const N = NInput.value.trim();
+      const dMdy = dMdyInput.value.trim();
+      const dNdx = dNdxInput.value.trim();
+
+      if (!M || !N) {
+        showPlaceholder('Please enter both M(x,y) and N(x,y).', 'fa-exclamation-circle');
+        return;
+      }
+      if (!dMdy || !dNdx) {
+        showPlaceholder('Please enter your computed ∂M/∂y and ∂N/∂x values before solving.', 'fa-exclamation-circle');
+        return;
+      }
+
+      stepsContainer.innerHTML = `<div class="placeholder-text"><i class="fas fa-cog fa-spin"></i><p>Solving step by step...</p></div>`;
+
+      // Run solver after a frame so the spinner renders
+      requestAnimationFrame(() => {
+        try {
+          const solver = new ExactDESolver();
+          const result = solver.solve(M, N, dMdy, dNdx);
+          displaySteps(result.steps, result.solution);
+        } catch (err) {
+          console.error('Solver error:', err);
+          showPlaceholder(`Error: ${err.message}. Check your input format.`, 'fa-exclamation-triangle');
+        }
+      });
+    });
+
+    clearButton.addEventListener('click', () => {
+      MInput.value = '';
+      NInput.value = '';
+      dMdyInput.value = '';
+      dNdxInput.value = '';
+      updateEquationDisplay();
+      showPlaceholder('Enter an equation above and click "Verify & Solve".');
+    });
+
+    exampleBtns.forEach(btn => {
+      btn.addEventListener('click', function () {
+        MInput.value = this.dataset.m;
+        NInput.value = this.dataset.n;
+        // Clear derivative inputs so student computes them
+        dMdyInput.value = '';
+        dNdxInput.value = '';
+        updateEquationDisplay();
+        dMdyInput.focus();
+      });
+    });
+
+    MInput.addEventListener('input', updateEquationDisplay);
+    NInput.addEventListener('input', updateEquationDisplay);
+
+    [MInput, NInput, dMdyInput, dNdxInput].forEach(el => {
+      el.addEventListener('keydown', e => { if (e.key === 'Enter') solveButton.click(); });
+    });
+
+    // Add input format tips
+    const inputSection = document.querySelector('.input-section');
+    if (inputSection && !inputSection.querySelector('.format-tips')) {
+      const tips = document.createElement('div');
+      tips.className = 'format-tips';
+      tips.innerHTML = `
+        <h5><i class="fas fa-info-circle"></i> Input Format Tips:</h5>
+        <ul>
+          <li>Use * for multiplication: <code>2*x*y</code></li>
+          <li>Use ^ for powers: <code>x^2</code>, <code>y^3</code></li>
+          <li>Functions: <code>sin(x)</code>, <code>cos(x)</code>, <code>exp(x)</code></li>
+          <li>Enter M and N, then manually compute ∂M/∂y and ∂N/∂x and enter them above</li>
+        </ul>`;
+      inputSection.appendChild(tips);
+    }
+
+    // FIX: use local SVG data URI fallback instead of via.placeholder.com
+    document.querySelectorAll('img').forEach(img => {
+      img.onerror = function () {
+        const initials = (this.alt || '?').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        this.onerror = null;
+        this.src = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><rect width='150' height='150' fill='%232c3e50'/><text x='75' y='95' font-size='48' text-anchor='middle' fill='white' font-family='sans-serif'>${initials}</text></svg>`;
+      };
+    });
+
+    updateEquationDisplay();
+  }
+
+  // Kick off aim section
+  loadSectionContent(activeSection);
 });

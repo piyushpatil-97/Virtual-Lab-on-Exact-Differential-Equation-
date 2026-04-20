@@ -1,0 +1,2808 @@
+INDEX.HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Labs - Exact Differential Equations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo-section">
+                <div class="pcce-logo-container">
+                    <img src="images/pcce.png" alt="PCOE Logo" class="pcce-logo-img" id="pcceLogo">
+                    <div class="pcce-logo-text">
+                        <div class="main">APPLIED SCIENCES & HUMANITIES</div>
+                        <div class="sub">Pimpri Chinchwad College of Engineering</div>
+                    </div>
+                </div>
+                
+                <div class="virtual-labs-logo">
+                    <i class="fas fa-flask"></i>
+                    <h1>Virtual <span>Labs</span></h1>
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span>Welcome, Student</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container main-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3><i class="fas fa-bars"></i> Navigation</h3>
+            <ul class="nav-menu">
+                <li class="nav-item active" data-section="aim">
+                    <i class="fas fa-bullseye"></i>
+                    <span>Aim</span>
+                </li>
+                <li class="nav-item" data-section="theory">
+                    <i class="fas fa-book"></i>
+                    <span>Theory</span>
+                </li>
+                <li class="nav-item" data-section="pretest">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Pretest</span>
+                </li>
+                <li class="nav-item" data-section="simulation">
+                    <i class="fas fa-desktop"></i>
+                    <span>Simulation</span>
+                </li>
+                <li class="nav-item" data-section="posttest">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Posttest</span>
+                </li>
+                <li class="nav-item" data-section="references">
+                    <i class="fas fa-book-open"></i>
+                    <span>References</span>
+                </li>
+                <li class="nav-item" data-section="contributors">
+                    <i class="fas fa-users"></i>
+                    <span>Contributors</span>
+                </li>
+                <li class="nav-item" data-section="feedback">
+                    <i class="fas fa-comment-alt"></i>
+                    <span>Feedback</span>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content">
+            <div class="content-header">
+                <div class="breadcrumb">
+                    <a href="#">Home</a> / <span id="current-section">Aim</span>
+                </div>
+                <h2>Exact Differential Equations</h2>
+                <p>Virtual Lab for Engineering Mathematics</p>
+            </div>
+
+            <!-- Dynamic Content Sections -->
+            <div id="content-sections">
+                <!-- Aim Section -->
+                <section id="aim-section" class="content-section active">
+                    <div class="section-content">
+                        <h3><i class="fas fa-bullseye"></i> Aim of the Experiment</h3>
+                        <div class="aim-content">
+                            <div class="aim-card">
+                                <i class="fas fa-crosshairs"></i>
+                                <h4>Primary Objective</h4>
+                                <p>To understand the concept of exact differential equations and learn systematic methods to solve them step-by-step.</p>
+                            </div>
+                            <div class="aim-card">
+                                <i class="fas fa-tasks"></i>
+                                <h4>Learning Outcomes</h4>
+                                <ul>
+                                    <li>Identify exact differential equations</li>
+                                    <li>Apply the condition for exactness: ∂M/∂y = ∂N/∂x</li>
+                                    <li>Solve exact differential equations systematically</li>
+                                    <li>Handle non-exact equations using integrating factors</li>
+                                </ul>
+                            </div>
+                            <div class="aim-card">
+                                <i class="fas fa-chart-line"></i>
+                                <h4>Skills Developed</h4>
+                                <ul>
+                                    <li>Mathematical reasoning and problem-solving</li>
+                                    <li>Step-by-step analytical thinking</li>
+                                    <li>Verification of solutions</li>
+                                    <li>Application of partial derivatives</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="example-box">
+                            <h4><i class="fas fa-lightbulb"></i> Sample Exact Differential Equation</h4>
+                            <p class="equation">(2xy + y²)dx + (x² + 2xy)dy = 0</p>
+                            <p>This is an exact differential equation where:</p>
+                            <p>M(x,y) = 2xy + y², N(x,y) = x² + 2xy</p>
+                            <p>∂M/∂y = 2x + 2y = ∂N/∂x ✓</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Theory Section -->
+                <section id="theory-section" class="content-section">
+                    <div class="section-content">
+                        <h3><i class="fas fa-book"></i> Theoretical Background</h3>
+                        
+                        <div class="theory-card">
+                            <h4><i class="fas fa-dna"></i> Definition</h4>
+                            <p>A differential equation of the form M(x,y)dx + N(x,y)dy = 0 is called <strong>exact</strong> if there exists a function ψ(x,y) such that:</p>
+                            <p class="equation">dψ = M(x,y)dx + N(x,y)dy</p>
+                            <p>This implies that:</p>
+                            <p class="equation">∂ψ/∂x = M(x,y) and ∂ψ/∂y = N(x,y)</p>
+                        </div>
+
+                        <div class="theory-card">
+                            <h4><i class="fas fa-check-circle"></i> Condition for Exactness</h4>
+                            <p>The necessary and sufficient condition for exactness is:</p>
+                            <p class="equation">∂M/∂y = ∂N/∂x</p>
+                            <p>Where M and N have continuous partial derivatives in the region of interest.</p>
+                        </div>
+
+                        <div class="theory-card">
+                            <h4><i class="fas fa-cogs"></i> Solution Procedure</h4>
+                            <div class="steps">
+                                <div class="step">
+                                    <span class="step-number">1</span>
+                                    <p>Verify exactness: Check if ∂M/∂y = ∂N/∂x</p>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">2</span>
+                                    <p>Integrate M w.r.t x: ψ = ∫M dx + g(y)</p>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">3</span>
+                                    <p>Differentiate w.r.t y: ∂ψ/∂y = ∂/∂y(∫M dx) + g'(y)</p>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">4</span>
+                                    <p>Compare with N: ∂ψ/∂y should equal N</p>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">5</span>
+                                    <p>Find g(y): Solve for g'(y) and integrate</p>
+                                </div>
+                                <div class="step">
+                                    <span class="step-number">6</span>
+                                    <p>Write solution: ψ(x,y) = C</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="theory-card">
+                            <h4><i class="fas fa-exclamation-triangle"></i> Integrating Factors</h4>
+                            <p>If ∂M/∂y ≠ ∂N/∂x, the equation is not exact. However, sometimes we can find an <strong>integrating factor μ(x,y)</strong> such that:</p>
+                            <p class="equation">μM dx + μN dy = 0 becomes exact</p>
+                            <p>Common integrating factors:</p>
+                            <ul>
+                                <li>If (∂M/∂y - ∂N/∂x)/N is function of x only: μ = e^∫f(x)dx</li>
+                                <li>If (∂N/∂x - ∂M/∂y)/M is function of y only: μ = e^∫g(y)dy</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Pretest Section -->
+                <section id="pretest-section" class="content-section">
+                    <div class="section-content">
+                        <h3><i class="fas fa-question-circle"></i> Pretest - Prerequisite Knowledge</h3>
+                        <p class="section-description">Test your fundamental knowledge before learning exact differential equations.</p>
+                        
+                        <div class="quiz-container" id="pretest-quiz">
+                            <div class="quiz-header">
+                                <div class="quiz-info">
+                                    <span><i class="fas fa-clock"></i> Time: Unlimited</span>
+                                    <span><i class="fas fa-question"></i> Questions: 10</span>
+                                    <span><i class="fas fa-star"></i> Score: <span id="pretest-score">0</span>/10</span>
+                                </div>
+                                <button class="btn btn-primary" id="start-pretest">
+                                    <i class="fas fa-play"></i> Start Test
+                                </button>
+                            </div>
+
+                            <div class="questions-container">
+                                <!-- Questions will be loaded by JavaScript -->
+                            </div>
+
+                            <div class="quiz-controls">
+                                <button class="btn btn-secondary" id="prev-question">
+                                    <i class="fas fa-arrow-left"></i> Previous
+                                </button>
+                                <button class="btn btn-primary" id="next-question">
+                                    Next <i class="fas fa-arrow-right"></i>
+                                </button>
+                                <button class="btn btn-success" id="submit-pretest">
+                                    <i class="fas fa-paper-plane"></i> Submit Test
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Simulation Section -->
+                <section id="simulation-section" class="content-section">
+                    <div class="section-content">
+                        <h3><i class="fas fa-desktop"></i> Interactive Simulation</h3>
+                        <p class="section-description">Enter any exact differential equation and get step-by-step solution.</p>
+                        
+                        <div class="simulation-container">
+                            <div class="input-section">
+                                <h4><i class="fas fa-edit"></i> Enter Your Equation</h4>
+                                <div class="equation-input">
+                                    <div class="input-group">
+                                        <label>M(x,y):</label>
+                                        <input type="text" id="M-input" placeholder="e.g., 2xy + y^2" value="2*x*y + y^2">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>N(x,y):</label>
+                                        <input type="text" id="N-input" placeholder="e.g., x^2 + 2xy" value="x^2 + 2*x*y">
+                                    </div>
+                                    <div class="equation-preview">
+                                        <h5>Equation:</h5>
+                                        <div id="equation-display">(2xy + y²)dx + (x² + 2xy)dy = 0</div>
+                                    </div>
+                                    <button class="btn btn-primary" id="solve-equation">
+                                        <i class="fas fa-calculator"></i> Solve Step-by-Step
+                                    </button>
+                                    <button class="btn btn-secondary" id="clear-input">
+                                        <i class="fas fa-redo"></i> Clear
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="solution-section">
+                                <h4><i class="fas fa-list-ol"></i> Step-by-Step Solution</h4>
+                                <div class="steps-container" id="solution-steps">
+                                    <!-- Solution steps will appear here -->
+                                    <div class="placeholder-text">
+                                        <i class="fas fa-arrow-up"></i>
+                                        <p>Enter an equation above and click "Solve Step-by-Step" to see the solution</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="examples-section">
+                                <h4><i class="fas fa-lightbulb"></i> Example Equations</h4>
+                                <div class="example-buttons">
+                                    <button class="example-btn" data-m="2*x*y + y^2" data-n="x^2 + 2*x*y">
+                                        (2xy + y²)dx + (x² + 2xy)dy = 0
+                                    </button>
+                                    <button class="example-btn" data-m="y^2*cos(x) + y" data-n="2*y*sin(x) + x">
+                                        (y²cosx + y)dx + (2ysinx + x)dy = 0
+                                    </button>
+                                    <button class="example-btn" data-m="e^y" data-n="x*e^y + 2*y">
+                                        e^y dx + (xe^y + 2y)dy = 0
+                                    </button>
+                                    <button class="example-btn" data-m="3*x^2*y" data-n="x^3 + cos(y)">
+                                        3x²y dx + (x³ + cosy)dy = 0
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Posttest Section -->
+                <section id="posttest-section" class="content-section">
+                    <div class="section-content">
+                        <h3><i class="fas fa-clipboard-check"></i> Posttest - Exact Differential Equations</h3>
+                        <p class="section-description">Test your understanding of exact differential equations after completing the simulation.</p>
+                        
+                        <div class="quiz-container" id="posttest-quiz">
+                            <div class="quiz-header">
+                                <div class="quiz-info">
+                                    <span><i class="fas fa-clock"></i> Time: Unlimited</span>
+                                    <span><i class="fas fa-question"></i> Questions: 10</span>
+                                    <span><i class="fas fa-star"></i> Score: <span id="posttest-score">0</span>/10</span>
+                                </div>
+                                <button class="btn btn-primary" id="start-posttest">
+                                    <i class="fas fa-play"></i> Start Test
+                                </button>
+                            </div>
+
+                            <div class="questions-container">
+                                <!-- Questions will be loaded by JavaScript -->
+                            </div>
+
+                            <div class="quiz-controls">
+                                <button class="btn btn-secondary" id="prev-postquestion">
+                                    <i class="fas fa-arrow-left"></i> Previous
+                                </button>
+                                <button class="btn btn-primary" id="next-postquestion">
+                                    Next <i class="fas fa-arrow-right"></i>
+                                </button>
+                                <button class="btn btn-success" id="submit-posttest">
+                                    <i class="fas fa-paper-plane"></i> Submit Test
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- References Section -->
+                <section id="references-section" class="content-section">
+                    <div class="section-content">
+                        <h3><i class="fas fa-book-open"></i> References & Further Reading</h3>
+                        
+                        <div class="references-container">
+                            <div class="reference-card">
+                                <h4><i class="fas fa-book"></i> Textbooks</h4>
+                                <ul>
+                                    <li>Advanced Engineering Mathematics by Erwin Kreyszig</li>
+                                    <li>Differential Equations by George F. Simmons</li>
+                                    <li>Engineering Mathematics by B.S. Grewal</li>
+                                    <li>A Textbook of Differential Equations by Raisinghania</li>
+                                </ul>
+                            </div>
+
+                            <div class="reference-card">
+                                <h4><i class="fas fa-globe"></i> Online Resources</h4>
+                                <ul>
+                                    <li>MIT OpenCourseWare - Differential Equations</li>
+                                    <li>Khan Academy - Differential Equations</li>
+                                    <li>Wolfram MathWorld - Exact Differential Equations</li>
+                                    <li>Paul's Online Math Notes</li>
+                                </ul>
+                            </div>
+
+                            <div class="reference-card">
+                                <h4><i class="fas fa-video"></i> Video Lectures</h4>
+                                <ul>
+                                    <li>NPTEL Course on Differential Equations</li>
+                                    <li>3Blue1Brown - Differential Equations</li>
+                                    <li>Professor Leonard - Differential Equations Playlist</li>
+                                </ul>
+                            </div>
+
+                            <div class="reference-card">
+                                <h4><i class="fas fa-tools"></i> Software Tools</h4>
+                                <ul>
+                                    <li>Wolfram Alpha - Equation Solver</li>
+                                    <li>MATLAB - Symbolic Math Toolbox</li>
+                                    <li>Python - SymPy Library</li>
+                                    <li>Desmos - Graphing Calculator</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contributors Section -->
+                <section id="contributors-section" class="content-section">
+                    <div class="section-content">
+                        <h3><i class="fas fa-users"></i> Project Contributors</h3>
+                        
+                        <div class="contributors-container">
+                            <div class="contributor-card guide">
+                                <div class="contributor-image">
+                                    <img src="images/prof_kute.jpg" alt="Prof. Dinesh Kute">
+                                </div>
+                                <div class="contributor-info">
+                                    <h4>PROF. DINESH KUTE</h4>
+                                    <p class="role">Project Guide</p>
+                                    <p class="department">Department of Applied Sciences & Humanities</p>
+                                    <p class="qualification">PROF. AT AS&H DEPARTMENT, PCCOE,PUNE</p>
+                                </div>
+                            </div>
+
+                            <h4 class="team-heading">Project Team Members</h4>
+                            <div class="team-members">
+                                <div class="member-card">
+                                    <div class="member-image">
+                                        <img src="images/student1.jpg" alt="Piyush Patil">
+                                    </div>
+                                    <div class="member-info">
+                                        <h5>Piyush Patil</h5>
+                                        <p class="prn">PRN: 125B1F132</p>
+                                        <p class="year">FIRST YEAR INFORMATION TECHNOLOGY</p>
+                                    </div>
+                                </div>
+
+                                <div class="member-card">
+                                    <div class="member-image">
+                                        <img src="images/student2.jpg" alt="Pratham Gupta">
+                                    </div>
+                                    <div class="member-info">
+                                        <h5>Pratham Gupta</h5>
+                                        <p class="prn">PRN: 125B1F125</p>
+                                        <p class="year">FIRST YEAR INFORMATION TECHNOLOGY</p>
+                                    </div>
+                                </div>
+
+                                <div class="member-card">
+                                    <div class="member-image">
+                                        <img src="images/student3.jpg" alt="Pawan Koshti">
+                                    </div>
+                                    <div class="member-info">
+                                        <h5>Pawan Koshti</h5>
+                                        <p class="prn">PRN: 125B1F079</p>
+                                        <p class="year">FIRST YEAR INFORMATION TECHNOLOGY</p>
+                                    </div>
+                                </div>
+
+                                <div class="member-card">
+                                    <div class="member-image">
+                                        <img src="images/student4.jpg" alt="Hariom Ugale">
+                                    </div>
+                                    <div class="member-info">
+                                        <h5>Hariom Ugale</h5>
+                                        <p class="prn">PRN: 125B1F083</p>
+                                        <p class="year">FIRST YEAR INFORMATION TECHNOLOGY</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Feedback Section -->
+                <section id="feedback-section" class="content-section">
+                    <div class="section-content">
+                        <h3><i class="fas fa-comment-alt"></i> Feedback</h3>
+                        <p class="section-description">Your feedback helps us improve the virtual lab experience.</p>
+                        
+                        <div class="feedback-container">
+                            <div class="feedback-info">
+                                <div class="feedback-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <div class="feedback-text">
+                                    <h4>Share Your Experience</h4>
+                                    <p>Please take a moment to provide your valuable feedback about this virtual lab on Exact Differential Equations.</p>
+                                    <p>Your input will help us enhance the learning experience for future students.</p>
+                                </div>
+                            </div>
+
+                            <div class="google-form-container">
+                                <h4><i class="fab fa-google"></i> Google Feedback Form</h4>
+                                <div class="form-link">
+                                    <p>Click the button below to open the feedback form:</p>
+                                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfcf1kM6Dn7BZnAssGyCtM3youCcyainoWBsPpq04EC4LlKrw/viewform?usp=header" 
+                                       target="_blank" class="btn btn-primary feedback-btn">
+                                        <i class="fas fa-external-link-alt"></i> Open Feedback Form
+                                    </a>
+                                </div>
+                                
+                                <div class="form-preview">
+                                    <h5>Form Preview:</h5>
+                                    <div class="preview-box">
+                                        <p><strong>Form Title:</strong> Virtual Lab Feedback - Exact Differential Equations</p>
+                                        <p><strong>Instructions:</strong> Please rate your experience and provide suggestions</p>
+                                        <p><strong>Sections:</strong> Rating, Comments, Suggestions for Improvement</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alternative-feedback">
+                                <h4><i class="fas fa-envelope"></i> Alternative Contact</h4>
+                                <p>If you encounter any issues with the form, you can email your feedback to:</p>
+                                <p class="email-contact">virtual.labs@pccoepune.org</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="container">
+        <p>Virtual Labs &copy; 2025 | Applied Sciences & Humanities Department | 
+           <span class="footer-logo">Pimpri Chinchwad College of Engineering</span>
+        </p>
+        <p class="footer-note">This virtual lab is developed for educational purposes</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/contrib/auto-render.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
+STYLE.CSS
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header Styles - FIXED */
+header {
+    background: linear-gradient(135deg, #2c3e50, #1a2530);
+    color: white;
+    padding: 15px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.pcce-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-right: 25px;
+    border-right: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.pcce-logo-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 8px;
+    background-color: white;
+    padding: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pcce-logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.pcce-logo-text .main {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+}
+
+.pcce-logo-text .sub {
+    font-size: 11px;
+    color: #ecf0f1;
+    opacity: 0.9;
+    margin-top: 2px;
+}
+
+.virtual-labs-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.virtual-labs-logo i {
+    font-size: 24px;
+    color: #3498db;
+}
+
+.virtual-labs-logo h1 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.virtual-labs-logo span {
+    color: #3498db;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.user-info i {
+    font-size: 18px;
+    color: #3498db;
+}
+
+/* Main Content Layout */
+.main-content {
+    display: flex;
+    margin-top: 100px; /* Increased for fixed header */
+    gap: 30px;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    flex: 0 0 280px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px 0;
+    height: fit-content;
+    position: sticky;
+    top: 120px; /* Adjusted for fixed header */
+}
+
+.sidebar h3 {
+    padding: 0 20px 15px;
+    color: #2c3e50;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-menu {
+    list-style: none;
+}
+
+.nav-item {
+    padding: 12px 25px;
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-item:hover {
+    background-color: #f8f9fa;
+    border-left-color: #3498db;
+}
+
+.nav-item.active {
+    background-color: #f0f7ff;
+    border-left-color: #3498db;
+    color: #3498db;
+    font-weight: 500;
+}
+
+.nav-item i {
+    width: 20px;
+    text-align: center;
+}
+
+/* Content Area */
+.content {
+    flex: 1;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    min-height: 600px;
+}
+
+.content-header {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.breadcrumb {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-bottom: 8px;
+}
+
+.breadcrumb a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.content-header h2 {
+    font-size: 28px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.content-header p {
+    color: #7f8c8d;
+    margin-top: 5px;
+}
+
+/* Content Sections */
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+}
+
+.section-content {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Aim Section */
+.aim-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.aim-card {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 8px;
+    padding: 20px;
+    border-left: 4px solid #3498db;
+}
+
+.aim-card i {
+    font-size: 24px;
+    color: #3498db;
+    margin-bottom: 15px;
+}
+
+.aim-card h4 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.aim-card ul {
+    list-style-position: inside;
+    color: #555;
+}
+
+.aim-card li {
+    margin-bottom: 8px;
+}
+
+.example-box {
+    background: #e8f4fc;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #d1e7ff;
+}
+
+.example-box h4 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.equation {
+    font-family: 'Cambria Math', serif;
+    background: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-size: 18px;
+    border: 1px solid #eee;
+}
+
+/* Theory Section */
+.theory-card {
+    background: white;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.theory-card h4 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+}
+
+.steps {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 3px solid #3498db;
+}
+
+.step-number {
+    background: #3498db;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* Quiz Sections */
+.quiz-container {
+    background: white;
+    border-radius: 8px;
+    padding: 25px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.quiz-info {
+    display: flex;
+    gap: 20px;
+    color: #7f8c8d;
+}
+
+.quiz-info span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.questions-container {
+    margin-bottom: 30px;
+}
+
+.question-item {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border-left: 3px solid #3498db;
+}
+
+.question-text {
+    font-size: 18px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.option {
+    padding: 12px 15px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.option:hover {
+    background: #f0f7ff;
+    border-color: #3498db;
+}
+
+.option.selected {
+    background: #e8f4fc;
+    border-color: #3498db;
+    color: #3498db;
+}
+
+.quiz-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+/* Simulation Section */
+.simulation-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.input-section, .solution-section, .examples-section {
+    background: white;
+    border-radius: 8px;
+    padding: 25px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.equation-input {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-group label {
+    width: 100px;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.equation-preview {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.equation-preview h5 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+#equation-display {
+    font-family: 'Cambria Math', serif;
+    font-size: 20px;
+    color: #2c3e50;
+    padding: 10px;
+    background: white;
+    border-radius: 4px;
+}
+
+.steps-container {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 20px;
+    min-height: 200px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.solution-step {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border-left: 3px solid #3498db;
+}
+
+.step-header {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.step-content {
+    color: #555;
+    line-height: 1.6;
+}
+
+.step-equation {
+    font-family: 'Cambria Math', serif;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    border: 1px solid #eee;
+}
+
+.placeholder-text {
+    text-align: center;
+    padding: 50px 20px;
+    color: #7f8c8d;
+}
+
+.placeholder-text i {
+    font-size: 48px;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.example-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px;
+}
+
+.example-btn {
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    font-family: 'Cambria Math', serif;
+    font-size: 14px;
+}
+
+.example-btn:hover {
+    background: #e8f4fc;
+    border-color: #3498db;
+}
+
+/* References Section */
+.references-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.reference-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    border-left: 4px solid #3498db;
+}
+
+.reference-card h4 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reference-card ul {
+    list-style-position: inside;
+    color: #555;
+}
+
+.reference-card li {
+    margin-bottom: 8px;
+    padding-left: 5px;
+}
+
+/* Contributors Section */
+.contributors-container {
+    background: white;
+    border-radius: 8px;
+    padding: 25px;
+    border: 1px solid #eee;
+}
+
+.contributor-card.guide {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 30px;
+    background: linear-gradient(135deg, #f0f7ff, #e8f4fc);
+    border-radius: 8px;
+    margin-bottom: 40px;
+    border: 1px solid #d1e7ff;
+}
+
+.contributor-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.contributor-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.contributor-info h4 {
+    color: #2c3e50;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.role {
+    color: #3498db;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.department, .qualification {
+    color: #7f8c8d;
+    margin-bottom: 5px;
+}
+
+.team-heading {
+    color: #2c3e50;
+    font-size: 22px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.team-members {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.member-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.member-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.member-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 20px;
+    border: 3px solid white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.member-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-info h5 {
+    color: #2c3e50;
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.prn {
+    color: #3498db;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.year {
+    color: #7f8c8d;
+    font-size: 14px;
+}
+
+/* Feedback Section */
+.feedback-container {
+    background: white;
+    border-radius: 8px;
+    padding: 30px;
+    border: 1px solid #eee;
+}
+
+.feedback-info {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.feedback-icon {
+    font-size: 48px;
+    color: #3498db;
+}
+
+.feedback-text h4 {
+    color: #2c3e50;
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.google-form-container {
+    background: #f0f7ff;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border: 1px solid #d1e7ff;
+}
+
+.google-form-container h4 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-link {
+    margin-bottom: 20px;
+}
+
+.feedback-btn {
+    margin-top: 15px;
+    padding: 12px 30px;
+    font-size: 16px;
+}
+
+.form-preview {
+    background: white;
+    border-radius: 6px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.form-preview h5 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.preview-box {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.alternative-feedback {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.alternative-feedback h4 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.email-contact {
+    font-size: 18px;
+    color: #3498db;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(to right, #3498db, #2c80b9);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(to right, #2c80b9, #216794);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: linear-gradient(to right, #28a745, #218838);
+    color: white;
+}
+
+.btn-success:hover {
+    background: linear-gradient(to right, #218838, #1e7e34);
+    transform: translateY(-2px);
+}
+
+/* Footer */
+footer {
+    margin-top: 40px;
+    padding: 20px 0;
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 14px;
+    border-top: 1px solid #eee;
+}
+
+.footer-logo {
+    display: inline-block;
+    margin: 0 5px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.footer-note {
+    font-size: 12px;
+    color: #95a5a6;
+    margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        position: static;
+        top: auto;
+    }
+    
+    .aim-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        padding: 10px 20px;
+    }
+    
+    .logo-section {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+    }
+    
+    .pcce-logo-container {
+        border-right: none;
+        padding-right: 0;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        padding-bottom: 15px;
+        justify-content: center;
+        width: 100%;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .virtual-labs-logo {
+        justify-content: center;
+    }
+    
+    .user-info {
+        font-size: 12px;
+    }
+    
+    .main-content {
+        margin-top: 150px; /* More space for stacked header on mobile */
+    }
+    
+    .sidebar {
+        top: auto;
+    }
+    
+    .contributor-card.guide {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .team-members {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .feedback-info {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    header {
+        padding: 10px 0;
+    }
+    
+    .pcce-logo-img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .pcce-logo-text .main {
+        font-size: 14px;
+    }
+    
+    .pcce-logo-text .sub {
+        font-size: 10px;
+    }
+    
+    .virtual-labs-logo h1 {
+        font-size: 18px;
+    }
+    
+    .virtual-labs-logo i {
+        font-size: 20px;
+    }
+    
+    .main-content {
+        margin-top: 140px;
+    }
+    
+    .content {
+        padding: 20px;
+    }
+    
+    .team-members {
+        grid-template-columns: 1fr;
+    }
+    
+    .quiz-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+/* Enhanced Solution Steps */
+.solution-step {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    border-left: 4px solid #3498db;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.solution-step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.final-step {
+    background: linear-gradient(135deg, #e8f4fc, #d1e7ff);
+    border-left-color: #28a745;
+}
+
+.step-header {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.step-number {
+    background: #3498db;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.step-content {
+    color: #555;
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+.step-equation {
+    font-family: 'Cambria Math', 'Times New Roman', serif;
+    background: #f8f9fa;
+    padding: 12px 15px;
+    border-radius: 4px;
+    margin: 12px 0;
+    border: 1px solid #e9ecef;
+    font-size: 17px;
+    overflow-x: auto;
+}
+
+.step-list {
+    margin: 15px 0 15px 20px;
+    color: #555;
+}
+
+.step-list li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.solution-summary {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    border-left-color: #28a745;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.2); }
+    70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+}
+
+.final-solution {
+    font-family: 'Cambria Math', 'Times New Roman', serif;
+    background: white;
+    padding: 15px;
+    border-radius: 4px;
+    margin: 15px 0;
+    border: 2px solid #28a745;
+    font-size: 20px;
+    font-weight: bold;
+    color: #155724;
+    text-align: center;
+}
+
+.placeholder-text .hint {
+    font-size: 14px;
+    color: #6c757d;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.format-tips {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 20px;
+    border-left: 3px solid #17a2b8;
+}
+
+.format-tips h5 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.format-tips ul {
+    margin-left: 20px;
+    color: #555;
+    font-size: 14px;
+}
+
+.format-tips li {
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+/* KaTeX specific styles */
+.katex {
+    font-size: 1.1em !important;
+}
+
+.katex-display {
+    margin: 1em 0 !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+SCRIPT.JS
+
+// Wait for DOM to load
+document.addEventListener('DOMContentLoaded', function() {
+    // Navigation functionality
+    const navItems = document.querySelectorAll('.nav-item');
+    const contentSections = document.querySelectorAll('.content-section');
+    const currentSectionSpan = document.getElementById('current-section');
+    const breadcrumbSection = document.querySelector('.breadcrumb span');
+
+    // Initialize active section
+    let activeSection = 'aim';
+
+    // Navigation click handler
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const sectionId = item.getAttribute('data-section');
+            
+            // Update navigation
+            navItems.forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            
+            // Update content sections
+            contentSections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === `${sectionId}-section`) {
+                    section.classList.add('active');
+                    activeSection = sectionId;
+                    
+                    // Update breadcrumb
+                    const sectionName = sectionId.charAt(0).toUpperCase() + sectionId.slice(1);
+                    currentSectionSpan.textContent = sectionName;
+                    breadcrumbSection.textContent = sectionName;
+                    
+                    // Load section-specific content
+                    loadSectionContent(sectionId);
+                }
+            });
+        });
+    });
+
+    // Section content loader
+    function loadSectionContent(sectionId) {
+        switch(sectionId) {
+            case 'pretest':
+                loadPretestQuestions();
+                break;
+            case 'posttest':
+                loadPosttestQuestions();
+                break;
+            case 'simulation':
+                initSimulation();
+                break;
+        }
+    }
+
+    // Pretest Questions
+    const pretestQuestions = [
+        {
+            question: "What is the derivative of sin(x)?",
+            options: ["cos(x)", "-cos(x)", "sin(x)", "-sin(x)"],
+            correct: 0
+        },
+        {
+            question: "What is ∫x dx?",
+            options: ["x²/2", "x²", "2x", "1"],
+            correct: 0
+        },
+        {
+            question: "What is ∂/∂x (xy)?",
+            options: ["y", "x", "xy", "0"],
+            correct: 0
+        },
+        {
+            question: "What is the order of the differential equation: d²y/dx² + 3dy/dx + 2y = 0?",
+            options: ["0", "1", "2", "3"],
+            correct: 2
+        },
+        {
+            question: "Which of these is a first order differential equation?",
+            options: ["y'' + y = 0", "dy/dx = x", "d³y/dx³ = y", "y' + y'' = x"],
+            correct: 1
+        },
+        {
+            question: "What is the general solution of dy/dx = 2x?",
+            options: ["y = x²", "y = x² + C", "y = 2x + C", "y = x"],
+            correct: 1
+        },
+        {
+            question: "What is ∂/∂y (x²y)?",
+            options: ["x²", "2xy", "xy", "y"],
+            correct: 0
+        },
+        {
+            question: "What is ∫e^x dx?",
+            options: ["e^x", "e^x + C", "ln(x)", "1/e^x"],
+            correct: 1
+        },
+        {
+            question: "Which of these is a separable differential equation?",
+            options: ["dy/dx = xy", "dy/dx + y = x", "y'' + y' = 0", "dy/dx = sin(x+y)"],
+            correct: 0
+        },
+        {
+            question: "What is the degree of (dy/dx)² + x = 0?",
+            options: ["1", "2", "0", "Undefined"],
+            correct: 1
+        }
+    ];
+
+    // Posttest Questions
+    const posttestQuestions = [
+        {
+            question: "Which of these is an exact differential equation?",
+            options: [
+                "(2x + y)dx + (x + 2y)dy = 0",
+                "(y²)dx + (2xy)dy = 0",
+                "(sin y)dx + (x cos y)dy = 0",
+                "All of the above"
+            ],
+            correct: 3
+        },
+        {
+            question: "For exactness of M dx + N dy = 0, what condition must be satisfied?",
+            options: [
+                "∂M/∂x = ∂N/∂y",
+                "∂M/∂y = ∂N/∂x",
+                "M = N",
+                "∂²M/∂x∂y = ∂²N/∂y∂x"
+            ],
+            correct: 1
+        },
+        {
+            question: "The equation (2xy + y²)dx + (x² + 2xy)dy = 0 is:",
+            options: [
+                "Exact",
+                "Not exact",
+                "Homogeneous",
+                "Linear"
+            ],
+            correct: 0
+        },
+        {
+            question: "The solution of the exact equation (y dx + x dy) = 0 is:",
+            options: [
+                "xy = C",
+                "x + y = C",
+                "x/y = C",
+                "x² + y² = C"
+            ],
+            correct: 0
+        },
+        {
+            question: "If M = e^y and N = xe^y + 2y, then ∂M/∂y equals:",
+            options: [
+                "e^y",
+                "xe^y",
+                "xe^y + 2",
+                "e^y + 2"
+            ],
+            correct: 0
+        },
+        {
+            question: "An integrating factor for (y² - 2xy)dx + (3xy - 6x²)dy = 0 is:",
+            options: [
+                "1/x",
+                "1/y",
+                "x",
+                "y"
+            ],
+            correct: 0
+        },
+        {
+            question: "The solution of (cos y dx - x sin y dy) = 0 is:",
+            options: [
+                "x cos y = C",
+                "x sin y = C",
+                "x + cos y = C",
+                "x - sin y = C"
+            ],
+            correct: 0
+        },
+        {
+            question: "Which method is used to solve exact differential equations?",
+            options: [
+                "Separation of variables",
+                "Integrating factor",
+                "Direct integration",
+                "Partial integration"
+            ],
+            correct: 3
+        },
+        {
+            question: "If ∂M/∂y ≠ ∂N/∂x, the equation is:",
+            options: [
+                "Always solvable",
+                "Not exact",
+                "Exact with integrating factor",
+                "Both B and C"
+            ],
+            correct: 3
+        },
+        {
+            question: "The general solution of an exact differential equation is of the form:",
+            options: [
+                "y = f(x) + C",
+                "F(x,y) = C",
+                "y' = f(x)",
+                "M = N"
+            ],
+            correct: 1
+        }
+    ];
+
+    // Pretest functionality
+    let currentPretestQuestion = 0;
+    let pretestAnswers = new Array(pretestQuestions.length).fill(-1);
+    let pretestScore = 0;
+
+    function loadPretestQuestions() {
+        const questionsContainer = document.querySelector('#pretest-quiz .questions-container');
+        questionsContainer.innerHTML = '';
+        
+        const question = pretestQuestions[currentPretestQuestion];
+        
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question-item';
+        questionDiv.innerHTML = `
+            <div class="question-number">Question ${currentPretestQuestion + 1} of ${pretestQuestions.length}</div>
+            <div class="question-text">${question.question}</div>
+            <div class="options">
+                ${question.options.map((option, index) => `
+                    <div class="option ${pretestAnswers[currentPretestQuestion] === index ? 'selected' : ''}" 
+                         data-index="${index}">
+                        ${String.fromCharCode(65 + index)}) ${option}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        
+        questionsContainer.appendChild(questionDiv);
+        
+        // Add event listeners to options
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const selectedIndex = parseInt(this.getAttribute('data-index'));
+                pretestAnswers[currentPretestQuestion] = selectedIndex;
+                
+                // Update UI
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+        
+        // Update navigation buttons
+        document.getElementById('prev-question').disabled = currentPretestQuestion === 0;
+        document.getElementById('next-question').disabled = currentPretestQuestion === pretestQuestions.length - 1;
+    }
+
+    // Pretest navigation
+    document.getElementById('start-pretest')?.addEventListener('click', function() {
+        currentPretestQuestion = 0;
+        pretestAnswers.fill(-1);
+        pretestScore = 0;
+        loadPretestQuestions();
+        this.disabled = true;
+    });
+
+    document.getElementById('prev-question')?.addEventListener('click', function() {
+        if (currentPretestQuestion > 0) {
+            currentPretestQuestion--;
+            loadPretestQuestions();
+        }
+    });
+
+    document.getElementById('next-question')?.addEventListener('click', function() {
+        if (currentPretestQuestion < pretestQuestions.length - 1) {
+            currentPretestQuestion++;
+            loadPretestQuestions();
+        }
+    });
+
+    document.getElementById('submit-pretest')?.addEventListener('click', function() {
+        // Calculate score
+        pretestScore = 0;
+        pretestQuestions.forEach((question, index) => {
+            if (pretestAnswers[index] === question.correct) {
+                pretestScore++;
+            }
+        });
+        
+        // Update score display
+        document.getElementById('pretest-score').textContent = pretestScore;
+        
+        // Show results
+        alert(`Pretest Completed!\nYour Score: ${pretestScore}/${pretestQuestions.length}\n${pretestScore >= 7 ? 'Great! You are ready to proceed.' : 'Review the basics before proceeding.'}`);
+        
+        // Re-enable start button
+        document.getElementById('start-pretest').disabled = false;
+    });
+
+    // Posttest functionality (similar to pretest)
+    let currentPosttestQuestion = 0;
+    let posttestAnswers = new Array(posttestQuestions.length).fill(-1);
+    let posttestScore = 0;
+
+    function loadPosttestQuestions() {
+        const questionsContainer = document.querySelector('#posttest-quiz .questions-container');
+        questionsContainer.innerHTML = '';
+        
+        const question = posttestQuestions[currentPosttestQuestion];
+        
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question-item';
+        questionDiv.innerHTML = `
+            <div class="question-number">Question ${currentPosttestQuestion + 1} of ${posttestQuestions.length}</div>
+            <div class="question-text">${question.question}</div>
+            <div class="options">
+                ${question.options.map((option, index) => `
+                    <div class="option ${posttestAnswers[currentPosttestQuestion] === index ? 'selected' : ''}" 
+                         data-index="${index}">
+                        ${String.fromCharCode(65 + index)}) ${option}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        
+        questionsContainer.appendChild(questionDiv);
+        
+        // Add event listeners to options
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const selectedIndex = parseInt(this.getAttribute('data-index'));
+                posttestAnswers[currentPosttestQuestion] = selectedIndex;
+                
+                // Update UI
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+        
+        // Update navigation buttons
+        document.getElementById('prev-postquestion').disabled = currentPosttestQuestion === 0;
+        document.getElementById('next-postquestion').disabled = currentPosttestQuestion === posttestQuestions.length - 1;
+    }
+
+    // Posttest navigation
+    document.getElementById('start-posttest')?.addEventListener('click', function() {
+        currentPosttestQuestion = 0;
+        posttestAnswers.fill(-1);
+        posttestScore = 0;
+        loadPosttestQuestions();
+        this.disabled = true;
+    });
+
+    document.getElementById('prev-postquestion')?.addEventListener('click', function() {
+        if (currentPosttestQuestion > 0) {
+            currentPosttestQuestion--;
+            loadPosttestQuestions();
+        }
+    });
+
+    document.getElementById('next-postquestion')?.addEventListener('click', function() {
+        if (currentPosttestQuestion < posttestQuestions.length - 1) {
+            currentPosttestQuestion++;
+            loadPosttestQuestions();
+        }
+    });
+
+    document.getElementById('submit-posttest')?.addEventListener('click', function() {
+        // Calculate score
+        posttestScore = 0;
+        posttestQuestions.forEach((question, index) => {
+            if (posttestAnswers[index] === question.correct) {
+                posttestScore++;
+            }
+        });
+        
+        // Update score display
+        document.getElementById('posttest-score').textContent = posttestScore;
+        
+        // Show results
+        alert(`Posttest Completed!\nYour Score: ${posttestScore}/${posttestQuestions.length}\n${posttestScore >= 7 ? 'Excellent! You have mastered the topic.' : 'You may want to review the material again.'}`);
+        
+        // Re-enable start button
+        document.getElementById('start-posttest').disabled = false;
+    });
+
+    // EXACT DIFFERENTIAL EQUATION SOLVER
+    class ExactDESolver {
+        constructor() {
+            this.steps = [];
+            this.isExact = false;
+            this.solution = null;
+        }
+
+        // Parse mathematical expression
+        parseExpression(expr) {
+            // Remove spaces and convert to lowercase
+            expr = expr.replace(/\s+/g, '').toLowerCase();
+            
+            // Replace common function notations
+            expr = expr.replace(/sin\(/g, 'Math.sin(')
+                      .replace(/cos\(/g, 'Math.cos(')
+                      .replace(/tan\(/g, 'Math.tan(')
+                      .replace(/exp\(/g, 'Math.exp(')
+                      .replace(/ln\(/g, 'Math.log(')
+                      .replace(/log\(/g, 'Math.log10(')
+                      .replace(/e\^/g, 'Math.exp(')
+                      .replace(/\^/g, '**')
+                      .replace(/(\d)([a-z])/g, '$1*$2')
+                      .replace(/([a-z])(\d)/g, '$1*$2')
+                      .replace(/([a-z])([a-z])/g, '$1*$2');
+            
+            return expr;
+        }
+
+        // Extract terms from expression
+        extractTerms(expr) {
+            const terms = [];
+            let currentTerm = '';
+            let bracketCount = 0;
+            
+            for (let i = 0; i < expr.length; i++) {
+                const char = expr[i];
+                
+                if (char === '(') bracketCount++;
+                if (char === ')') bracketCount--;
+                
+                if ((char === '+' || char === '-') && bracketCount === 0 && i > 0) {
+                    if (currentTerm) {
+                        terms.push(currentTerm);
+                        currentTerm = char;
+                    }
+                } else {
+                    currentTerm += char;
+                }
+            }
+            
+            if (currentTerm) terms.push(currentTerm);
+            return terms.map(term => term.trim()).filter(term => term);
+        }
+
+        // Compute partial derivative numerically
+        partialDerivative(funcStr, wrt, point, h = 0.00001) {
+            const { x, y } = point;
+            let f1, f2;
+            
+            try {
+                if (wrt === 'y') {
+                    f1 = this.evaluateAtPoint(funcStr, x, y + h);
+                    f2 = this.evaluateAtPoint(funcStr, x, y);
+                } else {
+                    f1 = this.evaluateAtPoint(funcStr, x + h, y);
+                    f2 = this.evaluateAtPoint(funcStr, x, y);
+                }
+                
+                return (f1 - f2) / h;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // Evaluate expression at point
+        evaluateAtPoint(expr, x, y) {
+            try {
+                const safeExpr = expr.replace(/x/g, x).replace(/y/g, y);
+                // Evaluate the expression
+                const func = new Function('Math', `return ${safeExpr}`);
+                return func(Math);
+            } catch (e) {
+                console.error('Evaluation error:', e);
+                return null;
+            }
+        }
+
+        // Integrate with respect to x
+        integrateWithRespectToX(M_expr) {
+            const terms = this.extractTerms(M_expr);
+            let result = '';
+            
+            for (const term of terms) {
+                const integratedTerm = this.integrateTerm(term, 'x');
+                result += (result && integratedTerm.startsWith('-') ? '' : '+') + integratedTerm;
+            }
+            
+            return result.replace(/^\+/, '') + ' + g(y)';
+        }
+
+        // Integrate a single term
+        integrateTerm(term, variable) {
+            term = term.trim();
+            
+            // Handle negative signs
+            let sign = term.startsWith('-') ? '-' : '';
+            if (sign) term = term.substring(1);
+            
+            // Check for functions
+            if (term.includes('sin(') || term.includes('cos(') || term.includes('tan(')) {
+                return this.integrateTrigTerm(sign + term, variable);
+            } else if (term.includes('exp(')) {
+                return this.integrateExpTerm(sign + term, variable);
+            } else {
+                return this.integratePolyTerm(sign + term, variable);
+            }
+        }
+
+        // Integrate polynomial term
+        integratePolyTerm(term, variable) {
+            // Handle coefficient
+            let coefficient = 1;
+            let varPart = term;
+            
+            // Extract coefficient if present
+            const match = term.match(/^([-+]?\d*\.?\d*)/);
+            if (match && match[1] && match[1] !== '' && match[1] !== '+' && match[1] !== '-') {
+                coefficient = parseFloat(match[1]);
+                varPart = term.substring(match[1].length);
+            } else if (term.startsWith('-')) {
+                coefficient = -1;
+                varPart = term.substring(1);
+            } else if (term.startsWith('+')) {
+                coefficient = 1;
+                varPart = term.substring(1);
+            }
+            
+            // Check if term contains the variable
+            if (!varPart.includes(variable)) {
+                // Constant with respect to variable
+                return `${coefficient}${variable}${varPart}`;
+            }
+            
+            // Handle power
+            if (varPart.includes('**')) {
+                const parts = varPart.split('**');
+                const base = parts[0];
+                const power = parseFloat(parts[1]);
+                
+                if (base === variable) {
+                    const newPower = power + 1;
+                    const newCoeff = coefficient / newPower;
+                    return `${newCoeff}${variable}**${newPower}`;
+                }
+            } else if (varPart === variable) {
+                // Simple variable
+                return `${coefficient/2}${variable}**2`;
+            }
+            
+            // If we can't integrate symbolically, return as is
+            return `${coefficient}∫(${varPart}) d${variable}`;
+        }
+
+        // Integrate trigonometric term
+        integrateTrigTerm(term, variable) {
+            // Extract the argument inside trig function
+            const match = term.match(/(sin|cos|tan)\(([^)]+)\)/);
+            if (match) {
+                const func = match[1];
+                const arg = match[2];
+                
+                // Check if argument is linear in variable
+                if (arg.includes('*' + variable) || arg === variable) {
+                    const coeffMatch = arg.match(new RegExp(`([-+]?\\d*\\.?\\d*)\\*?${variable}`));
+                    let a = 1;
+                    if (coeffMatch && coeffMatch[1]) {
+                        a = parseFloat(coeffMatch[1]) || 1;
+                    }
+                    
+                    switch(func) {
+                        case 'sin':
+                            return `-${1/a}cos(${arg})`;
+                        case 'cos':
+                            return `${1/a}sin(${arg})`;
+                        case 'tan':
+                            return `${1/a}ln|sec(${arg})|`;
+                    }
+                }
+            }
+            
+            return `∫(${term}) d${variable}`;
+        }
+
+        // Integrate exponential term
+        integrateExpTerm(term, variable) {
+            const match = term.match(/exp\(([^)]+)\)/);
+            if (match) {
+                const arg = match[1];
+                
+                if (arg.includes('*' + variable) || arg === variable) {
+                    const coeffMatch = arg.match(new RegExp(`([-+]?\\d*\\.?\\d*)\\*?${variable}`));
+                    let a = 1;
+                    if (coeffMatch && coeffMatch[1]) {
+                        a = parseFloat(coeffMatch[1]) || 1;
+                    }
+                    return `${1/a}exp(${arg})`;
+                }
+            }
+            
+            return `∫(${term}) d${variable}`;
+        }
+
+        // Differentiate with respect to y
+        differentiateWithRespectToY(expr) {
+            const terms = this.extractTerms(expr.replace(' + g(y)', ''));
+            let result = '';
+            
+            for (const term of terms) {
+                const diffTerm = this.differentiateTerm(term, 'y');
+                if (diffTerm && diffTerm !== '0') {
+                    result += (result && !diffTerm.startsWith('-') ? '+' : '') + diffTerm;
+                }
+            }
+            
+            return result.replace(/^\+/, '') + " + g'(y)";
+        }
+
+        // Differentiate a single term
+        differentiateTerm(term, variable) {
+            term = term.trim();
+            
+            // Handle negative signs
+            let sign = term.startsWith('-') ? '-' : '';
+            if (sign) term = term.substring(1);
+            
+            // Check if term contains g(y)
+            if (term.includes('g(y)')) {
+                return term.includes("'") ? "g'(y)" : "g(y)";
+            }
+            
+            // Check if term contains the variable
+            if (!term.includes(variable)) {
+                return '0'; // Derivative of constant with respect to y is 0
+            }
+            
+            // Simple cases
+            if (term === variable) {
+                return sign + '1';
+            }
+            
+            if (term.includes('*' + variable)) {
+                const coeff = parseFloat(term.split('*')[0]) || 1;
+                return sign + coeff;
+            }
+            
+            if (term.includes(variable + '**')) {
+                const parts = term.split('**');
+                const base = parts[0];
+                const power = parseFloat(parts[1]);
+                
+                if (base === variable) {
+                    const coeff = parseFloat(term.split('*')[0]) || 1;
+                    return sign + (coeff * power) + variable + '**' + (power - 1);
+                }
+            }
+            
+            // For other cases, return symbolic derivative
+            return sign + "∂(" + term + ")/∂" + variable;
+        }
+
+        // Solve exact differential equation
+        solve(M_expr, N_expr) {
+            this.steps = [];
+            this.isExact = false;
+            this.solution = null;
+            
+            // Clean expressions
+            M_expr = this.parseExpression(M_expr);
+            N_expr = this.parseExpression(N_expr);
+            
+            // Step 1: Display the given equation
+            this.steps.push({
+                header: "Step 1: Given Equation",
+                content: "The differential equation is:",
+                equation: `(${M_expr}) dx + (${N_expr}) dy = 0`
+            });
+            
+            // Step 2: Identify M and N
+            this.steps.push({
+                header: "Step 2: Identify M(x,y) and N(x,y)",
+                content: "We have:",
+                equations: [
+                    `M(x,y) = ${M_expr}`,
+                    `N(x,y) = ${N_expr}`
+                ]
+            });
+            
+            // Step 3: Check exactness
+            this.steps.push({
+                header: "Step 3: Check for Exactness",
+                content: "For exactness, we need ∂M/∂y = ∂N/∂x",
+                equation: `Condition: ∂M/∂y = ∂N/∂x`
+            });
+            
+            // Compute partial derivatives at sample points
+            const points = [{x: 1, y: 1}, {x: 2, y: 1}, {x: 1, y: 2}];
+            let allEqual = true;
+            let dM_dy_vals = [];
+            let dN_dx_vals = [];
+            
+            for (const point of points) {
+                const dM_dy = this.partialDerivative(M_expr, 'y', point);
+                const dN_dx = this.partialDerivative(N_expr, 'x', point);
+                
+                dM_dy_vals.push(dM_dy);
+                dN_dx_vals.push(dN_dx);
+                
+                if (Math.abs(dM_dy - dN_dx) > 0.001) {
+                    allEqual = false;
+                }
+            }
+            
+            // Take average values
+            const avg_dM_dy = dM_dy_vals.reduce((a, b) => a + b, 0) / dM_dy_vals.length;
+            const avg_dN_dx = dN_dx_vals.reduce((a, b) => a + b, 0) / dN_dx_vals.length;
+            
+            this.isExact = Math.abs(avg_dM_dy - avg_dN_dx) < 0.01;
+            
+            this.steps.push({
+                header: "Step 4: Compute Partial Derivatives",
+                content: "Computing at sample points:",
+                equations: [
+                    `∂M/∂y ≈ ${avg_dM_dy.toFixed(4)}`,
+                    `∂N/∂x ≈ ${avg_dN_dx.toFixed(4)}`
+                ]
+            });
+            
+            if (this.isExact) {
+                this.steps.push({
+                    header: "Step 5: Exactness Condition",
+                    content: "Since ∂M/∂y ≈ ∂N/∂x, the equation is exact.",
+                    equation: `∂M/∂y (${avg_dM_dy.toFixed(4)}) ≈ ∂N/∂x (${avg_dN_dx.toFixed(4)}) ✓`
+                });
+                
+                // Step 6: Integrate M with respect to x
+                const int_M_dx = this.integrateWithRespectToX(M_expr);
+                this.steps.push({
+                    header: "Step 6: Integrate M with respect to x",
+                    content: "Find ψ(x,y) by integrating M with respect to x:",
+                    equation: `ψ(x,y) = ∫M dx = ∫(${M_expr}) dx = ${int_M_dx}`
+                });
+                
+                // Step 7: Differentiate ψ with respect to y
+                const dψ_dy = this.differentiateWithRespectToY(int_M_dx);
+                this.steps.push({
+                    header: "Step 7: Differentiate ψ with respect to y",
+                    content: "Differentiate ψ with respect to y:",
+                    equation: `∂ψ/∂y = ∂/∂y [${int_M_dx}] = ${dψ_dy}`
+                });
+                
+                // Step 8: Compare with N to find g'(y)
+                this.steps.push({
+                    header: "Step 8: Compare with N(x,y)",
+                    content: "We know ∂ψ/∂y should equal N(x,y):",
+                    equation: `${dψ_dy} = ${N_expr}`
+                });
+                
+                // Step 9: Solve for g'(y)
+                // For exact equations, the terms from differentiation should match N
+                // The remaining terms give g'(y)
+                this.steps.push({
+                    header: "Step 9: Find g'(y)",
+                    content: "From comparison, we get:",
+                    equation: `g'(y) = ${N_expr} - [terms from ∂ψ/∂y excluding g'(y)]`
+                });
+                
+                // Step 10: Integrate to find g(y)
+                this.steps.push({
+                    header: "Step 10: Integrate g'(y)",
+                    content: "Integrate g'(y) with respect to y:",
+                    equation: `g(y) = ∫ g'(y) dy`
+                });
+                
+                // Step 11: Write final solution
+                // For exact equations: ψ(x,y) = C
+                const solution = this.constructSolution(int_M_dx);
+                this.solution = solution;
+                this.steps.push({
+                    header: "Step 11: General Solution",
+                    content: "The general solution is ψ(x,y) = constant:",
+                    equation: solution,
+                    final: true
+                });
+                
+            } else {
+                this.steps.push({
+                    header: "Step 5: Exactness Condition",
+                    content: "Since ∂M/∂y ≠ ∂N/∂x, the equation is not exact.",
+                    equation: `∂M/∂y (${avg_dM_dy.toFixed(4)}) ≠ ∂N/∂x (${avg_dN_dx.toFixed(4)})`
+                });
+                
+                // Check for integrating factors
+                const diff = avg_dM_dy - avg_dN_dx;
+                this.steps.push({
+                    header: "Step 6: Check for Integrating Factor",
+                    content: "We can try to find an integrating factor μ(x,y):",
+                    list: [
+                        "1. Check if (∂M/∂y - ∂N/∂x)/N is function of x only → μ(x) = exp(∫f(x)dx)",
+                        "2. Check if (∂N/∂x - ∂M/∂y)/M is function of y only → μ(y) = exp(∫g(y)dy)",
+                        "3. Try common integrating factors: 1/x, 1/y, 1/(x²+y²), etc."
+                    ]
+                });
+                
+                // Suggest possible integrating factors
+                const suggestions = this.suggestIntegratingFactor(M_expr, N_expr, diff);
+                if (suggestions.length > 0) {
+                    this.steps.push({
+                        header: "Step 7: Suggested Integrating Factors",
+                        content: "Possible integrating factors to try:",
+                        list: suggestions
+                    });
+                }
+            }
+            
+            return {
+                steps: this.steps,
+                isExact: this.isExact,
+                solution: this.solution
+            };
+        }
+        
+        // Construct solution
+        constructSolution(int_M_dx) {
+            // Remove g(y) and combine terms
+            let solution = int_M_dx.replace(' + g(y)', '');
+            
+            // For exact equations, the solution is typically of form F(x,y) = C
+            // We'll try to simplify the expression
+            solution = solution.replace(/\+\s*\-/g, '-')
+                              .replace(/\-\s*\-/g, '+')
+                              .replace(/\s+/g, ' ');
+            
+            return `${solution} = C`;
+        }
+        
+        // Suggest integrating factors
+        suggestIntegratingFactor(M_expr, N_expr, diff) {
+            const suggestions = [];
+            
+            // Check if M and N are homogeneous
+            if (M_expr.includes('x') && M_expr.includes('y') && 
+                N_expr.includes('x') && N_expr.includes('y')) {
+                suggestions.push("Try μ = 1/(xM + yN) if homogeneous");
+            }
+            
+            // Check if terms suggest specific patterns
+            if (M_expr.includes('y') && N_expr.includes('x')) {
+                suggestions.push("Try μ = 1/(xy)");
+            }
+            
+            if ((M_expr.includes('x**2') || M_expr.includes('y**2')) &&
+                (N_expr.includes('x**2') || N_expr.includes('y**2'))) {
+                suggestions.push("Try μ = 1/(x² + y²)");
+            }
+            
+            // Common patterns
+            if (Math.abs(diff) > 0.1) {
+                suggestions.push(`Try μ = exp(${diff.toFixed(2)}x) or μ = exp(${(-diff).toFixed(2)}y)`);
+            }
+            
+            return suggestions;
+        }
+    }
+
+    // Simulation functionality
+    function initSimulation() {
+        const MInput = document.getElementById('M-input');
+        const NInput = document.getElementById('N-input');
+        const equationDisplay = document.getElementById('equation-display');
+        const solveButton = document.getElementById('solve-equation');
+        const clearButton = document.getElementById('clear-input');
+        const exampleButtons = document.querySelectorAll('.example-btn');
+        const solutionSteps = document.getElementById('solution-steps');
+
+        // Update equation display
+        function updateEquationDisplay() {
+            const M = MInput.value || 'M(x,y)';
+            const N = NInput.value || 'N(x,y)';
+            equationDisplay.innerHTML = `(${M})dx + (${N})dy = 0`;
+            
+            // Try to render with KaTeX if available
+            try {
+                if (typeof katex !== 'undefined') {
+                    katex.render(`(${M})\\,dx + (${N})\\,dy = 0`, equationDisplay, {
+                        throwOnError: false,
+                        displayMode: false
+                    });
+                }
+            } catch (e) {
+                // If KaTeX fails, keep the plain text
+            }
+        }
+
+        // Display solution steps
+        function displaySolutionSteps(steps, isExact, solution) {
+            solutionSteps.innerHTML = '';
+            
+            steps.forEach((step, index) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = `solution-step ${step.final ? 'final-step' : ''}`;
+                
+                let contentHTML = `
+                    <div class="step-header">
+                        <span class="step-number">${index + 1}</span>
+                        ${step.header}
+                    </div>
+                    <div class="step-content">
+                        <p>${step.content}</p>
+                `;
+                
+                if (step.equation) {
+                    contentHTML += `<div class="step-equation">${step.equation}</div>`;
+                }
+                
+                if (step.equations) {
+                    step.equations.forEach(eq => {
+                        contentHTML += `<div class="step-equation">${eq}</div>`;
+                    });
+                }
+                
+                if (step.list) {
+                    contentHTML += '<ul class="step-list">';
+                    step.list.forEach(item => {
+                        contentHTML += `<li>${item}</li>`;
+                    });
+                    contentHTML += '</ul>';
+                }
+                
+                contentHTML += '</div>';
+                stepDiv.innerHTML = contentHTML;
+                solutionSteps.appendChild(stepDiv);
+                
+                // Try to render equations with KaTeX
+                setTimeout(() => {
+                    stepDiv.querySelectorAll('.step-equation').forEach(eqElement => {
+                        const eqText = eqElement.textContent;
+                        try {
+                            if (typeof katex !== 'undefined' && eqText) {
+                                katex.render(eqText, eqElement, {
+                                    throwOnError: false,
+                                    displayMode: false
+                                });
+                            }
+                        } catch (e) {
+                            // Keep plain text if KaTeX fails
+                        }
+                    });
+                }, 100);
+            });
+            
+            // Add solution summary
+            if (solution) {
+                const solutionDiv = document.createElement('div');
+                solutionDiv.className = 'solution-summary final-step';
+                solutionDiv.innerHTML = `
+                    <div class="step-header">
+                        <i class="fas fa-check-circle"></i>
+                        Solution Summary
+                    </div>
+                    <div class="step-content">
+                        <p>The exact differential equation has been solved successfully.</p>
+                        <div class="final-solution">${solution}</div>
+                    </div>
+                `;
+                solutionSteps.appendChild(solutionDiv);
+                
+                // Try to render final solution with KaTeX
+                setTimeout(() => {
+                    const finalEq = solutionDiv.querySelector('.final-solution');
+                    if (finalEq && typeof katex !== 'undefined') {
+                        try {
+                            katex.render(finalEq.textContent, finalEq, {
+                                throwOnError: false,
+                                displayMode: false
+                            });
+                        } catch (e) {
+                            // Keep plain text
+                        }
+                    }
+                }, 100);
+            }
+            
+            // Scroll to top of solution
+            solutionSteps.scrollTop = 0;
+        }
+
+        // Solve button click handler
+        solveButton.addEventListener('click', function() {
+            const M = MInput.value.trim();
+            const N = NInput.value.trim();
+            
+            if (!M || !N) {
+                alert('Please enter both M(x,y) and N(x,y) functions.');
+                return;
+            }
+            
+            // Show loading
+            solutionSteps.innerHTML = `
+                <div class="placeholder-text">
+                    <i class="fas fa-cog fa-spin"></i>
+                    <p>Solving equation step by step...</p>
+                </div>
+            `;
+            
+            // Solve using the solver
+            setTimeout(() => {
+                try {
+                    const solver = new ExactDESolver();
+                    const result = solver.solve(M, N);
+                    
+                    if (result.steps.length > 0) {
+                        displaySolutionSteps(result.steps, result.isExact, result.solution);
+                    } else {
+                        solutionSteps.innerHTML = `
+                            <div class="placeholder-text">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <p>Could not solve the equation. Please check your input.</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Solving error:', error);
+                    solutionSteps.innerHTML = `
+                        <div class="placeholder-text">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Error solving equation: ${error.message}</p>
+                            <p>Please check your input format and try again.</p>
+                        </div>
+                    `;
+                }
+            }, 500);
+        });
+
+        // Clear button
+        clearButton.addEventListener('click', function() {
+            MInput.value = '';
+            NInput.value = '';
+            updateEquationDisplay();
+            solutionSteps.innerHTML = `
+                <div class="placeholder-text">
+                    <i class="fas fa-arrow-up"></i>
+                    <p>Enter an exact differential equation above and click "Solve Step-by-Step"</p>
+                    <p class="hint">Format: M(x,y) dx + N(x,y) dy = 0</p>
+                </div>
+            `;
+        });
+
+        // Example buttons
+        exampleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const M = this.getAttribute('data-m');
+                const N = this.getAttribute('data-n');
+                
+                MInput.value = M;
+                NInput.value = N;
+                updateEquationDisplay();
+                
+                // Auto-solve after a brief delay
+                setTimeout(() => {
+                    solveButton.click();
+                }, 300);
+            });
+        });
+
+        // Add sample equations dropdown
+        const sampleEquations = [
+            {
+                name: "Basic Example",
+                M: "2*x*y + y^2",
+                N: "x^2 + 2*x*y",
+                desc: "(2xy + y²)dx + (x² + 2xy)dy = 0"
+            },
+            {
+                name: "Trigonometric Example",
+                M: "y^2*cos(x) + y",
+                N: "2*y*sin(x) + x",
+                desc: "(y²cosx + y)dx + (2ysinx + x)dy = 0"
+            },
+            {
+                name: "Exponential Example",
+                M: "exp(y)",
+                N: "x*exp(y) + 2*y",
+                desc: "e^y dx + (xe^y + 2y)dy = 0"
+            },
+            {
+                name: "Polynomial Example",
+                M: "3*x^2*y",
+                N: "x^3 + cos(y)",
+                desc: "3x²y dx + (x³ + cosy)dy = 0"
+            },
+            {
+                name: "Linear Example",
+                M: "y",
+                N: "x",
+                desc: "y dx + x dy = 0"
+            },
+            {
+                name: "Homogeneous Example",
+                M: "x^2 + y^2",
+                N: "2*x*y",
+                desc: "(x² + y²)dx + 2xy dy = 0"
+            }
+        ];
+
+        // Add input format tips
+        const formatTips = document.createElement('div');
+        formatTips.className = 'format-tips';
+        formatTips.innerHTML = `
+            <h5><i class="fas fa-info-circle"></i> Input Format Tips:</h5>
+            <ul>
+                <li>Use * for multiplication: 2*x*y</li>
+                <li>Use ^ for exponentiation: x^2, y^3</li>
+                <li>Use sin(x), cos(x), exp(x) for functions</li>
+                <li>Examples: 3*x^2*y, sin(x+y), exp(2*x)</li>
+                <li>The solver will show all steps for exact equations</li>
+                <li>For non-exact equations, it will suggest integrating factors</li>
+            </ul>
+        `;
+        
+        // Find input section and append tips
+        const inputSection = document.querySelector('.input-section');
+        if (inputSection) {
+            inputSection.appendChild(formatTips);
+        }
+
+        // Initialize
+        updateEquationDisplay();
+        
+        // Update display on input
+        MInput.addEventListener('input', updateEquationDisplay);
+        NInput.addEventListener('input', updateEquationDisplay);
+        
+        // Add Enter key support
+        MInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') solveButton.click();
+        });
+        
+        NInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') solveButton.click();
+        });
+    }
+
+    // Initialize the first section
+    loadSectionContent(activeSection);
+
+    // Handle image errors
+    document.querySelectorAll('img').forEach(img => {
+        img.onerror = function() {
+            this.src = 'https://via.placeholder.com/150/2c3e50/ffffff?text=Image';
+            this.onerror = null;
+        };
+    });
+});
