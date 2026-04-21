@@ -8,23 +8,19 @@ document.addEventListener('DOMContentLoaded', function () {
     navTabs.forEach(tab => {
         tab.addEventListener('click', function () {
             const target = this.getAttribute('data-section');
-
             navTabs.forEach(t => t.classList.remove('active'));
             sections.forEach(s => s.classList.remove('active'));
-
             this.classList.add('active');
             const targetSection = document.getElementById(target + '-section');
             if (targetSection) targetSection.classList.add('active');
-
             if (currentSectionEl) {
-                currentSectionEl.textContent = this.querySelector('span')
-                    ? this.querySelector('span').textContent
+                const sp = this.querySelector('span');
+                currentSectionEl.textContent = sp ? sp.textContent
                     : target.charAt(0).toUpperCase() + target.slice(1);
             }
         });
     });
 
-    // ===================== IMAGE FALLBACK =====================
     document.querySelectorAll('img').forEach(img => {
         img.onerror = function () {
             this.src = 'https://via.placeholder.com/150/2c3e50/ffffff?text=Image';
@@ -37,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         { q: "What is a partial derivative?", opts: ["Derivative w.r.t one variable, others constant", "Full derivative", "Integral of a function", "None"], ans: 0 },
         { q: "If f(x,y) = x²y, then ∂f/∂x = ?", opts: ["2xy", "x²", "y", "2x"], ans: 0 },
         { q: "If f(x,y) = x²y, then ∂f/∂y = ?", opts: ["2xy", "x²", "2x", "y"], ans: 1 },
-        { q: "∫2xy dx = ?", opts: ["x²y + g(y)", "xy² + g(x)", "2xy²", "x²y²"], ans: 0 },
+        { q: "∫2xy dx = ?", opts: ["x²y + C", "xy² + C", "2xy²", "x²y²"], ans: 0 },
         { q: "Which is the general form of an exact DE?", opts: ["M(x,y)dx + N(x,y)dy = 0", "dy/dx = f(x)", "y'' + y = 0", "None"], ans: 0 },
         { q: "The condition for exactness is:", opts: ["∂M/∂y = ∂N/∂x", "∂M/∂x = ∂N/∂y", "M = N", "∂²M/∂x² = 0"], ans: 0 },
         { q: "∫cos(y) dy = ?", opts: ["sin(y) + C", "-sin(y) + C", "cos(y) + C", "tan(y) + C"], ans: 0 },
@@ -50,13 +46,13 @@ document.addEventListener('DOMContentLoaded', function () {
         { q: "Is (2xy + y²)dx + (x² + 2xy)dy = 0 exact?", opts: ["Yes", "No", "Cannot determine", "Need more info"], ans: 0 },
         { q: "For M = 2xy + y², ∂M/∂y = ?", opts: ["2x + 2y", "2x", "2y", "y²"], ans: 0 },
         { q: "For N = x² + 2xy, ∂N/∂x = ?", opts: ["2x + 2y", "2x", "2y", "x²"], ans: 0 },
-        { q: "∫(2xy + y²)dx = ?", opts: ["x²y + xy² + g(y)", "x²y² + g(y)", "2xy + g(y)", "None"], ans: 0 },
+        { q: "∫(2xy + y²)dx = ?", opts: ["x²y + xy²", "x²y²", "2xy", "None"], ans: 0 },
         { q: "If ∂M/∂y ≠ ∂N/∂x, the equation is:", opts: ["Non-exact", "Exact", "Linear", "Separable"], ans: 0 },
         { q: "The function ψ(x,y) = C represents:", opts: ["General solution", "Particular solution", "Integrating factor", "None"], ans: 0 },
         { q: "For y dx + x dy = 0, the solution is:", opts: ["xy = C", "x + y = C", "x² + y² = C", "y/x = C"], ans: 0 },
         { q: "An integrating factor μ is used when:", opts: ["Equation is not exact", "Equation is exact", "M = N", "N = 0"], ans: 0 },
-        { q: "For exact DE, ∫M dx gives:", opts: ["Partial solution ψ, with g(y) unknown", "Final solution", "N directly", "None"], ans: 0 },
-        { q: "After solving, g'(y) is found by:", opts: ["Comparing ∂ψ/∂y with N", "Differentiating M", "Integrating N", "Setting M = 0"], ans: 0 }
+        { q: "In the solution formula, ∫M dx is taken with:", opts: ["y as constant", "x as constant", "Both constant", "Neither"], ans: 0 },
+        { q: "Terms from N not containing x are integrated because:", opts: ["They give the y-only part of the solution", "They equal M", "They are zero", "None"], ans: 0 }
     ];
 
     function initQuiz(containerId, questions, scoreId) {
@@ -89,29 +85,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const startBtn = container.querySelector('[id^="start-"]');
-        if (startBtn) {
-            startBtn.addEventListener('click', function () {
-                current = 0;
-                renderQuestion(current);
-                this.style.display = 'none';
-            });
-        }
+        if (startBtn) startBtn.addEventListener('click', function () { current = 0; renderQuestion(current); this.style.display = 'none'; });
 
         const prevBtn = container.querySelector('[id^="prev-"]');
         const nextBtn = container.querySelector('[id^="next-"]');
         const submitBtn = container.querySelector('[id^="submit-"]');
 
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => {
-                if (current > 0) { current--; renderQuestion(current); }
-            });
-        }
-
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                if (current < questions.length - 1) { current++; renderQuestion(current); }
-            });
-        }
+        if (prevBtn) prevBtn.addEventListener('click', () => { if (current > 0) { current--; renderQuestion(current); } });
+        if (nextBtn) nextBtn.addEventListener('click', () => { if (current < questions.length - 1) { current++; renderQuestion(current); } });
 
         if (submitBtn) {
             submitBtn.addEventListener('click', () => {
@@ -122,9 +103,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div style="text-align:center;padding:30px;">
                         <i class="fas fa-check-circle" style="font-size:48px;color:#27ae60;"></i>
                         <h3 style="color:#2c3e50;margin:16px 0 8px;">Test Submitted!</h3>
-                        <p style="color:#7f8c8d;font-size:16px;">Your Score: <strong style="color:#2c3e50;">${score} / ${questions.length}</strong></p>
-                        <p style="color:${score >= 7 ? '#27ae60' : '#e74c3c'};font-size:15px;margin-top:8px;">
-                            ${score >= 7 ? '🎉 Excellent! Well done.' : score >= 5 ? '👍 Good effort! Review the missed topics.' : '📚 Please review the material and try again.'}
+                        <p style="font-size:16px;">Score: <strong>${score} / ${questions.length}</strong></p>
+                        <p style="color:${score >= 7 ? '#27ae60' : score >= 5 ? '#f39c12' : '#e74c3c'};margin-top:8px;">
+                            ${score >= 7 ? '🎉 Excellent!' : score >= 5 ? '👍 Good — review missed topics.' : '📚 Please revise and try again.'}
                         </p>
                     </div>`;
             });
@@ -133,695 +114,646 @@ document.addEventListener('DOMContentLoaded', function () {
 
     initQuiz('pretest-quiz', pretestQuestions, 'pretest-score');
     initQuiz('posttest-quiz', posttestQuestions, 'posttest-score');
-
-    // ===================== SIMULATION =====================
     initSimulation();
 });
 
-// ============================================================
+
+// ================================================================
 //  SIMULATION ENGINE
-// ============================================================
+//
+//  Method (exactly as in student's handwritten notes):
+//
+//    G.S. = ∫M dx (y = const)
+//           + ∫[terms in N NOT containing x] dy
+//           = C
+//
+//  From Q2 notes (Image 1):
+//    M = -tany + 2xy + y
+//    ∫M dx (y const) = -x·tany + x²y + xy
+//    Terms in N not having x: sec²y  →  ∫sec²y dy = tany
+//    G.S. = -x·tany + x²y + xy + tany = C
+//
+//  From Q1 notes (Image 2):
+//    M = sinx·cosy + e^(2x)
+//    ∫M dx = -cosx·cosy + e^(2x)/2
+//    Terms in N not having x: tany  →  ∫tany dy = ln|secy|
+//    G.S. = -cosx·cosy + e^(2x)/2 + ln|secy| = C
+// ================================================================
 function initSimulation() {
 
-    // --- DOM refs ---
-    const MInput = document.getElementById('M-input');
-    const NInput = document.getElementById('N-input');
-    const eqDisplay = document.getElementById('eq-display');
-    const btnProceedDeriv = document.getElementById('btn-proceed-deriv');
-    const btnReset = document.getElementById('btn-reset');
-    const panel2 = document.getElementById('panel-step2');
-    const dMdyInput = document.getElementById('dMdy-input');
-    const dNdxInput = document.getElementById('dNdx-input');
-    const btnCheckDMdy = document.getElementById('btn-check-dMdy');
-    const btnCheckDNdx = document.getElementById('btn-check-dNdx');
-    const resDMdy = document.getElementById('res-dMdy');
-    const resDNdx = document.getElementById('res-dNdx');
-    const btnCheckExact = document.getElementById('btn-check-exactness');
-    const solutionSteps = document.getElementById('solution-steps');
+    const MInput     = document.getElementById('M-input');
+    const NInput     = document.getElementById('N-input');
+    const eqDisplay  = document.getElementById('eq-display');
+    const btnProceed = document.getElementById('btn-proceed-deriv');
+    const btnReset   = document.getElementById('btn-reset');
+    const panel2     = document.getElementById('panel-step2');
+    const dMdyInput  = document.getElementById('dMdy-input');
+    const dNdxInput  = document.getElementById('dNdx-input');
+    const btnChkM    = document.getElementById('btn-check-dMdy');
+    const btnChkN    = document.getElementById('btn-check-dNdx');
+    const resDMdy    = document.getElementById('res-dMdy');
+    const resDNdx    = document.getElementById('res-dNdx');
+    const btnExact   = document.getElementById('btn-check-exactness');
+    const solSteps   = document.getElementById('solution-steps');
     const sampleBtns = document.querySelectorAll('.sample-btn');
 
-    if (!MInput) return; // simulation not on page
+    if (!MInput) return;
 
-    // State
-    let currentM = '', currentN = '';
-    let correctDMdy = '', correctDNdx = '';
+    let curM = '', curN = '', cDMdy = '', cDNdx = '';
     let dMdyOk = false, dNdxOk = false;
 
-    // Update equation preview
     function updatePreview() {
         const M = MInput.value.trim() || 'M(x,y)';
         const N = NInput.value.trim() || 'N(x,y)';
-        eqDisplay.textContent = `( ${M} ) dx + ( ${N} ) dy = 0`;
+        eqDisplay.textContent = `( ${M} ) dx  +  ( ${N} ) dy  =  0`;
     }
-
     MInput.addEventListener('input', updatePreview);
     NInput.addEventListener('input', updatePreview);
 
-    // Sample buttons
     sampleBtns.forEach(btn => {
         btn.addEventListener('click', function () {
             MInput.value = this.dataset.m;
             NInput.value = this.dataset.n;
             updatePreview();
-            resetToStep1();
+            resetAll();
         });
     });
 
-    // Reset
-    function resetToStep1() {
+    function resetAll() {
         panel2.classList.add('hidden');
-        dMdyInput.value = '';
-        dNdxInput.value = '';
-        resDMdy.textContent = '';
-        resDMdy.className = 'verify-feedback';
-        resDNdx.textContent = '';
-        resDNdx.className = 'verify-feedback';
-        dMdyOk = false;
-        dNdxOk = false;
-        solutionSteps.innerHTML = `
+        dMdyInput.value = ''; dNdxInput.value = '';
+        clearFB(resDMdy); clearFB(resDNdx);
+        dMdyOk = false; dNdxOk = false;
+        solSteps.innerHTML = `
             <div class="placeholder-msg">
                 <i class="fas fa-calculator"></i>
-                <p>Enter M(x,y) and N(x,y) on the left, then follow the guided steps.</p>
-                <p class="hint-small">The solution will appear here as you progress.</p>
+                <p>Enter M(x,y) and N(x,y), then follow the guided steps.</p>
+                <p class="hint-small">Solution will appear here step by step.</p>
             </div>`;
     }
 
-    btnReset.addEventListener('click', () => {
-        MInput.value = '';
-        NInput.value = '';
-        updatePreview();
-        resetToStep1();
-    });
+    function clearFB(el) { el.textContent = ''; el.className = 'verify-feedback'; }
+    function setFB(el, msg, cls) { el.textContent = msg; el.className = `verify-feedback ${cls}`; }
 
-    // Step 1 → show derivative panel
-    btnProceedDeriv.addEventListener('click', () => {
+    btnReset.addEventListener('click', () => { MInput.value = ''; NInput.value = ''; updatePreview(); resetAll(); });
+
+    // ---- Step 1: Proceed to derivatives ----
+    btnProceed.addEventListener('click', () => {
         const M = MInput.value.trim();
         const N = NInput.value.trim();
+        if (!M || !N) { pushAlert('Please enter both M(x,y) and N(x,y) first.'); return; }
 
-        if (!M || !N) {
-            showMsg('⚠ Please enter both M(x,y) and N(x,y) first.', 'warning');
-            return;
-        }
+        curM = M; curN = N;
+        dMdyOk = false; dNdxOk = false;
 
-        currentM = M;
-        currentN = N;
-        dMdyOk = false;
-        dNdxOk = false;
+        try { cDMdy = diffExpr(M, 'y'); cDNdx = diffExpr(N, 'x'); }
+        catch (e) { pushAlert('Could not parse the expression. Check input format.'); return; }
 
-        // Compute correct derivatives
-        try {
-            correctDMdy = computeDerivative(M, 'y');
-            correctDNdx = computeDerivative(N, 'x');
-        } catch (e) {
-            showMsg('❌ Could not parse expression. Please check your input.', 'error');
-            return;
-        }
-
-        dMdyInput.value = '';
-        dNdxInput.value = '';
-        resDMdy.textContent = '';
-        resDMdy.className = 'verify-feedback';
-        resDNdx.textContent = '';
-        resDNdx.className = 'verify-feedback';
-
+        dMdyInput.value = ''; dNdxInput.value = '';
+        clearFB(resDMdy); clearFB(resDNdx);
         panel2.classList.remove('hidden');
         panel2.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-        // Show step 1 in solution panel
-        solutionSteps.innerHTML = '';
-        addSolStep('Step 1: Equation Entered', `
-            The differential equation is:<br>
-            <span class="sol-equation">( ${M} ) dx + ( ${N} ) dy = 0</span>
-            We identify:<br>
-            <strong>M(x,y)</strong> = ${M}<br>
-            <strong>N(x,y)</strong> = ${N}<br><br>
-            Now compute ∂M/∂y and ∂N/∂x to check exactness.
+        solSteps.innerHTML = '';
+        addStep('Step 1 — Compare with Mdx + Ndy = 0', `
+            <span class="sol-eq"><strong>M(x,y)</strong> = ${M}</span>
+            <span class="sol-eq"><strong>N(x,y)</strong> = ${N}</span>
+            Next: compute ∂M/∂y and ∂N/∂x to test exactness.
         `, 'fas fa-edit', '#3498db');
     });
 
-    // Verify ∂M/∂y
-    btnCheckDMdy.addEventListener('click', () => {
-        const userVal = dMdyInput.value.trim();
-        if (!userVal) { resDMdy.textContent = 'Please enter a value first.'; resDMdy.className = 'verify-feedback hint'; return; }
-
-        const userSimp = normalizeExpr(userVal);
-        const corrSimp = normalizeExpr(correctDMdy);
-
-        if (userSimp === corrSimp || expressionsEqual(userVal, correctDMdy)) {
-            resDMdy.textContent = `✓ Correct! ∂M/∂y = ${correctDMdy}`;
-            resDMdy.className = 'verify-feedback correct';
+    // ---- Step 2a: Verify ∂M/∂y ----
+    btnChkM.addEventListener('click', () => {
+        const u = dMdyInput.value.trim();
+        if (!u) { setFB(resDMdy, 'Enter a value first.', 'hint'); return; }
+        if (exprsEqual(u, cDMdy)) {
+            setFB(resDMdy, `✓ Correct!  ∂M/∂y = ${cDMdy}`, 'correct');
             dMdyOk = true;
-
-            addSolStep('Step 2a: ∂M/∂y Computed', `
-                Differentiating M = ${currentM} with respect to y:<br>
-                <span class="sol-equation">∂M/∂y = ${correctDMdy}</span>
-                ✓ Your answer is correct.
+            addStep('Step 2a — ∂M/∂y', `
+                Differentiating M = ${curM} &nbsp;w.r.t.&nbsp;<strong>y</strong> (x = constant):<br>
+                <span class="sol-eq">∂M/∂y  =  ${cDMdy}</span>
+                ✓ Correct.
             `, 'fas fa-check-circle', '#27ae60');
         } else {
-            resDMdy.textContent = `✗ Not quite. Check your differentiation. Hint: treat x as constant.`;
-            resDMdy.className = 'verify-feedback wrong';
+            setFB(resDMdy, '✗ Incorrect — differentiate w.r.t y, treating x as constant.', 'wrong');
             dMdyOk = false;
         }
     });
 
-    // Verify ∂N/∂x
-    btnCheckDNdx.addEventListener('click', () => {
-        const userVal = dNdxInput.value.trim();
-        if (!userVal) { resDNdx.textContent = 'Please enter a value first.'; resDNdx.className = 'verify-feedback hint'; return; }
-
-        const userSimp = normalizeExpr(userVal);
-        const corrSimp = normalizeExpr(correctDNdx);
-
-        if (userSimp === corrSimp || expressionsEqual(userVal, correctDNdx)) {
-            resDNdx.textContent = `✓ Correct! ∂N/∂x = ${correctDNdx}`;
-            resDNdx.className = 'verify-feedback correct';
+    // ---- Step 2b: Verify ∂N/∂x ----
+    btnChkN.addEventListener('click', () => {
+        const u = dNdxInput.value.trim();
+        if (!u) { setFB(resDNdx, 'Enter a value first.', 'hint'); return; }
+        if (exprsEqual(u, cDNdx)) {
+            setFB(resDNdx, `✓ Correct!  ∂N/∂x = ${cDNdx}`, 'correct');
             dNdxOk = true;
-
-            addSolStep('Step 2b: ∂N/∂x Computed', `
-                Differentiating N = ${currentN} with respect to x:<br>
-                <span class="sol-equation">∂N/∂x = ${correctDNdx}</span>
-                ✓ Your answer is correct.
+            addStep('Step 2b — ∂N/∂x', `
+                Differentiating N = ${curN} &nbsp;w.r.t.&nbsp;<strong>x</strong> (y = constant):<br>
+                <span class="sol-eq">∂N/∂x  =  ${cDNdx}</span>
+                ✓ Correct.
             `, 'fas fa-check-circle', '#27ae60');
         } else {
-            resDNdx.textContent = `✗ Not quite. Check your differentiation. Hint: treat y as constant.`;
-            resDNdx.className = 'verify-feedback wrong';
+            setFB(resDNdx, '✗ Incorrect — differentiate w.r.t x, treating y as constant.', 'wrong');
             dNdxOk = false;
         }
     });
 
-    // Check exactness and continue solution
-    btnCheckExact.addEventListener('click', () => {
-        if (!dMdyOk || !dNdxOk) {
-            showMsg('⚠ Please verify both ∂M/∂y and ∂N/∂x correctly before checking exactness.', 'warning');
-            return;
-        }
+    // ---- Step 3: Check exactness ----
+    btnExact.addEventListener('click', () => {
+        if (!dMdyOk || !dNdxOk) { pushAlert('Verify both derivatives correctly first.'); return; }
 
-        const isExact = expressionsEqual(correctDMdy, correctDNdx);
+        const exact = exprsEqual(cDMdy, cDNdx);
 
-        addSolStep('Step 3: Exactness Condition', `
-            Checking if ∂M/∂y = ∂N/∂x:<br>
-            <span class="sol-equation">∂M/∂y = ${correctDMdy}</span>
-            <span class="sol-equation">∂N/∂x = ${correctDNdx}</span>
-            ${isExact
-                ? '<span class="sol-exact-tag">✓ ∂M/∂y = ∂N/∂x &nbsp;→&nbsp; EXACT EQUATION</span>'
-                : '<span class="sol-non-exact-tag">✗ ∂M/∂y ≠ ∂N/∂x &nbsp;→&nbsp; NON-EXACT EQUATION</span>'
+        addStep('Step 3 — Exactness Condition', `
+            <table class="cond-table">
+                <tr><td>∂M/∂y</td><td>=</td><td><strong>${cDMdy}</strong></td></tr>
+                <tr><td>∂N/∂x</td><td>=</td><td><strong>${cDNdx}</strong></td></tr>
+            </table>
+            ${exact
+                ? `<span class="tag-exact">∴ &nbsp;∂M/∂y = ∂N/∂x &nbsp;⟹&nbsp; Given D.E. is <strong>EXACT</strong></span>`
+                : `<span class="tag-nonexact">∴ &nbsp;∂M/∂y ≠ ∂N/∂x &nbsp;⟹&nbsp; Given D.E. is <strong>NOT EXACT</strong></span>`
             }
-        `, 'fas fa-balance-scale', isExact ? '#27ae60' : '#e74c3c', isExact ? 'exact-badge' : 'non-exact-badge');
+        `, 'fas fa-balance-scale', exact ? '#27ae60' : '#e74c3c',
+           exact ? 'exact-badge' : 'non-exact-badge');
 
-        if (!isExact) {
-            addSolStep('Result: Non-Exact Equation', `
-                Since ∂M/∂y ≠ ∂N/∂x, the given equation is <strong>NOT EXACT</strong>.<br><br>
-                To solve it, we need an <strong>Integrating Factor (μ)</strong>:<br>
-                <span class="sol-equation">If (∂M/∂y − ∂N/∂x) / N = f(x) only → μ = e^(∫f(x)dx)</span>
-                <span class="sol-equation">If (∂N/∂x − ∂M/∂y) / M = g(y) only → μ = e^(∫g(y)dy)</span>
-                Multiply the equation by μ to make it exact, then proceed.
+        if (!exact) {
+            addStep('Non-Exact — Integrating Factor Needed', `
+                Since ∂M/∂y ≠ ∂N/∂x, use an <strong>Integrating Factor (μ)</strong>:<br>
+                <span class="sol-eq">If &nbsp;(∂M/∂y − ∂N/∂x) / N &nbsp;= f(x) only &nbsp;→ &nbsp;μ = e<sup>∫f(x)dx</sup></span>
+                <span class="sol-eq">If &nbsp;(∂N/∂x − ∂M/∂y) / M &nbsp;= g(y) only &nbsp;→ &nbsp;μ = e<sup>∫g(y)dy</sup></span>
+                Multiply through by μ, then proceed with the exact formula.
             `, 'fas fa-exclamation-triangle', '#e74c3c', 'non-exact-badge');
             return;
         }
 
-        // Exact — compute full solution
-        computeFullSolution(currentM, currentN, correctDMdy, correctDNdx);
+        solveExact(curM, curN);
     });
 
-    // ===================== FULL SOLUTION =====================
-    function computeFullSolution(M, N, dMdy, dNdx) {
-        // Step 4: Integrate M w.r.t x
-        const intM = integrateWrtX(M);
-        addSolStep('Step 4: Integrate M w.r.t x', `
-            Since the equation is exact, find ψ(x,y) such that ∂ψ/∂x = M.<br>
-            <span class="sol-equation">ψ = ∫M dx = ∫( ${M} ) dx</span>
-            <span class="sol-equation">ψ = ${intM} + g(y)</span>
-            where g(y) is an unknown function of y only.
-        `, 'fas fa-integral', '#8e44ad');
+    // ================================================================
+    //  EXACT SOLVER — Student's method (handwritten notes)
+    //
+    //  G.S. =  ∫M dx (y = const)
+    //        + ∫[terms in N NOT containing x] dy
+    //        = C
+    // ================================================================
+    function solveExact(M, N) {
 
-        // Step 5: Differentiate ψ w.r.t y and compare with N
-        const diffIntMY = differentiateWrtY(intM);
-        addSolStep('Step 5: Find g(y)', `
-            Differentiate ψ w.r.t y and set equal to N:<br>
-            <span class="sol-equation">∂ψ/∂y = ${diffIntMY} + g'(y) = N = ${N}</span>
-            Solving for g'(y):<br>
-            <span class="sol-equation">g'(y) = ${N} − (${diffIntMY})</span>
-            Integrating g'(y) w.r.t y to get g(y):<br>
-            <span class="sol-equation">g(y) = ∫[g'(y)] dy</span>
-            <em>(If g'(y) simplifies to a pure function of y, integrate it. If it's 0, g(y) = 0.)</em>
-        `, 'fas fa-equals', '#f39c12');
+        // Step 4 — Integrate M w.r.t x (y = constant)
+        const intMTerms = splitTerms(M);
+        const intMParts = intMTerms.map(t => intWrtX(t.trim())).filter(r => r !== '0');
+        const intMStr   = joinTerms(intMParts) || '0';
 
-        // Step 6: Write final solution
-        const sol = buildSolution(intM, M, N);
-        addSolStep('Step 6: General Solution', `
-            Combining, the general solution ψ(x,y) = C is:
-            <div class="final-answer-box">${sol} = C</div>
-            This is the <strong>general solution</strong> of the exact differential equation.
+        addStep('Step 4 — ∫M dx &nbsp;(y = constant)', `
+            <div class="formula-box">∫ ( ${M} ) dx &nbsp;&nbsp;[y treated as constant]</div>
+            Integrating term by term:<br>
+            ${intMTerms.map((t,i) => `
+                <div class="int-row">
+                    <span class="int-term">∫ (${t.trim()}) dx</span>
+                    <span class="int-arrow">→</span>
+                    <span class="int-result">${intMParts[i] || '0'}</span>
+                </div>`).join('')}
+            <span class="sol-eq">${intMStr}</span>
+        `, 'fas fa-calculator', '#8e44ad');
+
+        // Step 5 — Identify terms in N not containing x
+        const NTerms   = splitTerms(N);
+        const noXTerms = NTerms.filter(t => !hasVar(t.trim(), 'x'));
+        const hasXTerms = NTerms.filter(t => hasVar(t.trim(), 'x'));
+
+        const noXStr  = noXTerms.length > 0 ? joinTerms(noXTerms.map(t => t.trim())) : '(none)';
+        const hasXStr = hasXTerms.length > 0 ? joinTerms(hasXTerms.map(t => t.trim())) : '(none)';
+
+        addStep('Step 5 — Identify Terms in N Not Containing x', `
+            <strong>N(x,y)</strong> = ${N}<br><br>
+            <table class="term-table">
+                <tr>
+                    <th>Terms containing x &nbsp;(skip — already covered by ∫M dx)</th>
+                    <th>Terms NOT containing x &nbsp;✓ (integrate these w.r.t y)</th>
+                </tr>
+                <tr>
+                    <td style="color:#c0392b;">${hasXStr}</td>
+                    <td style="color:#27ae60;font-weight:600;">${noXStr}</td>
+                </tr>
+            </table>
+        `, 'fas fa-filter', '#f39c12');
+
+        // Step 6 — Integrate those terms w.r.t y
+        let intNyStr = '0';
+        let intNyParts = [];
+
+        if (noXTerms.length > 0) {
+            const noXJoined = joinTerms(noXTerms.map(t => t.trim()));
+            const noXSplit  = splitTerms(noXJoined);
+            intNyParts = noXSplit.map(t => intWrtY(t.trim())).filter(r => r !== '0');
+            intNyStr   = joinTerms(intNyParts) || '0';
+
+            addStep('Step 6 — ∫[Terms in N not containing x] dy', `
+                <div class="formula-box">∫ ( ${noXStr} ) dy</div>
+                Integrating term by term:<br>
+                ${noXSplit.map((t, i) => `
+                    <div class="int-row">
+                        <span class="int-term">∫ (${t.trim()}) dy</span>
+                        <span class="int-arrow">→</span>
+                        <span class="int-result">${intNyParts[i] || '0'}</span>
+                    </div>`).join('')}
+                <span class="sol-eq">${intNyStr}</span>
+            `, 'fas fa-calculator', '#16a085');
+        } else {
+            addStep('Step 6 — No Terms in N Free of x', `
+                All terms of N contain x, so:<br>
+                <span class="sol-eq">∫[terms in N not containing x] dy = 0</span>
+                Nothing extra to add.
+            `, 'fas fa-info-circle', '#7f8c8d');
+        }
+
+        // Step 7 — General Solution
+        const gsParts = [intMStr];
+        if (intNyStr !== '0') gsParts.push(intNyStr);
+        const gsStr = joinTerms(gsParts);
+
+        addStep('Step 7 — General Solution', `
+            Using the formula:<br>
+            <div class="formula-box">
+                G.S. &nbsp;=&nbsp;
+                <u>∫M dx</u><sub style="font-size:11px;"> (y=const)</sub>
+                &nbsp;+&nbsp;
+                <u>∫[terms in N not containing x] dy</u>
+                &nbsp;= C
+            </div>
+            <div class="final-answer-box">
+                ${gsStr} &nbsp;= C
+            </div>
         `, 'fas fa-check-double', '#27ae60', 'final-sol');
     }
 
-    // ===================== MATH HELPERS =====================
 
-    /**
-     * Normalize an expression string for basic comparison:
-     * remove spaces, sort terms, lowercase
-     */
-    function normalizeExpr(expr) {
-        return expr.replace(/\s+/g, '').toLowerCase()
-            .replace(/\*\*/, '^')
-            .replace(/\bpow\(([^,]+),([^)]+)\)/, '$1^$2');
-    }
+    // ================================================================
+    //  MATH ENGINE
+    // ================================================================
 
-    /**
-     * Numeric test: evaluate both expressions at sample (x,y) points
-     * and check if they match (within tolerance).
-     */
-    function expressionsEqual(a, b) {
-        // First try exact string match after normalizing
-        if (normalizeExpr(a) === normalizeExpr(b)) return true;
-
-        // Numeric test at multiple points
-        const points = [
-            { x: 1, y: 2 }, { x: 2, y: 3 }, { x: 0.5, y: 1.5 },
-            { x: 3, y: 1 }, { x: 1, y: 1 }
-        ];
-
-        try {
-            for (const pt of points) {
-                const va = evalExpr(a, pt.x, pt.y);
-                const vb = evalExpr(b, pt.x, pt.y);
-                if (isNaN(va) || isNaN(vb)) continue;
-                if (Math.abs(va - vb) > 1e-6) return false;
-            }
-            return true;
-        } catch (e) {
-            return false;
-        }
-    }
-
-    /** Safe eval with x,y substitution */
-    function evalExpr(expr, xVal, yVal) {
-        try {
-            // Prepare expression for JS eval
-            let e = expr
-                .replace(/\bexp\b/g, 'Math.exp')
-                .replace(/\bsin\b/g, 'Math.sin')
-                .replace(/\bcos\b/g, 'Math.cos')
-                .replace(/\btan\b/g, 'Math.tan')
-                .replace(/\bsqrt\b/g, 'Math.sqrt')
-                .replace(/\bln\b/g, 'Math.log')
-                .replace(/\blog\b/g, 'Math.log')
-                .replace(/\^/g, '**')
-                .replace(/\bx\b/g, `(${xVal})`)
-                .replace(/\by\b/g, `(${yVal})`);
-            // eslint-disable-next-line no-new-func
-            return Function('"use strict"; return (' + e + ')')();
-        } catch (err) {
-            return NaN;
-        }
-    }
-
-    /**
-     * Symbolic differentiation — handles common patterns found in textbook DE problems.
-     */
-    function computeDerivative(expr, varName) {
-        // Use known patterns for common exact DE examples
-        // This is a symbolic diff engine for the subset of expressions students use
-
-        // Tokenize and differentiate term by term
-        const terms = splitTerms(expr);
-        const derivedTerms = terms.map(term => diffTerm(term.trim(), varName));
-        const result = derivedTerms.filter(t => t !== '0' && t !== '').join(' + ')
-            .replace(/\+ -/g, '- ')
-            .replace(/^\+\s*/, '')
-            || '0';
-        return simplifyConst(result);
-    }
-
-    /** Split expression into additive terms */
+    /* Split "a + b - c + ..." into ["a", "+b", "-c", ...] at top-level +/- */
     function splitTerms(expr) {
-        // Replace e^ patterns temporarily
-        const replaced = expr.replace(/exp\(/g, 'EXP(');
+        const s = expr.replace(/\s+/g, '');
         const terms = [];
-        let depth = 0, start = 0, i = 0;
-        for (; i < replaced.length; i++) {
-            const c = replaced[i];
-            if (c === '(') depth++;
-            else if (c === ')') depth--;
+        let depth = 0, start = 0;
+        for (let i = 0; i < s.length; i++) {
+            const c = s[i];
+            if (c === '(' || c === '[') depth++;
+            else if (c === ')' || c === ']') depth--;
             else if ((c === '+' || c === '-') && depth === 0 && i > 0) {
-                terms.push(replaced.slice(start, i).replace(/EXP\(/g, 'exp('));
+                terms.push(s.slice(start, i));
                 start = i;
             }
         }
-        terms.push(replaced.slice(start).replace(/EXP\(/g, 'exp('));
-        return terms.map(t => t.trim()).filter(t => t !== '');
+        terms.push(s.slice(start));
+        return terms.filter(t => t !== '');
     }
 
-    /** Differentiate a single term w.r.t varName */
-    function diffTerm(term, v) {
-        const other = v === 'x' ? 'y' : 'x';
-
-        // Constant (no variable v)
-        if (!containsVar(term, v)) return '0';
-
-        // Just the variable: x → 1, y → 1
-        if (term === v || term === `+${v}`) return '1';
-        if (term === `-${v}`) return '-1';
-
-        // Constant * variable: e.g. 3*x → 3, 2*y → 2
-        const constVarMatch = term.match(/^([+-]?\d*\.?\d*)\*?([xy])$/);
-        if (constVarMatch) {
-            const coeff = constVarMatch[1];
-            const variable = constVarMatch[2];
-            if (variable === v) {
-                return coeff === '' || coeff === '+' ? '1' :
-                    coeff === '-' ? '-1' : coeff;
-            }
-            return '0';
-        }
-
-        // Power: x^n → n*x^(n-1), y^n → n*y^(n-1)
-        const powerMatch = term.match(/^([+-]?\d*\.?\d*)\*?([xy])\^(\d+\.?\d*)$/);
-        if (powerMatch) {
-            let coeff = powerMatch[1] === '' || powerMatch[1] === '+' ? 1 :
-                powerMatch[1] === '-' ? -1 : parseFloat(powerMatch[1]);
-            const variable = powerMatch[2];
-            const exp = parseFloat(powerMatch[3]);
-            if (variable !== v) return '0';
-            const newCoeff = coeff * exp;
-            const newExp = exp - 1;
-            if (newExp === 0) return `${newCoeff}`;
-            if (newExp === 1) return newCoeff === 1 ? v : `${newCoeff}*${v}`;
-            return `${newCoeff}*${v}^${newExp}`;
-        }
-
-        // Product: coeff * x^a * y^b
-        const prodMatch = term.match(/^([+-]?\d*\.?\d*)\*?x\^?(\d*)\*?y\^?(\d*)$/) ||
-            term.match(/^([+-]?\d*\.?\d*)\*?y\^?(\d*)\*?x\^?(\d*)$/);
-        if (prodMatch) {
-            // Try to parse as a*x^m*y^n
-            return diffProductXY(term, v);
-        }
-
-        // sin(x), sin(y), etc.
-        const sinMatch = term.match(/^([+-]?\d*\.?\d*)\*?sin\(([^)]+)\)$/);
-        if (sinMatch) {
-            const coeff = parseCoeff(sinMatch[1]);
-            const inner = sinMatch[2];
-            if (!containsVar(inner, v)) return '0';
-            // ∂/∂v (sin(inner)) = cos(inner) * ∂inner/∂v
-            const innerDeriv = diffSimpleInner(inner, v);
-            return `${coeff === 1 ? '' : coeff === -1 ? '-' : coeff + '*'}${innerDeriv === '1' ? '' : innerDeriv + '*'}cos(${inner})`;
-        }
-
-        // cos(x), cos(y)
-        const cosMatch = term.match(/^([+-]?\d*\.?\d*)\*?cos\(([^)]+)\)$/);
-        if (cosMatch) {
-            const coeff = parseCoeff(cosMatch[1]);
-            const inner = cosMatch[2];
-            if (!containsVar(inner, v)) return '0';
-            const innerDeriv = diffSimpleInner(inner, v);
-            return `${coeff === 1 ? '-' : (coeff * -1) + '*'}${innerDeriv === '1' ? '' : innerDeriv + '*'}sin(${inner})`;
-        }
-
-        // exp(x), exp(y), exp(2*x), etc.
-        const expMatch = term.match(/^([+-]?\d*\.?\d*)\*?exp\(([^)]+)\)$/);
-        if (expMatch) {
-            const coeff = parseCoeff(expMatch[1]);
-            const inner = expMatch[2];
-            if (!containsVar(inner, v)) return '0';
-            const innerDeriv = diffSimpleInner(inner, v);
-            const newCoeff = coeff * (parseFloat(innerDeriv) || 1);
-            return `${newCoeff === 1 ? '' : newCoeff === -1 ? '-' : newCoeff + '*'}exp(${inner})`;
-        }
-
-        // y^2*cos(x) or similar products — try splitting on *
-        if (term.includes('*')) {
-            return diffProductGeneral(term, v);
-        }
-
-        // Fallback: return the term if we can't parse it
-        return `d(${term})/d${v}`;
+    /* Re-join an array of terms with proper +/- signs */
+    function joinTerms(arr) {
+        if (!arr.length) return '0';
+        return arr.reduce((acc, t, i) => {
+            if (i === 0) return t;
+            if (t.startsWith('-')) return acc + ' ' + t;
+            return acc + ' + ' + t;
+        }, '');
     }
 
-    function containsVar(expr, v) {
-        const regex = new RegExp(`(?<![a-zA-Z])${v}(?![a-zA-Z])`);
-        return regex.test(expr);
+    function hasVar(expr, v) {
+        return new RegExp(`(?<![a-zA-Z])${v}(?![a-zA-Z])`).test(expr);
     }
 
     function parseCoeff(s) {
         if (!s || s === '' || s === '+') return 1;
         if (s === '-') return -1;
-        return parseFloat(s) || 1;
+        const n = parseFloat(s);
+        return isNaN(n) ? 1 : n;
     }
 
-    function diffSimpleInner(inner, v) {
-        // For simple inner expressions like x, y, 2*x, 3*y
-        if (inner === v) return '1';
-        const m = inner.match(/^(\d+)\*?([xy])$/);
-        if (m && m[2] === v) return m[1];
-        if (!containsVar(inner, v)) return '0';
-        return `d(${inner})/d${v}`;
+    function fmtC(c, varStr) {
+        if (!varStr) return `${c}`;
+        if (c === 1) return varStr;
+        if (c === -1) return `-${varStr}`;
+        return `${c}*${varStr}`;
     }
 
-    function diffProductXY(term, v) {
-        // Parse a*x^m * y^n style
-        const sign = term.startsWith('-') ? -1 : 1;
-        const clean = term.replace(/^[+-]/, '').trim();
-        const parts = clean.split('*').map(p => p.trim());
-
-        let coeff = 1;
-        let xPow = 0, yPow = 0;
-
-        for (const p of parts) {
-            if (!isNaN(p)) { coeff *= parseFloat(p); continue; }
-            if (p === 'x') { xPow += 1; continue; }
-            if (p === 'y') { yPow += 1; continue; }
-            const xm = p.match(/^x\^(\d+)$/); if (xm) { xPow += parseInt(xm[1]); continue; }
-            const ym = p.match(/^y\^(\d+)$/); if (ym) { yPow += parseInt(ym[1]); continue; }
-        }
-        coeff *= sign;
-
-        // Differentiate a*x^m*y^n w.r.t v
-        let result;
-        if (v === 'x') {
-            if (xPow === 0) return '0';
-            const newCoeff = coeff * xPow;
-            const newXPow = xPow - 1;
-            result = buildTerm(newCoeff, newXPow, yPow, 'x', 'y');
-        } else {
-            if (yPow === 0) return '0';
-            const newCoeff = coeff * yPow;
-            const newYPow = yPow - 1;
-            result = buildTerm(newCoeff, xPow, newYPow, 'x', 'y');
-        }
-        return result;
-    }
-
-    function buildTerm(coeff, xPow, yPow, x, y) {
-        if (coeff === 0) return '0';
-        let parts = [];
-        if (xPow === 1) parts.push(x);
-        else if (xPow > 1) parts.push(`${x}^${xPow}`);
-        if (yPow === 1) parts.push(y);
-        else if (yPow > 1) parts.push(`${y}^${yPow}`);
-
-        const varStr = parts.join('*');
-        if (!varStr) return `${coeff}`;
-        if (coeff === 1) return varStr;
-        if (coeff === -1) return `-${varStr}`;
-        return `${coeff}*${varStr}`;
-    }
-
-    function diffProductGeneral(term, v) {
-        // Product rule: split on last * that's not inside parens
-        // Try numeric derivative instead for complex products
-        const sign = term.startsWith('-') ? -1 : 1;
-        const clean = term.replace(/^[+-]/, '').trim();
-
-        // Try to split into factors
-        const factors = splitFactors(clean);
-        if (factors.length === 1) return `d(${term})/d${v}`;
-
-        // Product rule: Σ (derivative of each factor * others)
-        const derivTerms = factors.map((f, idx) => {
-            const df = diffTerm(f, v);
-            if (df === '0') return '0';
-            const others = factors.filter((_, i) => i !== idx);
-            const othersStr = others.join('*');
-            if (df === '1') return othersStr || '1';
-            return `${df}*${othersStr}`;
-        });
-
-        const result = derivTerms.filter(t => t !== '0').join(' + ');
-        const signed = sign === -1 ? `-(${result})` : result;
-        return simplifyConst(signed || '0');
-    }
-
-    function splitFactors(expr) {
-        // Split by * not inside parens
-        const factors = [];
-        let depth = 0, start = 0;
-        for (let i = 0; i < expr.length; i++) {
-            if (expr[i] === '(') depth++;
-            else if (expr[i] === ')') depth--;
-            else if (expr[i] === '*' && depth === 0) {
-                factors.push(expr.slice(start, i).trim());
-                start = i + 1;
-            }
-        }
-        factors.push(expr.slice(start).trim());
-        return factors.filter(f => f);
-    }
-
-    function simplifyConst(expr) {
-        // Minimal simplification: remove *1, 1*, +0, etc.
-        return expr
-            .replace(/\*1(?!\d)/g, '')
-            .replace(/(?<!\d)1\*/g, '')
-            .replace(/\+ 0\b/g, '')
-            .replace(/^0 \+ /, '')
-            .replace(/\(\+/g, '(')
-            .trim() || '0';
-    }
-
-    // Integration helpers (symbolic, for common patterns)
-    function integrateWrtX(expr) {
+    // ---- Differentiation ----
+    function diffExpr(expr, v) {
         const terms = splitTerms(expr);
-        const integrated = terms.map(t => integrateTerm(t.trim(), 'x'));
-        return integrated.filter(t => t !== '0').join(' + ')
-            .replace(/\+ -/g, '- ')
-            .replace(/^\+\s*/, '')
-            || '0';
+        const parts = terms.map(t => diffTerm(t.trim(), v)).filter(d => d !== '0' && d !== '');
+        return joinTerms(parts) || '0';
     }
 
-    function integrateTerm(term, v) {
+    function diffTerm(s, v) {
+        if (!hasVar(s, v)) return '0';
         const other = v === 'x' ? 'y' : 'x';
-        if (!containsVar(term, v)) {
-            // Constant w.r.t v → multiply by v
-            return `${term === '1' ? '' : term + '*'}${v}`;
+
+        // just v
+        if (s === v || s === `+${v}`) return '1';
+        if (s === `-${v}`) return '-1';
+
+        // sin(inner)
+        const SIN = s.match(/^([+-]?\d*\.?\d*)\*?sin\(([^)]+)\)$/);
+        if (SIN) {
+            const c = parseCoeff(SIN[1]); const inner = SIN[2];
+            if (!hasVar(inner, v)) return '0';
+            const id = idiff(inner, v);
+            return fmtC(c * id, `cos(${inner})`);
         }
 
-        // Just the variable
-        if (term === v || term === `+${v}`) return `${v}^2/2`;
-        if (term === `-${v}`) return `-${v}^2/2`;
-
-        // Constant * v
-        const cvm = term.match(/^([+-]?\d*\.?\d*)\*?([xy])$/);
-        if (cvm && cvm[2] === v) {
-            const c = parseCoeff(cvm[1]);
-            return `${c / 2}*${v}^2`;
+        // cos(inner)
+        const COS = s.match(/^([+-]?\d*\.?\d*)\*?cos\(([^)]+)\)$/);
+        if (COS) {
+            const c = parseCoeff(COS[1]); const inner = COS[2];
+            if (!hasVar(inner, v)) return '0';
+            const id = idiff(inner, v);
+            const newC = -(c * id);
+            return fmtC(newC, `sin(${inner})`);
         }
 
-        // v^n
-        const pvm = term.match(/^([+-]?\d*\.?\d*)\*?([xy])\^(\d+\.?\d*)$/);
-        if (pvm && pvm[2] === v) {
-            const c = parseCoeff(pvm[1]);
-            const n = parseFloat(pvm[3]);
-            const newN = n + 1;
-            const newC = c / newN;
-            return newC === 1 ? `${v}^${newN}` : `${newC}*${v}^${newN}`;
+        // tan(inner) → sec²(inner)
+        const TAN = s.match(/^([+-]?\d*\.?\d*)\*?tan\(([^)]+)\)$/);
+        if (TAN) {
+            const c = parseCoeff(TAN[1]); const inner = TAN[2];
+            if (!hasVar(inner, v)) return '0';
+            const id = idiff(inner, v);
+            return fmtC(c * id, `sec^2(${inner})`);
         }
 
-        // a * x^m * y^n (product)
-        if (term.includes('*') || (containsVar(term, 'x') && containsVar(term, 'y'))) {
-            return integrateProductXY(term, v);
+        // sec^2(inner) → 2*sec^2(inner)*tan(inner)  [rarely input, skip]
+        // exp(inner)
+        const EXP = s.match(/^([+-]?\d*\.?\d*)\*?exp\(([^)]+)\)$/);
+        if (EXP) {
+            const c = parseCoeff(EXP[1]); const inner = EXP[2];
+            if (!hasVar(inner, v)) return '0';
+            const id = idiff(inner, v);
+            return fmtC(c * id, `exp(${inner})`);
         }
 
-        // sin(x) → -cos(x)
-        const sinM = term.match(/^([+-]?\d*\.?\d*)\*?sin\(([^)]+)\)$/);
-        if (sinM && containsVar(sinM[2], v)) {
-            const c = parseCoeff(sinM[1]);
-            const inner = sinM[2];
-            const innerC = diffSimpleInner(inner, v);
-            const divisor = parseFloat(innerC) || 1;
-            return `${(c / divisor) === -1 ? '-' : (c / divisor) === 1 ? '' : (c / divisor) + '*'}-cos(${inner})`.replace('--', '');
+        // monomial: [coeff*]v^n
+        const MONO = s.match(/^([+-]?\d*\.?\d*)\*?([xy])\^?(\d*\.?\d*)$/);
+        if (MONO) {
+            const c = parseCoeff(MONO[1]);
+            const vrb = MONO[2]; const n = MONO[3] === '' ? 1 : parseFloat(MONO[3]);
+            if (vrb !== v) return '0';
+            if (n === 1) return fmtC(c, '');
+            const newC = c * n; const newN = n - 1;
+            if (newN === 0) return `${newC}`;
+            if (newN === 1) return fmtC(newC, v);
+            return fmtC(newC, `${v}^${newN}`);
         }
 
-        // cos(x) → sin(x)
-        const cosM = term.match(/^([+-]?\d*\.?\d*)\*?cos\(([^)]+)\)$/);
-        if (cosM && containsVar(cosM[2], v)) {
-            const c = parseCoeff(cosM[1]);
-            const inner = cosM[2];
-            const innerC = diffSimpleInner(inner, v);
-            const divisor = parseFloat(innerC) || 1;
-            const newC = c / divisor;
-            return `${newC === 1 ? '' : newC === -1 ? '-' : newC + '*'}sin(${inner})`;
+        // product x^a * y^b
+        if (hasVar(s, 'x') && hasVar(s, 'y') && s.includes('*')) {
+            return diffXYprod(s, v);
         }
 
-        // exp(x) → exp(x)
-        const expM = term.match(/^([+-]?\d*\.?\d*)\*?exp\(([^)]+)\)$/);
-        if (expM && containsVar(expM[2], v)) {
-            const c = parseCoeff(expM[1]);
-            const inner = expM[2];
-            const innerC = diffSimpleInner(inner, v);
-            const divisor = parseFloat(innerC) || 1;
-            const newC = c / divisor;
-            return `${newC === 1 ? '' : newC === -1 ? '-' : newC + '*'}exp(${inner})`;
-        }
+        // product rule for other combos
+        if (s.includes('*')) return diffProd(s, v);
 
-        return `∫(${term})d${v}`;
+        return `d(${s})/d${v}`;
     }
 
-    function integrateProductXY(term, v) {
-        const sign = term.startsWith('-') ? -1 : 1;
-        const clean = term.replace(/^[+-]/, '').trim();
-        const parts = clean.split('*').map(p => p.trim());
+    function idiff(inner, v) {
+        if (inner === v) return 1;
+        const m = inner.replace(/\s+/g,'').match(/^([+-]?\d+\.?\d*)\*?([xy])$/);
+        if (m && m[2] === v) return parseFloat(m[1]);
+        if (!hasVar(inner, v)) return 0;
+        return 1;
+    }
 
-        let coeff = sign;
-        let xPow = 0, yPow = 0;
-
-        for (const p of parts) {
-            if (!isNaN(p)) { coeff *= parseFloat(p); continue; }
-            if (p === 'x') { xPow += 1; continue; }
-            if (p === 'y') { yPow += 1; continue; }
-            const xm = p.match(/^x\^(\d+)$/); if (xm) { xPow += parseInt(xm[1]); continue; }
-            const ym = p.match(/^y\^(\d+)$/); if (ym) { yPow += parseInt(ym[1]); continue; }
+    function diffXYprod(s, v) {
+        const sign = s.startsWith('-') ? -1 : 1;
+        const factors = s.replace(/^[+-]/, '').split('*');
+        let coeff = sign, xP = 0, yP = 0;
+        for (const f of factors) {
+            const ft = f.trim();
+            if (!isNaN(ft)) { coeff *= parseFloat(ft); continue; }
+            if (ft === 'x') { xP++; continue; }
+            if (ft === 'y') { yP++; continue; }
+            const xm = ft.match(/^x\^(\d+\.?\d*)$/); if (xm) { xP += parseFloat(xm[1]); continue; }
+            const ym = ft.match(/^y\^(\d+\.?\d*)$/); if (ym) { yP += parseFloat(ym[1]); continue; }
         }
-
         if (v === 'x') {
-            const newXPow = xPow + 1;
-            const newCoeff = coeff / newXPow;
-            return buildTerm(newCoeff, newXPow, yPow, 'x', 'y');
+            if (xP === 0) return '0';
+            return buildMono(coeff * xP, xP - 1, yP);
         } else {
-            const newYPow = yPow + 1;
-            const newCoeff = coeff / newYPow;
-            return buildTerm(newCoeff, xPow, newYPow, 'x', 'y');
+            if (yP === 0) return '0';
+            return buildMono(coeff * yP, xP, yP - 1);
         }
     }
 
-    function differentiateWrtY(expr) {
-        return computeDerivative(expr, 'y');
+    function diffProd(s, v) {
+        const idx = s.indexOf('*');
+        if (idx < 0) return `d(${s})/d${v}`;
+        const A = s.slice(0, idx).trim(), B = s.slice(idx + 1).trim();
+        const dA = diffTerm(A, v), dB = diffTerm(B, v);
+        const parts = [];
+        if (dA !== '0') parts.push(dA === '1' ? B : `${dA}*${B}`);
+        if (dB !== '0') parts.push(dB === '1' ? A : `${A}*${dB}`);
+        return joinTerms(parts) || '0';
     }
 
-    function buildSolution(intM, M, N) {
-        // The solution is: intM + g(y) = C
-        // We simplify and present intM (which already has the x terms)
-        // In most cases for these examples the full ψ = intM
-        // We show intM as main part
-        return intM;
+    function buildMono(coeff, xP, yP) {
+        if (coeff === 0) return '0';
+        const xStr = xP === 0 ? '' : xP === 1 ? 'x' : `x^${xP}`;
+        const yStr = yP === 0 ? '' : yP === 1 ? 'y' : `y^${yP}`;
+        const varStr = [xStr, yStr].filter(Boolean).join('*');
+        return fmtC(coeff, varStr);
     }
 
-    // ===================== UI HELPERS =====================
-    function addSolStep(title, body, icon, color, extraClass) {
-        // Remove placeholder if present
-        const ph = solutionSteps.querySelector('.placeholder-msg');
+    // ---- Integration w.r.t x (y = constant) ----
+    function intWrtX(term) {
+        if (!hasVar(term, 'x')) {
+            // pure y-term or const → multiply by x
+            if (term === '0') return '0';
+            if (term === '1' || term === '+1') return 'x';
+            if (term === '-1') return '-x';
+            const clean = term.replace(/^\+/, '');
+            return `${clean}*x`;
+        }
+        const s = term.replace(/\s+/g, '');
+
+        // just x
+        if (s === 'x' || s === '+x') return 'x^2/2';
+        if (s === '-x') return '-x^2/2';
+
+        // monomial c*x^n
+        const MX = s.match(/^([+-]?\d*\.?\d*)\*?x\^?(\d*\.?\d*)$/);
+        if (MX) {
+            const c = parseCoeff(MX[1]); const n = MX[2] === '' ? 1 : parseFloat(MX[2]);
+            const nn = n + 1; const nc = c / nn;
+            return fmtC(nc, nn === 1 ? 'x' : `x^${nn}`);
+        }
+
+        // product x^a * y^b
+        if (hasVar(s, 'y') && s.includes('*')) return intXYprod(s, 'x');
+
+        // sin(inner) → -cos(inner)/id
+        const SIN = s.match(/^([+-]?\d*\.?\d*)\*?sin\(([^)]+)\)$/);
+        if (SIN && hasVar(SIN[2], 'x')) {
+            const c = parseCoeff(SIN[1]); const id = idiff(SIN[2], 'x');
+            return fmtC(-c / id, `cos(${SIN[2]})`);
+        }
+
+        // cos(inner) → sin(inner)/id
+        const COS = s.match(/^([+-]?\d*\.?\d*)\*?cos\(([^)]+)\)$/);
+        if (COS && hasVar(COS[2], 'x')) {
+            const c = parseCoeff(COS[1]); const id = idiff(COS[2], 'x');
+            return fmtC(c / id, `sin(${COS[2]})`);
+        }
+
+        // exp(inner) → exp(inner)/id
+        const EXP = s.match(/^([+-]?\d*\.?\d*)\*?exp\(([^)]+)\)$/);
+        if (EXP && hasVar(EXP[2], 'x')) {
+            const c = parseCoeff(EXP[1]); const id = idiff(EXP[2], 'x');
+            return fmtC(c / id, `exp(${EXP[2]})`);
+        }
+
+        // tan(x) → -ln|cos(x)|   (i.e. ln|sec(x)|)
+        const TANX = s.match(/^([+-]?\d*\.?\d*)\*?tan\(([^)]+)\)$/);
+        if (TANX && hasVar(TANX[2], 'x')) {
+            const c = parseCoeff(TANX[1]);
+            return fmtC(-c, `ln|cos(${TANX[2]})|`);
+        }
+
+        // product rule type: e.g. sin(x)*cos(y) already handled by splitTerms if separate
+        // Try product split
+        if (s.includes('*')) return intXYprod(s, 'x');
+
+        return `∫(${term})dx`;
+    }
+
+    // ---- Integration w.r.t y ----
+    function intWrtY(term) {
+        if (!hasVar(term, 'y')) {
+            if (term === '0') return '0';
+            if (term === '1' || term === '+1') return 'y';
+            if (term === '-1') return '-y';
+            const clean = term.replace(/^\+/, '');
+            return `${clean}*y`;
+        }
+        const s = term.replace(/\s+/g, '');
+
+        if (s === 'y' || s === '+y') return 'y^2/2';
+        if (s === '-y') return '-y^2/2';
+
+        const MY = s.match(/^([+-]?\d*\.?\d*)\*?y\^?(\d*\.?\d*)$/);
+        if (MY) {
+            const c = parseCoeff(MY[1]); const n = MY[2] === '' ? 1 : parseFloat(MY[2]);
+            const nn = n + 1; const nc = c / nn;
+            return fmtC(nc, nn === 1 ? 'y' : `y^${nn}`);
+        }
+
+        if (hasVar(s, 'x') && s.includes('*')) return intXYprod(s, 'y');
+
+        const SIN = s.match(/^([+-]?\d*\.?\d*)\*?sin\(([^)]+)\)$/);
+        if (SIN && hasVar(SIN[2], 'y')) {
+            const c = parseCoeff(SIN[1]); const id = idiff(SIN[2], 'y');
+            return fmtC(-c / id, `cos(${SIN[2]})`);
+        }
+
+        const COS = s.match(/^([+-]?\d*\.?\d*)\*?cos\(([^)]+)\)$/);
+        if (COS && hasVar(COS[2], 'y')) {
+            const c = parseCoeff(COS[1]); const id = idiff(COS[2], 'y');
+            return fmtC(c / id, `sin(${COS[2]})`);
+        }
+
+        // tan(y) → ln|sec(y)|
+        const TAN = s.match(/^([+-]?\d*\.?\d*)\*?tan\(([^)]+)\)$/);
+        if (TAN && hasVar(TAN[2], 'y')) {
+            const c = parseCoeff(TAN[1]);
+            return fmtC(c, `ln|sec(${TAN[2]})|`);
+        }
+
+        // sec^2(y) → tan(y)
+        const SEC2 = s.match(/^([+-]?\d*\.?\d*)\*?sec\^2\(([^)]+)\)$/);
+        if (SEC2 && hasVar(SEC2[2], 'y')) {
+            const c = parseCoeff(SEC2[1]);
+            return fmtC(c, `tan(${SEC2[2]})`);
+        }
+
+        // exp(y)
+        const EXP = s.match(/^([+-]?\d*\.?\d*)\*?exp\(([^)]+)\)$/);
+        if (EXP && hasVar(EXP[2], 'y')) {
+            const c = parseCoeff(EXP[1]); const id = idiff(EXP[2], 'y');
+            return fmtC(c / id, `exp(${EXP[2]})`);
+        }
+
+        if (s.includes('*')) return intXYprod(s, 'y');
+
+        return `∫(${term})dy`;
+    }
+
+    function intXYprod(s, wrt) {
+        const sign = s.startsWith('-') ? -1 : 1;
+        const factors = s.replace(/^[+-]/, '').split('*');
+        let coeff = sign, xP = 0, yP = 0, extra = [];
+        for (const f of factors) {
+            const ft = f.trim();
+            if (!isNaN(ft)) { coeff *= parseFloat(ft); continue; }
+            if (ft === 'x') { xP++; continue; }
+            if (ft === 'y') { yP++; continue; }
+            const xm = ft.match(/^x\^(\d+\.?\d*)$/); if (xm) { xP += parseFloat(xm[1]); continue; }
+            const ym = ft.match(/^y\^(\d+\.?\d*)$/); if (ym) { yP += parseFloat(ym[1]); continue; }
+            extra.push(ft);
+        }
+        if (wrt === 'x') { const np = xP + 1; return buildMono(coeff / np, np, yP); }
+        else              { const np = yP + 1; return buildMono(coeff / np, xP, np); }
+    }
+
+    // ---- Numeric expression comparison ----
+    function evalEx(e, x, y) {
+        try {
+            const r = e.replace(/\s+/g,'')
+                .replace(/\bexp\b/g,'Math.exp')
+                .replace(/\bsin\b/g,'Math.sin')
+                .replace(/\bcos\b/g,'Math.cos')
+                .replace(/\btan\b/g,'Math.tan')
+                .replace(/\bsec\^2\b/g,'(1/Math.pow(Math.cos')
+                .replace(/\bsqrt\b/g,'Math.sqrt')
+                .replace(/\^/g,'**')
+                .replace(/(?<![a-zA-Z])x(?![a-zA-Z])/g,`(${x})`)
+                .replace(/(?<![a-zA-Z])y(?![a-zA-Z])/g,`(${y})`);
+            // eslint-disable-next-line no-new-func
+            return Function('"use strict";return('+r+')')();
+        } catch { return NaN; }
+    }
+
+    function exprsEqual(a, b) {
+        const norm = s => s.replace(/\s+/g,'').toLowerCase().replace(/\*\*/g,'^');
+        if (norm(a) === norm(b)) return true;
+        const pts = [{x:1,y:2},{x:2,y:3},{x:0.5,y:1.5},{x:3,y:1},{x:1.5,y:2.5}];
+        let matched = 0;
+        for (const p of pts) {
+            const va = evalEx(a, p.x, p.y), vb = evalEx(b, p.x, p.y);
+            if (isNaN(va) || isNaN(vb) || !isFinite(va) || !isFinite(vb)) continue;
+            if (Math.abs(va - vb) > 0.01) return false;
+            matched++;
+        }
+        return matched >= 2;
+    }
+
+    // ---- UI helpers ----
+    function addStep(title, body, icon, color, extraClass) {
+        const ph = solSteps.querySelector('.placeholder-msg');
         if (ph) ph.remove();
-
         const div = document.createElement('div');
         div.className = `sol-step ${extraClass || ''}`;
         div.innerHTML = `
             <div class="sol-step-title">
-                <i class="${icon}" style="color:${color};"></i>
-                ${title}
+                <i class="${icon}" style="color:${color};font-size:15px;"></i>
+                <span>${title}</span>
             </div>
-            <div class="sol-step-body">${body}</div>
-        `;
-        solutionSteps.appendChild(div);
+            <div class="sol-step-body">${body}</div>`;
+        solSteps.appendChild(div);
         div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    function showMsg(text, type) {
-        const colors = { warning: '#f39c12', error: '#e74c3c', info: '#3498db' };
-        const icons = { warning: 'fas fa-exclamation-triangle', error: 'fas fa-times-circle', info: 'fas fa-info-circle' };
-        addSolStep('Notice', `<span style="color:${colors[type]}">${text}</span>`, icons[type], colors[type]);
+    function pushAlert(text) {
+        addStep('Notice', `<span style="color:#e67e22;">⚠ ${text}</span>`,
+                'fas fa-exclamation-triangle', '#e67e22');
     }
 
-    // Initialize preview
     updatePreview();
 }
